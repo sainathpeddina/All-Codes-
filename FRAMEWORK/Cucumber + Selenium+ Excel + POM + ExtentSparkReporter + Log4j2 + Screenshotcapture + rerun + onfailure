@@ -413,6 +413,13 @@ sheetName=Login
 
 ▶️ Run Tests
 mvn test
+
+| Scenario                        | Solution                             |
+| ------------------------------- | ------------------------------------ |
+| Hooks in different package      | Add that package in `glue`           |
+| Multiple glue packages needed   | Use array: `glue = {"pkg1", "pkg2"}` |
+| Forgot to include hooks package | `@Before`, `@After` will NOT run ❌   |
+
 To rerun failed scenarios:
 
 mvn test -Dcucumber.options="@target/failed_scenarios.txt"
