@@ -1,0 +1,210 @@
+
+🧠 Key Points:
+git add: Selects changes you want to commit.
+git commit: Creates a snapshot of the staged changes.
+git push: Uploads your commits to a remote server.
+
+🔧 What is Git?
+Git is a version control system used to track changes in source code during software development.
+
+✅ Key Features:
+Tracks Changes: Keeps a history of code changes.
+Collaboration: Multiple developers can work on the same codebase simultaneously.
+Branching: Allows you to create branches to test or develop features separately from the main code.
+Revert Changes: Go back to previous versions of the code if needed.
+
+📌 Example Use:
+You can save the current state of your code using a commit, and later you can revert to that state or compare it with future changes.
+
+🌐 What is GitHub?
+GitHub is a web-based platform that hosts Git repositories online.
+
+✅ Key Features:
+Remote Storage: Stores Git repositories in the cloud.
+Collaboration: Lets developers collaborate through pull requests, issues, and code reviews.
+CI/CD Integration: Supports continuous integration and deployment tools.
+Project Management: Provides tools like issue tracking, wikis, and Kanban boards.
+
+📌 Example Use:
+You push your local Git commits to GitHub so teammates can see and work on the same code, review it, or suggest changes.
+
+🧠 In Short:
+Git = the tool that manages your code history locally.
+GitHub = an online platform to share, collaborate, and manage Git projects remotely.
+
+
+⚠️ What is a Git Conflict?
+A conflict happens when Git can’t automatically merge changes — usually because the same lines in the same file were changed in different branches.
+
+🛠️ How to Resolve a Git Conflict
+📍Scenario:
+1. Check the conflict
+Open the conflicted file (e.g., file.txt). You'll see something like:
+
+<<<<<<< HEAD
+This is the content from your current branch
+=======
+This is the content from the branch you're merging in
+>>>>>>> feature-branch
+
+2. Edit the file manually
+Decide which content to keep:
+
+Example resolution:
+This is the final content that resolves the conflict
+Then remove the conflict markers (<<<<<<<, =======, >>>>>>>).
+
+3. Mark as resolved
+After editing the file:
+git add file.txt
+
+4. Complete the merge
+git commit
+Or if it’s a merge that paused on conflict:
+git merge --continue
+
+🧼 Optional Cleanup
+git merge --abort  # Cancels the merge
+
+💡 Summary:
+| Step             | Command/Action                            |
+| ---------------- | ----------------------------------------- |
+| Detect conflict  | `git merge branch-name`                   |
+| View conflict    | Open the file, look for `<<<<<<<` markers |
+| Resolve conflict | Manually edit and clean the file          |
+| Mark as resolved | `git add file-name`                       |
+| Finish merge     | `git commit` or `git merge --continue`    |
+
+git init
+git checkout -b feature
+git checkout main
+git merge feature
+# edit file to resolve conflict
+git add greeting.txt
+git commit
+
+✅ BASIC GIT METHODS
+1. git init
+Purpose: Initializes a new Git repository.
+git init
+Use Case: Start tracking a new project in Git.
+
+2. git clone
+Purpose: Creates a local copy of a remote repository.
+git clone https://github.com/user/repo.git
+Use Case: You want to contribute to an existing project on GitHub.
+
+3. git status
+Purpose: Shows the status of changes (modified, staged, untracked).
+git status
+Use Case: Check what files you’ve modified or added before committing.
+
+4. git add
+Purpose: Stages changes for the next commit.
+git add file.txt         # add one file
+git add .                # add all changes in the directory
+Use Case: You’ve made changes and want to include them in the next commit.
+
+5. git commit
+Purpose: Saves the staged changes with a message.
+git commit -m "Fixed login bug"
+Use Case: You want to save a stable version of your code.
+
+6. git log
+Purpose: Shows a history of commits.
+git log
+Use Case: View who made which changes and when.
+
+🔄 BRANCHING & MERGING
+7. git branch
+Purpose: Lists, creates, or deletes branches.
+git branch            # list branches
+git branch new-feature  # create new branch
+
+8. git checkout
+Purpose: Switches between branches or restores files.
+git checkout main            # switch branch
+git checkout -b feature      # create and switch
+
+9. git merge
+Purpose: Merges changes from one branch into another.
+git checkout main
+git merge feature
+
+10. git rebase
+Purpose: Reapplies commits on top of another base branch.
+git checkout feature
+git rebase main
+Use Case: Cleaner commit history than merge.
+
+🌍 REMOTE COMMANDS
+11. git remote
+Purpose: Manage remote connections (e.g., GitHub).
+git remote -v              # list remotes
+git remote add origin https://github.com/user/repo.git
+
+12. git push
+Purpose: Uploads your commits to a remote repository.
+git push origin main
+
+13. git pull (git pull = git fetch + git merge)
+Purpose: Fetches and merges changes from a remote repo.
+git pull origin main
+
+14. git fetch
+Purpose: Gets changes from the remote without merging.
+git fetch origin
+
+🧹 UNDOING & FIXING
+15. git diff
+Purpose: Shows differences between files or commits.
+git diff
+
+16. git reset
+Purpose: Unstages files or resets commit history.
+git reset file.txt             # unstage
+git reset --hard HEAD~1        # remove last commit.
+
+17. git revert
+Purpose: Creates a new commit that undoes a specific commit.
+git revert a1b2c3d
+
+18. git stash
+Purpose: Temporarily shelves changes you don’t want to commit yet.
+git stash         # save current changes
+git stash pop     # restore them
+
+📄 FILE HISTORY & CLEANUP
+19. git blame
+Purpose: Shows who changed each line in a file.
+git blame app.js
+
+20. git clean
+Purpose: Removes untracked files.
+git clean -f       # delete untracked files
+
+✅ Steps to Approve a Pull Request (PR) on GitHub
+| Criteria                   | Description                                                      |
+| -------------------------- | ---------------------------------------------------------------- |
+| **Code Quality**           | Readability, clarity, consistency, and complexity.               |
+| **Functionality**          | Does it implement the desired feature? Are edge cases covered?   |
+| **Tests**                  | Sufficient and passing tests for new functionality.              |
+| **Performance**            | Ensure no performance bottlenecks or inefficiencies.             |
+| **Security**               | Proper validation and no vulnerabilities.                        |
+| **Documentation**          | Code and functionality documented properly.                      |
+| **Backward Compatibility** | Ensure the change doesn't break existing functionality.          |
+| **Merge Conflicts**        | Ensure there are no merge conflicts.                             |
+| **UI/UX**                  | Ensure UI changes follow guidelines and improve user experience. |
+| **Dependency Updates**     | New dependencies are necessary and managed correctly.            |
+| **Code Duplication**       | Eliminate redundant or duplicated code.                          |
+| **Commit Message**         | Clear, descriptive commit messages and clean commit history.     |
+
+6. (Optional) Merge the PR
+If you're allowed and ready:
+Click "Merge pull request"
+Choose a merge option:
+Create a merge commit
+Squash and merge
+Rebase and merge
+Confirm by clicking "Confirm merge"
+
