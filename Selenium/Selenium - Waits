@@ -1,0 +1,167 @@
+✅ Why Use Waits?
+Web applications often include
+AJAX calls
+Dynamic loading
+Animations
+Delays in rendering elements
+
+Selenium waits help your script pause until a certain condition is true, ensuring test stability.
+
+🧠 Types of Waits in Selenium (Java)
+1. Implicit Wait
+2. Explicit Wait
+3. Fluent Wait
+
+🔹 1. Implicit Wait
+✅ Description:
+Tells Selenium to wait for a certain amount of time when trying to find an element before throwing NoSuchElementException.
+
+✅ Syntax:
+driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+✅ Use Case:
+Use when most elements on the page have a consistent load time.
+
+⚠️ Limitation:
+Applies globally to all findElement and findElements calls.
+
+Not recommended with Explicit Waits (may conflict).
+
+🔹 2. Explicit Wait (WebDriverWait + ExpectedConditions)
+✅ Description:
+Waits for a specific condition (like visibility, clickability) for a specific element.
+
+✅ Syntax:
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+
+✅ Common Conditions:
+ExpectedConditions.visibilityOfElementLocated(locator);
+ExpectedConditions.elementToBeClickable(locator);
+ExpectedConditions.alertIsPresent();
+ExpectedConditions.titleContains("Selenium");
+ExpectedConditions.presenceOfElementLocated(locator);
+
+✅ Use Case:
+Use when only certain elements require waiting.
+
+🔹 3. Fluent Wait (Advanced Explicit Wait)
+✅ Description:
+A more configurable form of WebDriverWait:
+Can set polling frequency.
+Can ignore specific exceptions.
+Waits until a custom condition is met.
+
+✅ Syntax:
+Wait<WebDriver> wait = new FluentWait<>(driver)
+        .withTimeout(Duration.ofSeconds(20))
+        .pollingEvery(Duration.ofSeconds(2))
+        .ignoring(NoSuchElementException.class);
+
+WebElement element = wait.until(driver -> driver.findElement(By.id("email")));
+✅ Use Case:
+Use when:
+Elements appear at irregular intervals.
+You need fine control over polling and exceptions.
+
+🧪 Comparison Table
+| Type          | Applies To          | Custom Conditions                | Polling Interval | Global? |
+| ------------- | ------------------- | -------------------------------- | ---------------- | ------- |
+| Implicit Wait | All `findElement/s` | ❌ No                             | ❌ Fixed          | ✅ Yes   |
+| Explicit Wait | Specific elements   | ✅ Yes (via `ExpectedConditions`) | ❌ Fixed          | ❌ No    |
+| Fluent Wait   | Specific elements   | ✅ Yes                            | ✅ Customizable   | ❌ No    |
+
+
+Bonus: Custom Wait Condition Example
+wait.until(driver -> driver.findElement(By.id("status")).getText().equals("Loaded"));
+Would you like a complete Java utility class for waits that you can reuse in all test cases?
+
+
+✅ 1. Element Presence and Visibility Conditions
+| Method                                     | Description                                                                    | Example   
+| `presenceOfElementLocated(By locator)`     | Waits until the element is **present** in the DOM (may or may not be visible). | `wait.until(ExpectedConditions.presenceOfElementLocated(By.id("email")));`        |
+| `visibilityOfElementLocated(By locator)`   | Waits until the element is **present and visible**.                            | `wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")));` |
+| `visibilityOf(WebElement element)`         | Waits until the specific element is **visible**.                               | `wait.until(ExpectedConditions.visibilityOf(myElement));`                         |
+| `invisibilityOfElementLocated(By locator)` | Waits until the element is **not visible or not present**.                     | `wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading")));`  |
+| `invisibilityOf(WebElement element)`       | Waits until the specific element is **not visible**.                           | `wait.until(ExpectedConditions.invisibilityOf(myModal));`                         |
+
+
+✅ 2. Clickability Conditions
+| Method                                     | Description                                                          | Example             
+| `elementToBeClickable(By locator)`         | Waits until the element is **visible and enabled** (can be clicked). | `wait.until(ExpectedConditions.elementToBeClickable(By.id("loginBtn")));` |
+| `elementToBeClickable(WebElement element)` | Same as above but uses a `WebElement` reference.                     | `wait.until(ExpectedConditions.elementToBeClickable(button));`            |
+
+
+✅ 3. Selection Conditions (Checkbox, Radio, Dropdown)
+| Method                                           | Description                                                          | Example       
+| `elementToBeSelected(By locator)`                | Waits until the element is **selected**.                             | `wait.until(ExpectedConditions.elementToBeSelected(By.id("agree")));`         |
+| `elementSelectionStateToBe(WebElement, boolean)` | Waits until the element's selected state matches the expected value. | `wait.until(ExpectedConditions.elementSelectionStateToBe(myCheckbox, true));` |
+
+
+✅ 4. Alert Conditions
+| Method             | Description                              | Example                                            |
+| `alertIsPresent()` | Waits until an **alert box is present**. | `wait.until(ExpectedConditions.alertIsPresent());` |
+
+
+✅ 5. Frame and Window Conditions
+| Method                                        | Description                                                | Example                    
+| `frameToBeAvailableAndSwitchToIt(By locator)` | Waits until a frame is available and then switches to it.  | `wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id("myFrame")));` |
+| `numberOfWindowsToBe(int number)`             | Waits until the specified number of windows/tabs are open. | `wait.until(ExpectedConditions.numberOfWindowsToBe(2));`                            |
+
+
+✅ 6. Text Conditions
+| Method                                                   | Description                                                    | Example     
+| `textToBePresentInElement(By locator, String text)`      | Waits until the element contains the given text.               | `wait.until(ExpectedConditions.textToBePresentInElement(By.id("message"), "Success"));`        |
+| `textToBePresentInElementValue(By locator, String text)` | Waits until the element’s `value` attribute contains the text. | `wait.until(ExpectedConditions.textToBePresentInElementValue(By.name("search"), "Selenium"));` |
+| `titleIs(String title)`                                  | Waits until the page title matches exactly.                    | `wait.until(ExpectedConditions.titleIs("Login Page"));`                                        |
+| `titleContains(String titleFragment)`                    | Waits until the page title contains the string.                | `wait.until(ExpectedConditions.titleContains("Dashboard"));`                                   |
+
+✅ 7. URL Conditions
+| Method                         | Description                                    | Example                                               
+| `urlToBe(String url)`          | Waits until the current URL matches exactly.   | `wait.until(ExpectedConditions.urlToBe("https://example.com/home"));` |
+| `urlContains(String fraction)` | Waits until the URL contains the given string. | `wait.until(ExpectedConditions.urlContains("dashboard"));`            |
+
+✅ Example: Full Usage in a Test
+WebDriver driver = new ChromeDriver();
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+driver.get("https://example.com");
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("username")));
+wait.until(ExpectedConditions.elementToBeClickable(By.id("loginBtn"))).click();
+wait.until(ExpectedConditions.titleContains("Dashboard"));
+
+✅ Common Exceptions to Ignore in FluentWait
+| Exception Class                   | Package               | Why Ignore                                                                  
+| `NoSuchElementException`          | `org.openqa.selenium` | Element is not in DOM yet. Most commonly ignored exception.                    |
+| `StaleElementReferenceException`  | `org.openqa.selenium` | Element was found but is no longer attached to the DOM. Useful in dynamic UIs. |
+| `ElementNotInteractableException` | `org.openqa.selenium` | Element is in the DOM but not interactable yet (e.g., covered, not visible).   |
+| `TimeoutException`                | `org.openqa.selenium` | Only useful in **nested waits**, rarely ignored directly.                      |
+| `WebDriverException`              | `org.openqa.selenium` | A broader base exception; use with care as it might hide real issues.          |
+
+✅ Example: Ignoring Multiple Exceptions
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.FluentWait;
+
+import java.time.Duration;
+import java.util.function.Function;
+
+public class FluentWaitExample {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+
+        Wait<WebDriver> wait = new FluentWait<>(driver)
+            .withTimeout(Duration.ofSeconds(30))
+            .pollingEvery(Duration.ofSeconds(3))
+            .ignoring(NoSuchElementException.class)
+            .ignoring(StaleElementReferenceException.class)
+            .ignoring(ElementNotInteractableException.class);
+
+        WebElement dynamicElement = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                return driver.findElement(By.id("dynamicElement"));
+            }
+        });
+
+        dynamicElement.click();
+        driver.quit();
+    }
+}
