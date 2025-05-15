@@ -1,0 +1,420 @@
+<pre>
+Project Structure
+SeleniumCucumberExcelPOM/
+├── pom.xml
+├── src/
+│   ├── main/java/
+│   │   ├── pages/
+│   │   │   └── LoginPage.java
+│   │   ├── utilities/
+│   │   │   ├── ExcelUtil.java
+│   │   │   ├── Log.java
+│   │   │   └── ScreenshotUtil.java
+│   │   │   └── ConfigReader.java
+│   ├── test/java/
+│   │   ├── features/
+│   │   │   └── login.feature
+│   │   ├── runners/
+│   │   │   └── TestRunner.java
+│   │   ├── stepDefinitions/
+│   │   │   └── LoginSteps.java
+│   │   └── testng/
+│   │   |     └── FailedTestRunner.java   
+|   |   └── hooks/
+│   │        └── TestHooks.java
+|   |   
+│   └── resources/
+│       └── log4j2.xml
+|       └── config.properties
+├── testdata/
+│   └── TestData.xlsx
+|   
+└── test-output/
+    └── ExtentReport/
+  
+
+📦 pom.xml
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>selenium.cucumber.excel</groupId>
+  <artifactId>ExcelCucumberPOM</artifactId>
+  <version>1.0</version>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <!-- Selenium -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>4.21.0</version>
+    </dependency>
+
+    <!-- Cucumber -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>7.14.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>7.14.0</version>
+    </dependency>
+
+    <!-- Apache POI -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.4</version>
+    </dependency>
+
+    <!-- ExtentReports Spark -->
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>5.0.9</version>
+    </dependency>
+
+    <!-- Log4j2 -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.20.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.20.0</version>
+    </dependency>
+
+    <!-- WebDriverManager -->
+    <dependency>
+      <groupId>io.github.bonigarcia</groupId>
+      <artifactId>webdrivermanager</artifactId>
+      <version>5.8.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <rerunFailingTestsCount>1</rerunFailingTestsCount>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+📄 ExcelUtil.java
+package utilities;
+
+import java.io.FileInputStream;
+import java.util.*;
+import org.apache.poi.xssf.usermodel.*;
+
+public class ExcelUtil {
+    private static final String EXCEL_PATH = "testdata/TestData.xlsx";
+
+    public static String getCellValue(String sheetName, int rowNum, String columnName) {
+        try (FileInputStream fis = new FileInputStream(EXCEL_PATH)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+            XSSFSheet sheet = workbook.getSheet(sheetName);
+            XSSFRow headerRow = sheet.getRow(0);
+            XSSFRow row = sheet.getRow(rowNum);
+
+            Map<String, Integer> colMap = new HashMap<>();
+
+            for (Cell cell : headerRow) {
+                colMap.put(cell.getStringCellValue(), cell.getColumnIndex());
+            }
+
+            int colIndex = colMap.get(columnName);
+            Cell cell = sheet.getRow(rowNum).getCell(colIndex);
+
+           return (cell != null) ? getCellAsString(cell) : "";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+        // Convert different cell types to String
+        private static String getCellAsString(Cell cell) {
+        DataFormatter formatter = new DataFormatter();
+        return formatter.formatCellValue(cell);
+    }
+}
+
+📄 Log.java
+package utilities;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class Log {
+    public static final Logger logger = LogManager.getLogger(Log.class);
+}
+
+📄 ScreenshotUtil.java
+package utilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+
+public class ScreenshotUtil {
+    public static String captureScreenshot(WebDriver driver, String scenarioName) {
+        TakesScreenshot ts = (TakesScreenshot) driver;
+        File src = ts.getScreenshotAs(OutputType.FILE);
+        String path = "test-output/screenshots/" + scenarioName + "_" +
+                      new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".png";
+        try {
+            FileUtils.copyFile(src, new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
+    }
+}
+
+📄 LoginPage.java
+package pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.*;
+
+public class LoginPage {
+    WebDriver driver;
+
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    @FindBy(id = "username")
+    WebElement username;
+
+    @FindBy(id = "password")
+    WebElement password;
+
+    @FindBy(id = "loginBtn")
+    WebElement loginBtn;
+
+    public void login(String user, String pass) {
+        username.sendKeys(user);
+        password.sendKeys(pass);
+        loginBtn.click();
+    }
+}
+
+📄 login.feature
+Feature: Login functionality
+
+  Scenario: Login with credentials from Excel
+    Given user launches browser and opens login page
+    When user enters credentials from Excel
+    Then user is logged in successfully
+
+📄 LoginSteps.java
+package stepDefinitions;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.cucumber.java.*;
+import io.cucumber.java.en.*;
+import pages.LoginPage;
+import utilities.*;
+import utilities.ConfigReader;
+
+import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+public class LoginSteps {
+    WebDriver driver;
+    LoginPage loginPage;
+
+    @Given("user launches browser and opens login page")
+    public void launchBrowser() {
+        driver = new ChromeDriver();
+        driver.get("https://example.com/login");
+        loginPage = new LoginPage(driver);
+        Log.logger.info("Opened login page");
+        test = extent.createTest("Login Test");
+    }
+
+    @When("user enters credentials from Excel")
+    public void enterCredentials() {
+        String sheet = ConfigReader.get("sheetName");
+        int row = 1;
+        String username = ExcelUtil.getCellValue(sheet, 1, "username");
+        String password = ExcelUtil.getCellValue(sheet, 1, "password");
+        loginPage.login(username, password);
+        Log.logger.info("Entered credentials from Excel");
+    }
+
+    @Then("user is logged in successfully")
+    public void verifyLogin() {
+        if (driver.getCurrentUrl().contains("dashboard")) {
+            Log.logger.info("Login success");
+            test.pass("Login test passed");
+        } else {
+            Log.logger.error("Login failed");
+            test.fail("Login test failed");
+        }
+        driver.quit();
+    }
+}
+
+📄 ConfigReader.java
+package utilities;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+public class ConfigReader { 
+    private static Properties properties;
+
+    static {
+        try {
+            FileInputStream fis = new FileInputStream("src/test/resources/config.properties");
+            properties = new Properties();
+            properties.load(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String get(String key) {
+        return properties.getProperty(key);
+    }
+}
+
+📄 TestHooks.java
+package hooks;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import org.openqa.selenium.OutputType;
+import stepDefinitions.LoginSteps;
+import utilities.Log;
+import utilities.ScreenshotUtil;
+import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+public class TestHooks {
+    public static ExtentReports extent;
+    public static ExtentTest test;
+    LoginSteps steps = new LoginSteps();
+
+    @Before
+    public void setup(Scenario scenario) {
+        ExtentSparkReporter spark = new ExtentSparkReporter("test-output/ExtentReport/SparkReport.html");
+        extent = new ExtentReports();
+        extent.attachReporter(spark);
+
+        test = extent.createTest(scenario.getName());
+        Log.logger.info("Starting Scenario: " + scenario.getName());
+    }
+
+    @After
+    public void teardown() {
+        extent.flush();
+    }
+
+    @AfterStep
+    public void takeScreenshot(Scenario scenario) {
+        if (scenario.isFailed()) {
+            String path = ScreenshotUtil.captureScreenshot(driver, scenario.getName());
+            test.fail("Scenario Failed").addScreenCaptureFromPath(path);
+            Log.logger.error("Scenario failed");
+        } else {
+            test.pass("Scenario Passed");
+        }
+    }
+   
+}
+
+📄 TestRunner.java
+package runners;
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.*;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "src/test/java/features",
+    glue = {"stepDefinitions"},
+    plugin = {
+        "pretty",
+        "html:target/cucumber-html-report",
+        "json:target/cucumber.json",
+        "rerun:target/failed_scenarios.txt"
+    },
+    monochrome = true
+)
+public class TestRunner {
+}
+
+📄 FailedTestRunner.java
+package testng;
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.*;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "@target/failed_scenarios.txt",
+    glue = {"stepDefinitions"},
+    plugin = {"pretty", "html:target/rerun-report.html"}
+)
+public class FailedTestRunner {
+}
+
+
+📄 log4j2.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
+
+🧪 Sample Excel File: TestData.xlsx
+username	password
+testuser	pass1234
+
+Sheet name: Login
+
+⚙️ Update config.properties
+baseURL=https://example.com/login
+browser=chrome
+excelSheetPath=testdata/TestData.xlsx
+sheetName=Login
+
+▶️ Run Tests
+mvn test
+To rerun failed scenarios:
+
+mvn test -Dcucumber.options="@target/failed_scenarios.txt"
+
+</pre>
