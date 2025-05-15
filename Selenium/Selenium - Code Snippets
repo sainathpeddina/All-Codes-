@@ -1,0 +1,120 @@
+driver.navigate().to("https://example.com");
+driver.navigate().back();     // Go back in browser history
+driver.navigate().forward();  // Go forward
+driver.navigate().refresh();  // Refresh the current page
+
+
+✅ Java Selenium Example: Finding Broken Links
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+
+public class BrokenLinksChecker {
+
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com"); // Change to your target URL
+
+        List<WebElement> allLinks = driver.findElements(By.tagName("a"));
+        System.out.println("Total links found: " + allLinks.size());
+
+        for (WebElement linkElement : allLinks) {
+            String url = linkElement.getDomAttribute("href");
+
+            if (url == null || url.isEmpty() || !url.startsWith("http")) {
+                System.out.println("Link is empty or not configured.");
+                continue;
+            }
+
+            try {
+                URL urlURL = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlURL.openConnection();
+                connection.setRequestMethod("HEAD");
+                connection.setConnectTimeout(3000);
+                connection.connect();
+
+                int responseCode = connection.getResponseCode();
+                String responseMessage = connection.getResponseCode();
+                if (responseCode >= 400) {
+                    System.out.println("❌ Broken link: " + url + " → Code: " + responseCode +  " → Message: " + responseMessage);
+                } else {
+                    System.out.println("✅ Valid link: " + url + " → Code: " + responseCode +  " → Message: " + responseMessage);
+                }
+
+            } catch (Exception e) {
+                System.out.println("❌ Error checking link: " + url + " → Exception: " + e.getMessage());
+            }
+        }
+
+        driver.quit();
+    }
+}
+
+✅ General Steps to Handle Dynamic Dropdown
+Click on the dropdown to expand the options.
+Wait for the dropdown items to be visible (Explicit Wait).
+Find the desired option in the list.
+Click on the option.
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.*;
+
+import java.time.Duration;
+import java.util.List;
+
+public class DynamicDropdownWithStaleHandling {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Step 1: Type in the search box
+        WebElement inputBox = driver.findElement(By.id("search-box"));
+        inputBox.sendKeys("Ind");
+
+        // Step 2: Wait for suggestions to appear
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("suggestions")));
+
+        // Step 3: Try clicking the desired option, retrying if stale
+        boolean optionClicked = false;
+        int attempts = 0;
+
+        while (!optionClicked && attempts < 3) {
+            try {
+                // Step 3.1: Re-fetch the elements inside try block
+                List<WebElement> suggestions = driver.findElements(By.xpath("//ul[@id='suggestions']/li"));
+
+                for (WebElement option : suggestions) {
+                    if (option.getText().equals("India")) {
+                        option.click();
+                        optionClicked = true;
+                        break;
+                    }
+                }
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Caught stale element, retrying...");
+                attempts++;
+                // Optional: short wait before retrying
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignored) {}
+            }
+        }
+
+        if (!optionClicked) {
+            System.out.println("Option 'India' not found or failed to click.");
+        }
+
+        driver.quit();
+    }
+}
+
+
+
