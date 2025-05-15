@@ -1,0 +1,55 @@
+Selenium exceptions are unchecked
+You are not required to handle them using try-catch or declare them with throws in method signatures.
+You can catch them explicitly if you want to handle failures gracefully.
+
+🔹 Common Selenium exceptions (unchecked):
+All these extend org.openqa.selenium.WebDriverException, which in turn extends RuntimeException.
+| Exception Class                    | Package                            | Description                                         |
+| ---------------------------------- | ---------------------------------- | --------------------------------------------------- |
+| `NoSuchElementException`           | `org.openqa.selenium`              | Element not found                                   |
+| `TimeoutException`                 | `org.openqa.selenium`              | Explicit wait timed out                             |
+| `StaleElementReferenceException`   | `org.openqa.selenium`              | Element is detached from DOM                        |
+| `ElementClickInterceptedException` | `org.openqa.selenium`              | Click was intercepted by another element            |
+| `ElementNotInteractableException`  | `org.openqa.selenium`              | Element not interactable (e.g., hidden or disabled) |
+| `NoSuchFrameException`             | `org.openqa.selenium`              | Frame not found                                     |
+| `NoSuchWindowException`            | `org.openqa.selenium`              | Window not found                                    |
+| `InvalidElementStateException`     | `org.openqa.selenium`              | Invalid action on element (e.g., read-only input)   |
+| `UnhandledAlertException`          | `org.openqa.selenium`              | Unexpected alert appeared                           |
+| `UnexpectedAlertPresentException`  | `org.openqa.selenium`              | Alert appeared and not handled                      |
+| `MoveTargetOutOfBoundsException`   | `org.openqa.selenium.interactions` | Trying to move to a point outside viewport          |
+| `JavascriptException`              | `org.openqa.selenium`              | Error executing JavaScript                          |
+| `SessionNotCreatedException`       | `org.openqa.selenium`              | Browser session could not be started                |
+| `InvalidArgumentException`         | `org.openqa.selenium`              | Invalid arguments passed to WebDriver commands      |
+| `WebDriverException`               | `org.openqa.selenium`              | Base class for all WebDriver-specific errors        |
+
+✅ Example:
+try {
+    driver.findElement(By.id("nonexistent")).click();
+} catch (NoSuchElementException e) {
+    System.out.println("Element not found.");
+}
+
+🔸 1. Catch Specific Exceptions First
+try {
+    driver.findElement(By.id("submit")).click();
+} catch (NoSuchElementException e) {
+    System.out.println("Element not found.");
+} catch (ElementClickInterceptedException e) {
+    System.out.println("Click was blocked by another element.");
+} catch (WebDriverException e) {
+    System.out.println("General WebDriver error: " + e.getMessage());
+}
+
+🔸 2. Use WebDriverWait Instead of Thread.sleep
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+try {
+    WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("login")));
+    element.click();
+} catch (TimeoutException e) {
+    System.out.println("Element was not clickable in time.");
+}
+
+Summary:
+✅ Selenium exceptions = unchecked
+🔧 You can catch them, but it’s not mandatory
+📦 All extend RuntimeException
