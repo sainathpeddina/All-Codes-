@@ -1,3 +1,106 @@
+✅ 1. Create a Database
+CREATE DATABASE BookStore;
+📌 This command creates a new database named BookStore.
+
+✅ 2. Use the Database
+USE BookStore;
+📌 This tells MySQL that you want to work inside the BookStore database.
+
+✅ 3. Create a Table
+Let’s create a Books table with 5 columns: id, title, author, genre, and price.
+
+CREATE TABLE Books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100),
+    author VARCHAR(100),
+    genre VARCHAR(50),
+    price DECIMAL(6,2)
+);
+📌 Explanation of columns:
+id: Auto-incrementing integer, primary key
+title: Book title (up to 100 characters)
+author: Author’s name (up to 100 characters)
+genre: Type of book (e.g., Fiction, Non-fiction)
+price: Decimal with up to 6 digits, 2 after the decimal point (e.g., 999.99)
+
+✅ 4. Insert Data into the Table
+INSERT INTO Books (title, author, genre, price)
+VALUES
+('Clean Code', 'Robert Martin', 'Programming', 450.00),
+('The Hobbit', 'J.R.R. Tolkien', 'Fantasy', 299.50),
+('Atomic Habits', 'James Clear', 'Self-help', 320.75);
+
+✅ 5. View the Table Data
+SELECT * FROM Books;
+This will show:
+
+| id | title         | author         | genre       | price  |
+| -- | ------------- | -------------- | ----------- | ------ |
+| 1  | Clean Code    | Robert Martin  | Programming | 450.00 |
+| 2  | The Hobbit    | J.R.R. Tolkien | Fantasy     | 299.50 |
+| 3  | Atomic Habits | James Clear    | Self-help   | 320.75 |
+
+✅ 6. Update a Record
+Let’s say you want to update the price of "The Hobbit" to 350.00:
+
+UPDATE Books
+SET price = 350.00
+WHERE title = 'The Hobbit';
+📌 This updates only the record where the title is "The Hobbit".
+
+✅ 7. Delete a Record
+Now, let’s delete the book "Atomic Habits":
+
+DELETE FROM Books
+WHERE title = 'Atomic Habits';
+📌 This removes the record matching the given title.
+
+✅ 8. View Updated Table
+SELECT * FROM Books;
+After the above operations, you’ll see:
+
+| id | title      | author         | genre       | price  |
+| -- | ---------- | -------------- | ----------- | ------ |
+| 1  | Clean Code | Robert Martin  | Programming | 450.00 |
+| 2  | The Hobbit | J.R.R. Tolkien | Fantasy     | 350.00 |
+
+✅ 9. Filtering with WHERE
+To show only books with a price greater than 400:
+
+SELECT * FROM Books
+WHERE price > 400;
+
+✅ 10. Filtering with LIKE
+To find books where the title starts with "C":
+
+SELECT * FROM Books
+WHERE title LIKE 'C%';
+📌 % is a wildcard:
+'C%' → starts with C
+'%e' → ends with e
+'%Code%' → contains “Code”
+
+✅ 11. Filtering with BETWEEN
+To get books priced between 300 and 500:
+
+SELECT * FROM Books
+WHERE price BETWEEN 300 AND 500;
+
+✅ Combine Filters
+To find programming books priced below 500:
+
+SELECT * FROM Books
+WHERE genre = 'Programming' AND price < 500;
+
+✅ 12. Sorting Data with ORDER BY
+🔹 Sort books by price (lowest to highest):
+SELECT * FROM Books
+ORDER BY price ASC;
+🔹 Sort books by title in descending (Z–A) order:
+SELECT * FROM Books
+ORDER BY title DESC;
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
 
 📌 1. Create Table
 CREATE TABLE employees (
