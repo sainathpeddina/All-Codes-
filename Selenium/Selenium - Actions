@@ -1,0 +1,188 @@
+✅ Actions (Class)
+🔹 What it is:
+Actions is a class in Selenium (org.openqa.selenium.interactions.Actions) used to build a chain of complex user interactions like:
+Mouse hover
+Click and hold
+Drag and drop
+Double click
+Right click
+Keyboard actions
+
+🔹 Usage:
+You use it to build and perform a series of actions.
+
+✅ Example:
+Actions actions = new Actions(driver);
+actions.moveToElement(element).click().perform();
+
+✅ Action (Interface)
+🔹 What it is:
+Action is an interface (org.openqa.selenium.interactions.Action) that represents a single composite action that has been built using Actions.build().
+It is rarely used directly, but can store a ready-to-perform action sequence.
+
+🔹 Usage:
+You build an Action object using Actions.build(), then call .perform() on it later.
+
+✅ Example:
+Actions actions = new Actions(driver);
+Action action = actions.moveToElement(element).click().build();  // Build action but don't perform yet
+action.perform();  // Perform later
+
+✅ When to Use What?
+You want to build and immediately perform an action	✅ Actions with .perform()
+You want to build an action chain now but perform it later	✅ Build an Action from Actions.build()
+
+🔁 Summary
+Actions → builder class to define multiple steps.
+Action → an object that stores those steps after you call .build().
+
+🔄 Relationship:
+Actions is used to define and queue actions.
+Action is used to store and run the action (via build()).
+
+✅ Commonly Used Methods of Actions Class
+| Method                                    | Description                                                      |
+| ----------------------------------------- | ---------------------------------------------------------------- |
+| `click()`                                 | Clicks at the current mouse location or on an element.           |
+| `clickAndHold()`                          | Clicks (without releasing) on an element or at current position. |
+| `contextClick()`                          | Right-clicks on the element.                                     |
+| `doubleClick()`                           | Double-clicks the element or at the current position.            |
+| `dragAndDrop(source, target)`             | Drags source element to target element.                          |
+| `dragAndDropBy(source, xOffset, yOffset)` | Drags source element by an offset.                               |
+| `keyDown(Keys key)`                       | Presses a key without releasing it.                              |
+| `keyUp(Keys key)`                         | Releases a key.                                                  |
+| `moveToElement(element)`                  | Moves mouse to the middle of the given element.                  |
+| `moveByOffset(x, y)`                      | Moves mouse by the given offset from current location.           |
+| `release()`                               | Releases the mouse button.                                       |
+| `sendKeys(keys)`                          | Sends keys to the active element.                                |
+| `build()`                                 | Compiles all the steps into a single `Action`.                   |
+| `perform()`                               | Executes the actions queued up.                                  |
+
+🔸 1. Mouse Hover (move to element)
+Actions actions = new Actions(driver);
+WebElement menu = driver.findElement(By.id("menu"));
+actions.moveToElement(menu).perform();
+
+🔸 2. Right Click (Context Click)
+WebElement button = driver.findElement(By.id("rightClickBtn"));
+Actions actions = new Actions(driver);
+actions.contextClick(button).perform();
+
+🔸 3. Double Click
+WebElement button = driver.findElement(By.id("doubleClickBtn"));
+new Actions(driver).doubleClick(button).perform();
+
+🔸 4. Drag and Drop
+WebElement source = driver.findElement(By.id("dragSource"));
+WebElement target = driver.findElement(By.id("dropTarget"));
+Actions actions = new Actions(driver);
+actions.dragAndDrop(source, target).perform();
+
+🔸 5. Click and Hold → Move → Release
+Actions actions = new Actions(driver);
+WebElement source = driver.findElement(By.id("dragSource"));
+WebElement target = driver.findElement(By.id("dropTarget"));
+
+actions.clickAndHold(source)
+       .moveToElement(target)
+       .release()
+       .perform();
+
+🔸 6. Keyboard Events
+WebElement input = driver.findElement(By.id("username"));
+Actions actions = new Actions(driver);
+actions.click(input)
+       .keyDown(Keys.SHIFT)
+       .sendKeys("testuser")
+       .keyUp(Keys.SHIFT)
+       .perform();  // Enters "TESTUSER"
+
+🔸 7. Using build() and Action
+Actions actions = new Actions(driver);
+WebElement element = driver.findElement(By.id("hover"));
+Action action = actions.moveToElement(element).build(); // Compile steps
+action.perform(); // Execute later
+
+✅ Methods Used
+sendKeys(CharSequence...): Sends key strokes to the active element.
+keyDown(Keys modifier): Presses and holds a modifier key (e.g., SHIFT, CTRL).
+keyUp(Keys modifier): Releases the held key.
+
+✅ Examples
+🔹 Example 1: Type Capital Letters (Hold SHIFT)
+WebElement input = driver.findElement(By.id("textField"));
+Actions actions = new Actions(driver);
+
+actions.click(input)
+       .keyDown(Keys.SHIFT)
+       .sendKeys("selenium")  // Enters "SELENIUM"
+       .keyUp(Keys.SHIFT)
+       .perform();
+
+🔹 Example 2: Ctrl + A (Select All) and Ctrl + C (Copy)
+WebElement input = driver.findElement(By.id("textField"));
+input.sendKeys("Some text to copy");
+
+Actions actions = new Actions(driver);
+actions.click(input)
+       .keyDown(Keys.CONTROL)
+       .sendKeys("a")    // Select all
+       .sendKeys("c")    // Copy
+       .keyUp(Keys.CONTROL)
+       .perform();
+
+>>>>>>>>>>>>>>>>>>> OR >>>>>>>>>>>>>>>>>>>
+
+String selectAll = Keys.chord(Keys.CONTROL, "a");
+String copy = Keys.chord(Keys.CONTROL, "c");
+input.sendKeys(selectAll);
+input.sendKeys(copy);
+
+🔹 Example 3: Tab to Next Field and Enter
+Actions actions = new Actions(driver);
+actions.sendKeys(Keys.TAB)   // Move to next field
+       .sendKeys("nextValue")
+       .sendKeys(Keys.ENTER) // Submit
+       .perform();
+
+🔹 Example 4: Using Multiple Keys at Once
+Actions actions = new Actions(driver);
+actions.keyDown(Keys.CONTROL)
+       .keyDown(Keys.SHIFT)
+       .sendKeys("n")        // Ctrl + Shift + N (often used for new window)
+       .keyUp(Keys.SHIFT)
+       .keyUp(Keys.CONTROL)
+       .perform();
+
+
+✅ What is Keys.chord()?
+🔹 Purpose:
+Simulates pressing multiple keys together (a keyboard shortcut).
+Returns a String representing the combined key press.
+
+✅ Syntax:
+String selectAll = Keys.chord(Keys.CONTROL, "a");
+element.sendKeys(selectAll);
+
+🔸 1. CTRL + C (Copy) and CTRL + V (Paste)
+// Select all and copy
+String selectAll = Keys.chord(Keys.CONTROL, "a");
+String copy = Keys.chord(Keys.CONTROL, "c");
+
+input.sendKeys(selectAll);
+input.sendKeys(copy);
+
+// Paste in another field
+WebElement anotherInput = driver.findElement(By.id("destination"));
+String paste = Keys.chord(Keys.CONTROL, "v");
+anotherInput.sendKeys(paste);
+
+🔸 3. CTRL + SHIFT + T (Reopen Closed Tab)
+String reopenTab = Keys.chord(Keys.CONTROL, Keys.SHIFT, "t");
+driver.findElement(By.tagName("body")).sendKeys(reopenTab);
+
+
+🧠 Notes:
+Keys.chord() is useful only for keyboard shortcuts, not for sequences.
+It sends all keys at once, unlike Actions which can simulate keyDown/Up.
+Always chain .keyDown() with .keyUp() to release the key properly.
