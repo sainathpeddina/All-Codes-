@@ -1,0 +1,276 @@
+✅ 1. Class and Object
+🔹 Concept:
+A class is a blueprint for creating objects.
+An object is an instance of a class, which holds data and methods.
+
+🔹 In Selenium:
+You define classes to organize test code. Selenium WebDriver, for example, is a class.
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class BrowserTest {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver(); // 'driver' is an object
+        driver.get("https://www.google.com");
+        driver.quit();
+    }
+}
+
+🔹 Explanation:
+ChromeDriver is a class.
+driver is an object that can call methods like .get() and .quit().
+
+✅ 2. Encapsulation
+🔹 Concept:
+Hiding internal data using private fields and exposing it via public getters/setters.
+Keeps code modular and secure.
+
+🔹 In Selenium:
+Used in Page Object Model (POM) to encapsulate locators and actions on web elements.
+
+public class LoginPage {
+    private WebDriver driver;
+
+    // Constructor
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // Encapsulated methods
+    public void enterUsername(String username) {
+        driver.findElement(By.id("username")).sendKeys(username);
+    }
+
+    public void enterPassword(String password) {
+        driver.findElement(By.id("password")).sendKeys(password);
+    }
+
+    public void clickLogin() {
+        driver.findElement(By.id("loginBtn")).click();
+    }
+}
+🔹 Explanation:
+The locators and Selenium actions are encapsulated in the LoginPage class.
+The main test class doesn’t deal with internal details—only method calls.
+
+✅ 3. Inheritance
+🔹 Concept:
+One class inherits properties and methods from another.
+Promotes code reusability.
+
+🔹 In Selenium:
+Base test classes are often created with common setup/teardown methods that child classes inherit.
+
+public class BaseTest {
+    WebDriver driver;
+
+    public void setup() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    public void teardown() {
+        driver.quit();
+    }
+}
+
+public class LoginTest extends BaseTest {
+    public void testLogin() {
+        setup(); // inherited from BaseTest
+        driver.get("https://example.com");
+        // test steps here...
+        teardown(); // inherited
+    }
+}
+🔹 Explanation:
+LoginTest class inherits setup and teardown methods from BaseTest.
+
+✅ 4. Polymorphism
+🔹 Concept:
+Compile-time (Method Overloading): Same method name with different parameters.
+Runtime (Method Overriding): Subclass provides specific implementation of a superclass method.
+
+🔹 In Selenium:
+WebDriver is an interface. Different drivers (ChromeDriver, FirefoxDriver) provide runtime polymorphism.
+
+🔹 Example (Runtime Polymorphism):
+
+WebDriver driver;
+driver = new ChromeDriver();  // Can switch to FirefoxDriver without changing code
+driver.get("https://google.com");
+
+🔹 Example (Compile-time Polymorphism):
+
+public class Utility {
+    public void clickElement(WebElement element) {
+        element.click();
+    }
+
+    public void clickElement(By locator, WebDriver driver) {
+        driver.findElement(locator).click();
+    }
+}
+🔹 Explanation:
+You can use method overloading for different types of clicks.
+You can use WebDriver polymorphism to switch browsers easily.
+
+✅ 5. Abstraction
+🔹 Concept:
+Hiding implementation details and showing only essential information.
+Achieved via abstract classes or interfaces.
+
+🔹 In Selenium:
+Selenium WebDriver itself is an interface. The implementation (e.g., ChromeDriver) is hidden.
+
+WebDriver driver = new ChromeDriver();
+🔹 Explanation:
+You interact with the WebDriver interface.
+The actual implementation details (how ChromeDriver works) are abstracted away.
+
+🔁 Summary Table:
+| OOP Concept    | Selenium Example                          | Benefit                          |
+| -------------- | ----------------------------------------- | -------------------------------- |
+| Class & Object | `WebDriver driver = new ChromeDriver();`  | Reusability, structure           |
+| Encapsulation  | Page Object Model (POM)                   | Cleaner, modular code            |
+| Inheritance    | `LoginTest extends BaseTest`              | Code reuse, shared setup         |
+| Polymorphism   | `WebDriver driver = new FirefoxDriver();` | Flexible, scalable framework     |
+| Abstraction    | WebDriver interface                       | Hides complexity, simplifies use |
+
+✅ 1. Project Structure
+SeleniumOOPsDemo/
+│
+├── src/
+│   ├── base/
+│   │   └── BaseTest.java          // Inheritance
+│   ├── pages/
+│   │   └── LoginPage.java         // Encapsulation
+│   ├── utils/
+│   │   └── ElementUtils.java      // Polymorphism (method overloading)
+│   └── tests/
+│       └── LoginTest.java         // Class & Object usage
+│
+├── pom.xml                        // Maven dependencies
+
+✅ 2. Code Files
+🔹 pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.selenium.demo</groupId>
+    <artifactId>SeleniumOOPsDemo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!-- Selenium Java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.19.1</version>
+        </dependency>
+    </dependencies>
+</project>
+
+🔹 base/BaseTest.java – Inheritance
+
+package base;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class BaseTest {
+    protected WebDriver driver;
+
+    public void setup() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    public void teardown() {
+        driver.quit();
+    }
+}
+
+🔹 pages/LoginPage.java – Encapsulation
+
+package pages;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+    private WebDriver driver;
+
+    private By usernameField = By.id("username");
+    private By passwordField = By.id("password");
+    private By loginButton   = By.id("loginBtn");
+
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public void enterUsername(String username) {
+        driver.findElement(usernameField).sendKeys(username);
+    }
+
+    public void enterPassword(String password) {
+        driver.findElement(passwordField).sendKeys(password);
+    }
+
+    public void clickLogin() {
+        driver.findElement(loginButton).click();
+    }
+}
+
+🔹 utils/ElementUtils.java – Polymorphism (Overloading)
+
+package utils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class ElementUtils {
+    public void clickElement(WebElement element) {
+        element.click();
+    }
+
+    public void clickElement(By locator, WebDriver driver) {
+        driver.findElement(locator).click();
+    }
+}
+
+🔹 tests/LoginTest.java – Object, Abstraction, Inheritance
+
+package tests;
+import base.BaseTest;
+import pages.LoginPage;
+
+public class LoginTest extends BaseTest {
+
+    public void testLogin() {
+        setup(); // inherited
+
+        driver.get("https://example.com/login"); // abstracted by WebDriver interface
+
+        LoginPage loginPage = new LoginPage(driver); // object created from class
+        loginPage.enterUsername("admin");
+        loginPage.enterPassword("admin123");
+        loginPage.clickLogin();
+
+        teardown(); // inherited
+    }
+
+    public static void main(String[] args) {
+        new LoginTest().testLogin();
+    }
+}
+
+🧠 OOP Concepts Recap:
+| Concept       | Shown In                            |
+| ------------- | ----------------------------------- |
+| Class/Object  | `LoginTest`, `LoginPage`            |
+| Inheritance   | `LoginTest extends BaseTest`        |
+| Encapsulation | `LoginPage` methods & locators      |
+| Polymorphism  | `ElementUtils` (method overloading) |
+| Abstraction   | `WebDriver` interface               |
