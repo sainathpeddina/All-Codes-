@@ -1,0 +1,125 @@
+✅ 1. Checked Exceptions
+✅ 2. Unchecked Exceptions
+These determine how the Java compiler enforces exception handling.
+
+✅ 1. Checked Exceptions
+🔹 What Are They?
+Exceptions that must be either caught or declared in the method signature using throws.
+They are checked at compile-time.
+Represent recoverable conditions (e.g., file not found, invalid input/output).
+
+🔹 Example:
+public void readFile() throws IOException {
+    FileReader file = new FileReader("somefile.txt");
+}
+
+🔹 Common Checked Exceptions:
+| Exception               | Description                          |
+| ----------------------- | ------------------------------------ |
+| `IOException`           | Error during input/output operations |
+| `FileNotFoundException` | File not found                       |
+| `SQLException`          | SQL/database access error            |
+| `ParseException`        | Failed to parse a date/format        |
+| `InterruptedException`  | A thread was interrupted             |
+
+
+✅ 2. Unchecked Exceptions
+🔹 What Are They?
+Runtime exceptions that don't need to be declared or caught.
+Checked only at runtime, not enforced at compile-time.
+Represent programming errors (e.g., null pointer, array out of bounds).
+
+🔹 Example:
+public void divide(int a, int b) {
+    int result = a / b;  // Might throw ArithmeticException
+}
+
+🔹 Common Unchecked Exceptions:
+| Exception                        | Description                                       |
+| -------------------------------- | ------------------------------------------------- |
+| `ArithmeticException`            | Divide by zero                                    |
+| `NullPointerException`           | Accessing an object that is `null`                |
+| `ArrayIndexOutOfBoundsException` | Accessing invalid array index                     |
+| `IllegalArgumentException`       | Invalid argument passed to method                 |
+| `NumberFormatException`          | Invalid number format (`Integer.parseInt("abc")`) |
+
+✅ Diagram Summary
+             Exception
+                 |
+   ----------------------------------
+   |                                |
+Checked Exception         Unchecked Exception (RuntimeException)
+   |                                |
+IOException, SQLException      NullPointerException, ArithmeticException
+
+✅ Key Differences
+| Feature                     | Checked Exception                                    | Unchecked Exception                 |
+| --------------------------- | ---------------------------------------------------- | ----------------------------------- |
+| Compile-time check          | ✅ Yes                                                | ❌ No                                |
+| Needs `throws` or try-catch | ✅ Yes                                                | ❌ Optional                          |
+| Type                        | Extends `Exception` (but **not** `RuntimeException`) | Extends `RuntimeException`          |
+| Typical cause               | External conditions (I/O, DB, network)               | Programming bugs (nulls, bad logic) |
+
+
+✅ Custom Exceptions
+🔹 Custom Checked Exception:
+class MyCheckedException extends Exception {
+    public MyCheckedException(String message) {
+        super(message);
+    }
+}
+
+🔹 Custom Unchecked Exception:
+class MyUncheckedException extends RuntimeException {
+    public MyUncheckedException(String message) {
+        super(message);
+    }
+}
+
+✅ throw: Actual Exception Thrower
+🔹 Syntax:
+throw new ExceptionType("message");
+
+✅ Example:
+public void checkAge(int age) {
+    if (age < 18) {
+        throw new ArithmeticException("Not eligible to vote");
+    }
+}
+Immediately stops the program or goes to the nearest catch block.
+
+✅ throws: Declares a Possible Exception
+🔹 Syntax:
+public void methodName() throws ExceptionType1, ExceptionType2
+
+✅ Example:
+public void readFile() throws IOException {
+    FileReader fr = new FileReader("file.txt");
+}
+This tells the caller of the method: "You must handle or declare this exception".
+
+🔄 Example: Using Both Together
+public void riskyMethod() throws IOException {
+    throw new IOException("File not found");
+}
+
+throws says this method might throw an exception.
+throw actually throws it.
+
+✅ Analogy
+throws = "I might throw something at you!" (warning)
+throw = "I am throwing it now!" (action)
+
+🧠 Key Points:
+You must use throws to declare checked exceptions (like IOException, SQLException).
+You can use throw for both checked and unchecked exceptions.
+
+| Usage       | Location           | Purpose                                           |
+| ----------- | ------------------ | ------------------------------------------------- |
+| `throws`    | Method declaration | Declares that the method might throw an exception |
+| `try-catch` | Method body        | Handles exceptions when calling risky code        |
+
+| Keyword  | Used in                    | Purpose                                       |
+| -------- | -------------------------- | --------------------------------------------- |
+| `throw`  | Inside method or try block | To actually throw an exception                |
+| `throws` | In method signature        | To declare that a method may throw exceptions |
