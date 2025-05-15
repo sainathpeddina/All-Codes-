@@ -17,8 +17,8 @@ ALTER TABLE student MODIFY COLUMN name VARCHAR(150); -- MySQL
 ALTER TABLE student ALTER COLUMN name VARCHAR(150); -- SQL Server
 
 \-- Rename column
-ALTER TABLE student RENAME COLUMN name TO full\_name; -- MySQL
-EXEC sp\_rename 'student.name', 'full\_name', 'COLUMN'; -- SQL Server
+ALTER TABLE student RENAME COLUMN name TO full_name; -- MySQL
+EXEC sp_rename 'student.name', 'full_name', 'COLUMN'; -- SQL Server
 
 \-- Rename table
 ALTER TABLE student RENAME TO pupil;
@@ -60,31 +60,46 @@ DROP TABLE student;
 * Candidate Key: Minimal super key (no redundant attributes).
 * Primary Key: Unique + Not Null; the main identifier of table rows.
 * Alternate Key: Candidate key not chosen as the primary key.
-* Foreign Key: A field that refers to the primary key in another table.
+* Foreign Key: A field that refers to the primary key in another table. Only one per table.Must be: NOT NULL + UNIQUE
+* Composite Primary Key: Can use multiple columns (e.g., (id, name)).
+* One-to-One Mapping: Each row in table A maps to one row in table B.
+ALTER TABLE passport
+ADD CONSTRAINT fk_person FOREIGN KEY (person_id) REFERENCES person(id) UNIQUE;
+* One-to-Many Mapping: One row in table A maps to many rows in table B.
+ALTER TABLE orders
+ADD CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
+
+Super Keys: {A}, {AB}, {AC}, {BC}, {ABC}
+Only minimal ones are Candidate Keys:
+✅ {A}, {BC} - Candidate Key
+❌ {AB} → because {A} is already a Super Key (a proper subset)
+Candidate Keys = {stu_id}, {phone}
+Primary Key = {stu_id}
+➤ Alternate Key = {phone}
 
 5. Joins
 
 * INNER JOIN: fetch matching records
-  SELECT a.name, b.dept FROM employee a INNER JOIN department b ON a.dept\_id = b.dept\_id;
+  SELECT a.name, b.dept FROM employee a INNER JOIN department b ON a.dept_id = b.dept_id;
 
 * LEFT JOIN
-  SELECT a.name, b.dept FROM employee a LEFT JOIN department b ON a.dept\_id = b.dept\_id;
+  SELECT a.name, b.dept FROM employee a LEFT JOIN department b ON a.dept_id = b.dept_id;
 
 * RIGHT JOIN
-  SELECT a.name, b.dept FROM employee a RIGHT JOIN department b ON a.dept\_id = b.dept\_id;
+  SELECT a.name, b.dept FROM employee a RIGHT JOIN department b ON a.dept_id = b.dept_id;
 
 * FULL OUTER JOIN
-  SELECT a.name, b.dept FROM employee a FULL OUTER JOIN department b ON a.dept\_id = b.dept\_id;
+  SELECT a.name, b.dept FROM employee a FULL OUTER JOIN department b ON a.dept_id = b.dept_id;
 
 * CROSS JOIN
-  SELECT \* FROM employee CROSS JOIN department;
+  SELECT * FROM employee CROSS JOIN department;
 
 * SELF JOIN
-  SELECT e.name FROM employee e JOIN employee m ON e.manager\_id = m.id;
+  SELECT e.name FROM employee e JOIN employee m ON e.manager_id = m.id;
 
 6. Aggregate Functions
 
-SELECT MAX(salary), MIN(salary), AVG(salary), COUNT(\*), SUM(salary) FROM employee;
+SELECT MAX(salary), MIN(salary), AVG(salary), COUNT(*), SUM(salary) FROM employee;
 
 7. GROUP BY vs ORDER BY
 
@@ -98,9 +113,16 @@ ORDER BY: used to sort result
 
 9. Pattern Matching
 
-SELECT \* FROM employee WHERE name LIKE 'A%'; -- Starts with A
-SELECT \* FROM employee WHERE name LIKE '%A'; -- Ends with A
-SELECT \* FROM employee WHERE name LIKE 'A%Z'; -- Starts A, ends Z
+SELECT name FROM employee WHERE name LIKE 'A%';  -- Starts with A
+SELECT name FROM employee WHERE name LIKE '%A';  -- Ends with A
+SELECT name FROM employee WHERE name LIKE '_a%'; -- Second letter A
+SELECT name FROM employee WHERE name LIKE '_____'; -- Exactly 5 characters (5 underscores)
+
+| Pattern                       | Query Example                  |
+| ----------------------------- | ------------------------------ |
+| Starts with S, ends with R    | `LIKE 'S%R'`                   |
+| Contains 'm' anywhere         | `LIKE '%m%'`                   |
+| Second last letter is 'a'     | `LIKE '%a_'`                   |
 
 10. Subqueries
 
@@ -108,18 +130,18 @@ SELECT \* FROM employee WHERE name LIKE 'A%Z'; -- Starts A, ends Z
 SELECT name FROM employee WHERE id = (SELECT MAX(id) FROM employee);
 
 \-- Correlated subquery
-SELECT \* FROM employee e WHERE EXISTS (SELECT 1 FROM dept d WHERE e.id = d.emp\_id);
+SELECT * FROM employee e WHERE EXISTS (SELECT 1 FROM dept d WHERE e.id = d.emp_id);
 
 \-- IN vs EXISTS
-SELECT \* FROM employee WHERE id IN (SELECT emp\_id FROM dept);
-SELECT \* FROM employee WHERE EXISTS (SELECT 1 FROM dept WHERE dept.emp\_id = employee.id);
+SELECT * FROM employee WHERE id IN (SELECT emp_id FROM dept);
+SELECT * FROM employee WHERE EXISTS (SELECT 1 FROM dept WHERE dept.emp_id = employee.id);
 
 11. Set Operators
 
-SELECT \* FROM A UNION SELECT \* FROM B; -- Removes duplicates
-SELECT \* FROM A UNION ALL SELECT \* FROM B; -- Keeps duplicates
-SELECT \* FROM A INTERSECT SELECT \* FROM B; -- Common rows
-SELECT \* FROM A MINUS SELECT \* FROM B; -- In A, not in B (not supported in MySQL)
+SELECT * FROM A UNION SELECT * FROM B; -- Removes duplicates
+SELECT * FROM A UNION ALL SELECT * FROM B; -- Keeps duplicates
+SELECT * FROM A INTERSECT SELECT * FROM B; -- Common rows
+SELECT * FROM A MINUS SELECT * FROM B; -- In A, not in B (not supported in MySQL)
 
 12. Duplicate Handling
 
@@ -137,14 +159,14 @@ WHERE e1.id > e2.id AND e1.name = e2.name;
 SELECT MAX(salary) FROM employee WHERE salary < (SELECT MAX(salary) FROM employee);
 
 \-- 10th highest salary (MySQL 8+)
-SELECT salary FROM (SELECT salary, DENSE\_RANK() OVER (ORDER BY salary DESC) as rnk FROM employee) AS ranked WHERE rnk = 10;
+SELECT salary FROM (SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) as rnk FROM employee) AS ranked WHERE rnk = 10;
 
 14. Sample Join 3 Tables
 
 SELECT a.name, b.subject, c.marks
 FROM student a
-LEFT JOIN enrollment b ON a.id = b.student\_id
-RIGHT JOIN marks c ON c.enroll\_id = b.id;
+LEFT JOIN enrollment b ON a.id = b.student_id
+RIGHT JOIN marks c ON c.enroll_id = b.id;
 
 15. Miscellaneous
 
@@ -152,6 +174,15 @@ RIGHT JOIN marks c ON c.enroll\_id = b.id;
 SELECT deptid, COUNT(*) FROM student GROUP BY deptid ORDER BY COUNT(*) DESC LIMIT 1;
 
 \-- Get students joined in last 6 months
-SELECT \* FROM student WHERE join\_date >= CURDATE() - INTERVAL 6 MONTH;
+SELECT * FROM student WHERE join_date >= CURDATE() - INTERVAL 6 MONTH;
+
+\-- Delete First 1000 Records Based on ID
+DELETE FROM temporary
+WHERE id IN (
+  SELECT TOP 1000 id FROM temporary ORDER BY id
+);
+-- MySQL:
+-- DELETE FROM temporary ORDER BY id LIMIT 1000;
+
 
 If you want this exported as a PDF, Markdown file, or printable cheat sheet — let me know!
