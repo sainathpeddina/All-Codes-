@@ -1,0 +1,41 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ChromeDownloadPathExample {
+    public static void main(String[] args) {
+
+        // 1. Define the download path
+        String downloadFilepath = "/your/local/path/to/download"; // e.g., "C:/Downloads"
+
+        // 2. Set Chrome preferences
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("download.default_directory", downloadFilepath);
+        prefs.put("download.prompt_for_download", false); // disable download pop-up
+        prefs.put("profile.default_content_settings.popups", 0);
+        prefs.put("safebrowsing.enabled", true); // allow downloads from unsecure sources
+
+        // 3. Apply preferences to ChromeOptions
+        ChromeOptions options = new ChromeOptions();
+        options.setExperimentalOption("prefs", prefs);
+
+        // 4. Launch Chrome with the custom options
+        WebDriver driver = new ChromeDriver(options);
+        driver.get("https://example.com/download-page"); // replace with actual file link
+
+        
+        // Click the download link
+        driver.findElement(By.linkText("Download Sample txt File")).click();
+        // Optional: wait for file to finish downloading
+        Thread.sleep(5000);
+
+        // Upload logic 
+        WebElement upload = driver.findElement(By.id("upload"));
+        upload.sendKeys("C:\\path\\to\\file.txt"); // Directly sets file
+
+        driver.quit();
+    }
+}
