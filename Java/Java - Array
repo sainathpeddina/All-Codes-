@@ -1,0 +1,63 @@
+In Java, arrays are objects that store multiple variables of the same type. Arrays are used to store a fixed-size collection of elements.
+
+✅ Declaration of Array
+int[] arr;        // preferred
+int arr[];        // also valid
+
+✅ Initialization of Array
+arr = new int[5];   // allocates memory for 5 integers
+Or in one line:
+int[] arr = {10, 20, 30, 40, 50};
+
+✅ Accessing Array Elements
+System.out.println(arr[0]);  // prints 10
+arr[2] = 100;                // changes 30 to 100
+
+🔹 Common Array Operations in Java
+| Operation               | Description                             | Example                         |
+| ----------------------- | --------------------------------------- | ------------------------------- |
+| `length`                | Get size of array                       | `arr.length`                    |
+| `for` loop              | Traverse the array                      | `for(int i=0;i<arr.length;i++)` |
+| `for-each` loop         | Simplified loop                         | `for(int num : arr)`            |
+
+✅ Full Example Demonstrating Array & Methods
+import java.util.Arrays;
+public class ArrayExample {
+    public static void main(String[] args) {
+        int[] arr = {5, 2, 9, 1, 7};
+
+        // Length of array
+        System.out.println("Length: " + arr.length);
+
+        // Print original array
+        System.out.println("Original: " + Arrays.toString(arr));
+
+        // Sort array
+        Arrays.sort(arr);
+        System.out.println("Sorted: " + Arrays.toString(arr));
+
+        // Fill array
+        Arrays.fill(arr, 3);
+        System.out.println("Filled with 3s: " + Arrays.toString(arr));
+
+        // Copy array
+        int[] newArr = Arrays.copyOf(arr, 7); // resize to 7
+        System.out.println("Copied array: " + Arrays.toString(newArr));
+
+        // Compare arrays
+        System.out.println("Arrays equal? " + Arrays.equals(arr, newArr));
+
+        // Assign values back for binary search demo
+        arr = new int[]{1, 3, 5, 7, 9};
+        Arrays.sort(arr); // must be sorted
+        int index = Arrays.binarySearch(arr, 5);
+        System.out.println("Index of 5: " + index);
+    }
+}
+
+🧠 Notes:
+Arrays are zero-based (first index is 0).
+Once declared with a size, arrays cannot grow/shrink. Use ArrayList if you need resizable arrays.
+Arrays belong to the java.util package (specifically, utility methods in Arrays class).
+
+
