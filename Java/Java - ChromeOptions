@@ -1,0 +1,112 @@
+What is ChromeOptions? 
+ChromeOptions is a class in Selenium used to customize and configure the behavior of the Chrome browser,
+including command-line arguments, extensions, preferences, experimental options, and more.
+
+A – addArguments()
+Add command-line arguments to Chrome (e.g., headless, incognito).
+options.addArguments("--incognito", "--start-maximized");
+
+B – addExtensions()
+Load Chrome extensions (.crx files).
+File extension = new File("path/to/extension.crx");
+options.addExtensions(extension);
+
+C – setCapability()
+Set capabilities like acceptInsecureCerts.
+options.setCapability("acceptInsecureCerts", true);
+
+D – setExperimentalOption()
+Used to set low-level or experimental options.
+options.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
+
+E – excludeSwitches
+Remove default switches from Chrome's launch.
+options.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
+
+F – full-screen (via addArguments)
+options.addArguments("--start-fullscreen");
+
+G – goog:chromeOptions
+This is how ChromeOptions is represented internally in W3C capability format.
+options.setCapability("goog:chromeOptions", options);
+
+H – headless mode
+Runs Chrome without GUI.
+options.addArguments("--headless=new"); // or "--headless"
+
+I – ignore-certificate-errors
+options.addArguments("--ignore-certificate-errors");
+
+K – kiosk mode
+Runs Chrome in kiosk (full screen) mode.
+options.addArguments("--kiosk");
+
+L – load-extension
+Load unpacked extensions.
+options.addArguments("--load-extension=/path/to/extension/");
+
+M – mobileEmulation
+Emulate mobile devices.
+Map<String, String> mobileEmulation = new HashMap<>();
+mobileEmulation.put("deviceName", "Nexus 5");
+options.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+N – no-sandbox
+Disable sandboxing (used in CI pipelines).
+options.addArguments("--no-sandbox");
+
+O – output console logs (enable-logging)
+options.addArguments("--enable-logging");
+
+P – prefs
+Set user profile preferences.
+Map<String, Object> prefs = new HashMap<>();
+prefs.put("profile.default_content_setting_values.notifications", 2); // disable notifications
+options.setExperimentalOption("prefs", prefs);
+
+R – remote-debugging-port
+options.addArguments("--remote-debugging-port=9222");
+
+S – start-maximized
+options.addArguments("--start-maximized");
+
+T – test-type
+options.addArguments("--test-type");
+
+U – user-data-dir
+Use a specific Chrome user profile.
+options.addArguments("user-data-dir=/path/to/profile");
+
+V – version printing (for debugging)
+options.addArguments("--version");
+
+W – window-size
+Set custom browser dimensions.
+options.addArguments("--window-size=1200,800");
+
+
+Complete Example: Using ChromeOptions in Java
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.util.*;
+
+public class ChromeOptionsDemo {
+    public static void main(String[] args) {
+        ChromeOptions options = new ChromeOptions();
+
+        options.addArguments("--headless=new", "--disable-notifications", "--start-maximized");
+        options.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
+        options.setExperimentalOption("useAutomationExtension", false);
+
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("profile.default_content_setting_values.notifications", 2);
+        options.setExperimentalOption("prefs", prefs);
+
+        WebDriver driver = new ChromeDriver(options);
+        driver.get("https://example.com");
+        System.out.println("Title: " + driver.getTitle());
+        driver.quit();
+    }
+}
