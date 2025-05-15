@@ -1,0 +1,32 @@
+| Feature                       | `driver.get()`           | `driver.navigate().to()`                                    |
+| ----------------------------- | ------------------------ | ----------------------------------------------------------- |
+| Basic Page Load               | ✅ Yes                    | ✅ Yes                                                       |
+| Part of                       | `WebDriver`              | `Navigation` interface (`driver.navigate()`)                |
+| Supports back/forward/refresh | ❌ No                     | ✅ Yes                                                       |
+| Common Usage                  | Simple navigation        | More dynamic navigation (e.g., simulating browser behavior) |
+| Wait Behavior                 | Waits for full page load | Same behavior                                               |
+
+| Task                                          | Recommended Method         |
+| --------------------------------------------- | -------------------------- |
+| Just load a URL                               | ✅ `driver.get()`           |
+| Load URL and possibly go back/forward/refresh | ✅ `driver.navigate().to()` |
+
+| Feature         | `NoSuchElementException`                | `ElementNotVisibleException` / `ElementNotInteractableException` |
+| --------------- | --------------------------------------- | ---------------------------------------------------------------- |
+| Element in DOM? | ❌ Not present                           | ✅ Present but not visible                                        |
+| When it occurs  | During `findElement()`                  | During actions like `click()` or `sendKeys()`                    |
+| Common fix      | Fix locator, wait for element to appear | Wait for visibility or scroll into view                          |
+
+| Feature                     | `<frame>`                                           | `<iframe>`                              
+| **Definition**              | Defines a frame inside a `<frameset>`               | Embeds another HTML page within the current page  
+| **Parent tag**              | Must be inside a `<frameset>`                       | Can be used anywhere in `<body>`        
+| **Use Case**                | Used to split browser window into multiple section  | Used for embedding videos, ads, maps, etc.      
+| **Example Tag**             | `<frame src="page.html">`                           | `<iframe src="page.html"></iframe>`            
+
+| Feature                          | `Actions`            | `Keys.chord()`     |
+| -------------------------------- | -------------------- | ------------------ |
+| Fine control over press/release  | ✅ Yes                | ❌ No               |
+| Sends keys simultaneously        | ❌ No                 | ✅ Yes              |
+| Used with `.sendKeys()` directly | ❌ Less common        | ✅ Preferred        |
+| Ideal for                        | Custom key sequences | Keyboard shortcuts |
+
