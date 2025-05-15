@@ -1,0 +1,1115 @@
+✅ 1. Swap case in words
+Input: my name is ram
+Output: mY nAme iS rAm
+
+public class SwapWordCase {
+    public static void main(String[] args) {
+        String input = "my name is ram";
+        String[] words = input.split(" ");
+        StringBuilder result = new StringBuilder();
+
+       for (String word : words) {
+            if (word.length() >= 2) {
+                // First letter to lowercase, second letter to uppercase
+                result.append(word.substring(0,1)).append(word.substring(1,2).toUpperCase()).append(word.substring(2));
+            } else {
+                // For single-letter words, just lowercase it
+                result.append(Character.toLowerCase(word.charAt(0)));
+            }
+            result.append(" ");
+        }
+        System.out.println("Output: " + result.toString().trim());
+    }
+}
+
+✅ 2. Remove duplicate numbers in Array
+Input: (1, 5, 3, 3, 2, 7, 2, 5)
+Output: 1, 5, 3, 2, 7
+
+import java.util.*;
+public class RemoveDuplicates {
+    public static void main(String[] args) {
+        int[] arr = {1, 5, 3, 3, 2, 7, 2, 5};
+        Set<Integer> unique = new LinkedHashSet<>();
+        for (int num : arr) { unique.add(num); }
+        System.out.println("Output: " + unique);
+    }
+}
+
+✅ 3. Count frequency of numbers in array
+Input: (1, 5, 3, 3, 2, 7, 2, 5)
+Output: 1=1, 5=2, 3=2, 2=2, 7=1
+
+import java.util.*;
+public class FrequencyArray {
+    public static void main(String[] args) {
+        int[] arr = {2, 3, 2, 4, 3, 5, 3};
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int n : arr) {
+            freq.put(n, freq.getOrDefault(n, 0) + 1);
+        }
+        System.out.println("Frequencies: " + freq);
+    }
+}
+
+✅ 4. Find palindrome substrings
+Input: ghrrtmhistrabatrhcch
+Output: aba, hcch
+
+public class PalindromeSubstrings {
+    public static void main(String[] args) {
+        String str = "ghrrtmhistrabatrhcch";
+        boolean found = false;
+
+        for (int i = 0; i < str.length(); i++) {
+            for (int j = i + 2; j <= str.length(); j++) {
+                String sub = str.substring(i, j);
+                if (isPalindrome(sub)) {
+                    System.out.println(sub);
+                    found = true;
+                }
+            }
+        }
+        if (!found) { 
+            System.out.println("No palindrome substrings found."); }
+    }
+
+    static boolean isPalindrome(String s) {
+        return new StringBuilder(s).reverse().toString().equals(s);
+          // int l = 0, r = s.length() - 1;
+          //  while (l < r) {
+         //   if (s.charAt(l++) != s.charAt(r--)) return false; }
+         // return true;
+    }
+}
+
+✅ 5. Find smallest missing integer > 0
+Input: {1, 3, 4, 1, 6, 2}
+Output: 5
+
+import java.util.*;
+public class SmallestMissingPositive {
+    public static void main(String[] args) {
+        int[] arr = {1, 3, 4, 1, 6, 2};
+        Set<Integer> set = new HashSet<>();
+
+        for (int num : arr) {
+            if (num > 0) set.add(num);
+        }
+
+        int i = 1;
+        while (set.contains(i)) i++;
+        System.out.println("Smallest missing integer: " + i);
+    }
+}
+
+✅ 6. Input: "abc", Output: "aabbcc"
+public class DoubleCharacters {
+    public static void main(String[] args) {
+        String input = "abc";
+        StringBuilder sb = new StringBuilder();
+        for (char ch : input.toCharArray()) {
+            sb.append(ch).append(ch);
+        }
+
+        System.out.println("Output: " + sb);
+    }
+}
+
+✅ 7. Find position of a number at runtime
+Input: e.g., array = {4, 7, 1, 9}, input = 1
+Output: Position: 2 (or relevant position)
+
+import java.util.*;
+public class FindPosition {
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 30, 40, 50};
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number to find: ");
+        int target = sc.nextInt();
+
+        boolean found = false;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == target) {
+                System.out.println("Found at position (index): " + i);
+                found = true;
+                break;
+            }
+        }
+        if (!found) System.out.println("Number not found.");
+    }
+}
+
+✅ 8. Capitalize each word in a sentence
+Input: i code in java
+Output: I Code In Java
+
+public class CapitalizeWords {
+    public static void main(String[] args) {
+        String input = "i code in java";
+        String[] words = input.split(" ");
+        StringBuilder sb = new StringBuilder();
+
+        for (String word : words) {
+            sb.append(Character.toUpperCase(word.charAt(0)))
+              .append(word.substring(1))
+              .append(" ");
+        }
+
+        System.out.println("Output: " + sb.toString().trim());
+    }
+}
+
+✅ 9. Reverse a string
+Input: hello
+Output: olleh
+
+public class ReverseString {
+    public static void main(String[] args) {
+        String input = "hello";
+        String reversed = new StringBuilder(input).reverse().toString();
+        System.out.println("Reversed: " + reversed);
+    }
+}
+
+✅ 10. Check balanced parentheses
+Input: (a + b))
+Output: Not Balanced
+Input: (a + b) * (c + d)
+Output: Balanced
+
+import java.util.*;
+public class BalancedParentheses {
+    public static void main(String[] args) {
+        String expr = "{[()]}";
+        Stack<Character> stack = new Stack<>();
+
+        for (char ch : expr.toCharArray()) {
+            if ("({[".indexOf(ch) >= 0) stack.push(ch);
+            else if (")}]".indexOf(ch) >= 0) {
+                if (stack.isEmpty()) {
+                    System.out.println("Not balanced");
+                    return;
+                }
+                char top = stack.pop();
+                if (!((ch == ')' && top == '(') ||
+                      (ch == ']' && top == '[') ||
+                      (ch == '}' && top == '{'))) {
+                    System.out.println("Not balanced");
+                    return;
+                }
+            }
+        }
+
+        System.out.println(stack.isEmpty() ? "Balanced" : "Not balanced");
+    }
+}
+
+✅ 11. Print most repeated character
+Input: aabbbccccdd
+Output: c (4 times)
+
+import java.util.*;
+public class MostRepeatedChar {
+    public static void main(String[] args) {
+        String str = "teststring";
+        Map<Character, Integer> map = new HashMap<>();
+
+        for (char ch : str.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+
+        char maxChar = ' ';
+        int maxCount = 0;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxChar = entry.getKey();
+                maxCount = entry.getValue();
+            }
+        }
+
+        System.out.println("Max repeated character: " + maxChar + " (" + maxCount + " times)");
+    }
+}
+
+✅ 12. Reverse a string without reverse()
+Input: world
+Output: dlrow
+
+public class ManualReverse {
+    public static void main(String[] args) {
+        String input = "java";
+        String reversed = "";
+
+        for (int i = input.length() - 1; i >= 0; i--) {
+            reversed += input.charAt(i);
+        }
+
+        System.out.println("Reversed: " + reversed);
+    }
+}
+
+✅ 13. Swap two numbers without temp variable
+Input: a = 5, b = 7
+Output: a = 7, b = 5
+
+public class SwapNumbers {
+    public static void main(String[] args) {
+        int a = 10, b = 20;
+        System.out.println("Before swap: a=" + a + " b=" + b);
+
+        a = a + b;
+        b = a - b;
+        a = a - b;
+
+        System.out.println("After swap: a=" + a + " b=" + b);
+    }
+}
+
+✅ 1. Reverse words (e.g., "This is Optum India" → "India Optum is This")
+public class ReverseWords {
+    public static void main(String[] args) {
+        String input = "This is Optum India";
+        String[] words = input.split(" ");
+        StringBuilder reversed = new StringBuilder();
+
+        for (int i = words.length - 1; i >= 0; i--) {
+            reversed.append(words[i]).append(" ");
+        }
+
+        System.out.println("Output: " + reversed.toString().trim());
+    }
+}
+
+✅ 2. Reverse entire string character-by-character (e.g., "This is Optum India" → "a idnI mutpO si sihT")
+public class ReverseCharacters {
+    public static void main(String[] args) {
+        String input = "This is Optum India";
+        String reversed = "";
+
+        for (int i = input.length() - 1; i >= 0; i--) {
+            reversed += input.charAt(i);
+        }
+
+        System.out.println("Output: " + reversed);
+    }
+}
+
+✅ 3. Name reorder (e.g., "Mohandas Karamchand Gandhi" → "Gandhi Mohandas Karamchand")
+public class ReorderName {
+    public static void main(String[] args) {
+        String name = "Mohandas Karamchand Gandhi";
+        String[] parts = name.split(" ");
+
+        if (parts.length == 3) {
+            System.out.println(parts[2] + " " + parts[0] + " " + parts[1]);
+        } else {
+            System.out.println("Unexpected name format.");
+        }
+    }
+}
+
+✅ 4. Reverse string manually (no inbuilt methods)
+Input: "Hello"
+Output: "olleH"
+public class ManualReverse {
+    public static void main(String[] args) {
+        String str = "Hello World";
+        char[] chars = str.toCharArray();
+        String reversed = "";
+
+        for (int i = chars.length - 1; i >= 0; i--) {
+            reversed += chars[i];
+        }
+        System.out.println("Reversed: " + reversed);
+    }
+}
+
+✅ 5. First & last position of an element in array (with input & error handling)
+Input: array = [2, 4, 6, 4, 8, 4], input = 4
+Output: First position: 1, Last position: 5
+Input not found:
+Output: "Element not found in the array"
+
+import java.util.Scanner;
+public class FirstLastPosition {
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 30, 10, 40, 30, 10};
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter element to search: ");
+        int target = sc.nextInt();
+
+        int first = -1, last = -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == target) {
+                if (first == -1) first = i;
+                last = i;
+            }
+        }
+
+        if (first == -1) {
+            System.out.println("Element not found.");
+        } else {
+            System.out.println("First Position: " + first + ", Last Position: " + last);
+        }
+    }
+}
+
+✅ 6. Remove duplicates from array (without using any Collection classes)
+Input: [3, 3, 5, 1, 5, 7]
+Output: 3, 5, 1, 7
+
+public class RemoveDuplicatesNoCollections {
+    public static void main(String[] args) {
+        int[] arr = {1, 4, 2, 1, 3, 2, 4};
+        int[] temp = new int[arr.length];
+        int k = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            boolean exists = false;
+            for (int j = 0; j < k; j++) {
+                if (arr[i] == temp[j]) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                temp[k++] = arr[i];
+            }
+        }
+
+        System.out.print("After removing duplicates: ");
+        for (int i = 0; i < k; i++) {
+            System.out.print(temp[i] + " ");
+        }
+    }
+}
+
+✅ 1. Pattern with increasing $ symbols
+Input: "tomorrow" → Output: "t$m$$rr$$$w"
+
+public class TomorrowPattern {
+    public static void main(String[] args) {
+        String input = "tomorrow";
+        StringBuilder result = new StringBuilder();
+        int dollarCount = 1;
+
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if ("aeiou".indexOf(ch) == -1) {
+                result.append(ch);
+            } else {
+                result.append("$".repeat(dollarCount++));
+            }
+        }
+        System.out.println("Output: " + result);
+    }
+}
+
+✅ 2. Print Two Maximum Values from an Array
+Input: (106, 14, 46, 47, 94, 94, 52, 86, 36, 99, 101)
+Output: 101
+
+public class SecondLargest {
+    public static void main(String[] args) {
+        int[] arr = {106, 14, 46, 47, 94, 94, 52, 86, 36, 99, 101};
+        int first = Integer.MIN_VALUE;
+        int second = Integer.MIN_VALUE;
+
+        for (int num : arr) {
+            if (num > first) {
+                second = first;
+                first = num;
+            } else if (num > second && num != first) {
+                second = num;
+            }
+        }
+        System.out.println("Second Largest: " + second);
+    }
+}
+
+✅ 3. Remove duplicate words in string
+Input: "hello world hello hello world"
+Output: hello world
+
+import java.util.LinkedHashSet;
+public class RemoveDuplicateWords {
+    public static void main(String[] args) {
+        String input = "hello world hello hello world";
+        String[] words = input.split(" ");
+        LinkedHashSet<String> uniqueWords = new LinkedHashSet<>();
+
+        for (String word : words) {
+        uniqueWords.add(word); }
+        // System.out.print(uniqueWords + " ");
+        System.out.println("Output: " + String.join(" ", uniqueWords));
+    }
+}
+
+✅ 4. Frequency of each word
+Input: "i love programming love"
+Output: i=1, love=2, programming=1
+
+import java.util.*;
+public class WordFrequency {
+    public static void main(String[] args) {
+        String input = "i love programming love";
+        String[] words = input.split(" ");
+        Map<String, Integer> map = new LinkedHashMap<>();
+
+        for (String word : words) {
+            map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+        }
+    }
+}
+
+✅ 5. Frequency of each character
+Input: "apple"
+Output: a=1, p=2, l=1, e=1
+
+import java.util.*;
+public class CharFrequency {
+    public static void main(String[] args) {
+        String input = "hello world";
+        Map<Character, Integer> map = new LinkedHashMap<>();
+
+        for (char ch : input.toCharArray()) {
+            if (ch != ' ')
+                map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+        }
+    }
+}
+
+✅ 6. Find duplicate words in a string
+Input: "i love programming love"
+Output: love
+
+import java.util.*;
+public class DuplicateWords {
+    public static void main(String[] args) {
+        String input = "i love programming love";
+        String[] words = input.split(" ");
+        Set<String> seen = new HashSet<>();
+        Set<String> duplicates = new LinkedHashSet<>();
+
+        for (String word : words) {
+            if (!seen.add(word)) {
+                duplicates.add(word);
+            }
+        }
+        System.out.println("Duplicate words: " + duplicates);
+    }
+}
+
+✅ 8. Remove duplicate characters from a string
+Input: "programming"
+Output: "progamin"
+
+public class RemoveDuplicateChars {
+    public static void main(String[] args) {
+        String input = "programming";
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (result.indexOf(String.valueOf(ch)) == -1) {
+                result.append(ch);
+            }
+        }
+        System.out.println("After removing duplicates: " + result);
+    }
+}
+
+public class RemoveDuplicateChars {
+    public static void main(String[] args) {
+        String input = "sharda";
+        StringBuilder result = new StringBuilder();
+        Set<Character> seen = new HashSet<>();
+
+        for (char c : input.toCharArray()) {
+            if (!seen.contains(c)) {
+                seen.add(c);
+                result.append(c);
+            }
+        }
+        System.out.println("Output: " + result);
+    }
+}
+
+public class RemoveDuplicateChars {
+    public static void main(String[] args) {
+        String input = "sharda";
+        String result = "";
+
+        for (int i = 0; i < input.length(); i++) {
+            if (result.indexOf(input.charAt(i)) == -1) {
+                result += input.charAt(i);
+            }
+        }
+
+        System.out.println("Output: " + result);
+    }
+}
+
+✅ 1. Sum of All Even and Odd Numbers in a List
+Input: [1, 2, 3, 4, 5]
+Output: Sum of even = 6, Sum of odd = 9
+
+import java.util.*;
+public class SumOddEven {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6);
+        int sumEven = 0, sumOdd = 0;
+
+        for (int n : list) {
+            if (n % 2 == 0) sumEven += n;
+            else sumOdd += n;
+        }
+        System.out.println("Sum of Even: " + sumEven);
+        System.out.println("Sum of Odd: " + sumOdd);
+    }
+}
+
+✅ 2. Count number of words in a string
+Input: "I love Java programming"
+Output: 4
+
+public class WordCount {
+    public static void main(String[] args) {
+        String input = "I am learning Java programming";
+        String[] words = input.trim().split("\\s+");
+        System.out.println("Word Count: " + words.length);
+    }
+}
+
+✅ 3. Find Largest Number in an Array
+Input: [12, 45, 23, 89, 34]
+Output: 89
+
+public class LargestNumber {
+    public static void main(String[] args) {
+        int[] arr = {23, 56, 11, 89, 45};
+        int max = arr[0];
+
+        for (int num : arr) {
+            if (num > max) max = num;
+        }
+
+        System.out.println("Largest Number: " + max);
+    }
+}
+
+✅ 4. Second Smallest and Second Largest Number
+Input: [5, 3, 9, 1, 6, 2]
+Output: Second smallest = 2, Second largest = 6
+
+import java.util.Arrays;
+public class SecondMinMax {
+    public static void main(String[] args) {
+        int[] arr = {12, 45, 2, 41, 31, 10};
+        Arrays.sort(arr);
+        System.out.println("Second Smallest: " + arr[1]);
+        System.out.println("Second Largest: " + arr[arr.length - 2]);
+    }
+}
+
+✅ 5. Reverse a Given Array
+Input: [1, 2, 3, 4, 5]
+Output: [5, 4, 3, 2, 1]
+
+public class ReverseArray {
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 30, 40, 50};
+        for (int i = arr.length - 1; i >= 0; i--) {
+            System.out.print(arr[i] + " ");
+        }
+    }
+}
+
+✅ 7. Rearrange Array in Increasing and Decreasing Order
+Input: [4, 1, 3, 2, 5]
+Output (Ascending): 1, 2, 3, 4, 5
+Output (Descending): 5, 4, 3, 2, 1
+
+import java.util.Arrays;
+public class RearrangeArray {
+    public static void main(String[] args) {
+        int[] arr = {10, 5, 30, 20};
+        Arrays.sort(arr);
+        System.out.println("Ascending: " + Arrays.toString(arr));
+
+        System.out.print("Descending: ");
+        for (int i = arr.length - 1; i >= 0; i--) {
+            System.out.print(arr[i] + " ");
+        }
+    }
+}
+
+✅ 8. Calculate Sum of Array
+Input: [2, 4, 6, 8]
+Output: 20
+
+public class ArraySum {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        int sum = 0;
+
+        for (int n : arr) sum += n;
+
+        System.out.println("Sum: " + sum);
+    }
+}
+
+✅ 9. Rotate Array by k elements
+Input: array = [1, 2, 3, 4, 5], k = 2
+Output: [3, 4, 5, 1, 2]
+
+import java.util.Arrays;
+public class RotateArray {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        int k = 2;
+        int n = arr.length;
+        int[] rotated = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            rotated[(i + k) % n] = arr[i];
+        }
+
+        System.out.println("Rotated: " + Arrays.toString(rotated));
+    }
+}
+
+✅ 10. Find Average of Array Elements
+Input: [10, 20, 30, 40]
+Output: 25.0
+
+public class ArrayAverage {
+    public static void main(String[] args) {
+        int[] arr = {10, 20, 30, 40};
+        int sum = 0;
+
+        for (int n : arr) sum += n;
+
+        System.out.println("Average: " + (double) sum / arr.length);
+    }
+}
+
+✅ 11. Find Median of Array
+Input (odd): [1, 3, 5] → Output: 3
+Input (even): [1, 3, 5, 7] → Output: 4.0
+
+import java.util.Arrays;
+public class ArrayMedian {
+    public static void main(String[] args) {
+        int[] arr = {7, 3, 5, 1, 4};
+        Arrays.sort(arr);
+        double median;
+        int n = arr.length;
+
+        if (n % 2 == 1) {
+            median = arr[n / 2];
+        } else {
+            median = (arr[n / 2] + arr[n / 2 - 1]) / 2.0;
+        }
+
+        System.out.println("Median: " + median);
+    }
+}
+
+✅ 12. Remove Duplicates from Sorted Array
+Input: [1, 1, 2, 2, 3]
+Output: [1, 2, 3]
+
+public class RemoveSortedDuplicates {
+    public static void main(String[] args) {
+        int[] arr = {1, 1, 2, 2, 3, 4, 4};
+        int n = arr.length, j = 0;
+
+        for (int i = 1; i < n; i++) {
+            if (arr[i] != arr[j]) {
+                j++;
+                arr[j] = arr[i];
+            }
+        }
+
+        for (int i = 0; i <= j; i++) {
+            System.out.print(arr[i] + " ");
+        }
+    }
+}
+
+✅ 13. Remove Duplicates from Unsorted Array
+Input: [3, 1, 2, 1, 3, 4]
+Output: [3, 1, 2, 4]
+
+import java.util.*;
+public class RemoveUnsortedDuplicates {
+    public static void main(String[] args) {
+        int[] arr = {3, 5, 3, 2, 5, 7};
+        Set<Integer> set = new LinkedHashSet<>();
+
+        for (int num : arr) set.add(num);
+
+        System.out.println("After removing duplicates: " + set);
+    }
+}
+
+✅ 14. Add an Element to Array
+Input: array = [1, 2, 3], element = 4
+Output: [1, 2, 3, 4]
+
+import java.util.Arrays;
+public class AddElement {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3};
+        int newElement = 4;
+        int[] newArr = Arrays.copyOf(arr, arr.length + 1);
+        newArr[arr.length] = newElement;
+
+        System.out.println("New Array: " + Arrays.toString(newArr));
+    }
+}
+
+✅ 15. Find All Unique / Non-repeating Elements
+Input: [1, 2, 2, 3, 4, 4]
+Output: 1, 3
+
+import java.util.*;
+public class UniqueElements {
+    public static void main(String[] args) {
+        int[] arr = {4, 5, 6, 7, 5, 6, 8};
+        Map<Integer, Integer> freq = new LinkedHashMap<>();
+
+        for (int n : arr) {
+            freq.put(n, freq.getOrDefault(n, 0) + 1);
+        }
+
+        System.out.print("Non-repeating elements: ");
+        for (Map.Entry<Integer, Integer> e : freq.entrySet()) {
+            if (e.getValue() == 1) {
+                System.out.print(e.getKey() + " ");
+            }
+        }
+    }
+}
+
+✅ 16. Name reversal (e.g., "Harshvardhan Singh Yadav" → "Yadav Singh Harshvardhan")
+Input: "Harshvardhan Singh Yadav"
+Output: "Yadav Singh Harshvardhan"
+
+public class ReverseNameOrder {
+    public static void main(String[] args) {
+        String input = "Harshvardhan Singh Yadav";
+        String[] parts = input.split(" ");
+
+        for (int i = parts.length - 1; i >= 0; i--) {
+            System.out.print(parts[i] + " ");
+        }
+    }
+}
+
+✅ 1. Reverse Name Order
+Input: "Mohandas Karamchand Gandhi"
+Output: "Gandhi Mohandas Karamchand"
+
+public class ReverseName {
+    public static void main(String[] args) {
+        String input = "Mohandas Karamchand Gandhi";
+        String[] parts = input.split(" ");
+        StringBuilder output = new StringBuilder();
+
+        output.append(parts[parts.length - 1]);  // Last word (surname)
+        for (int i = 0; i < parts.length - 1; i++) {
+            output.append(" ").append(parts[i]);
+        }
+
+        System.out.println("Output: " + output);
+    }
+}
+
+✅ 3. Count Frequency of Characters in a String
+Input: aparna → Output: a=3 p=1 r=1 n=1
+import java.util.*;
+
+public class CharFrequency {
+    public static void main(String[] args) {
+        String input = "aparna";
+        Map<Character, Integer> freq = new LinkedHashMap<>();
+
+        for (char c : input.toCharArray()) {
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+        for (Map.Entry<Character, Integer> entry : freq.entrySet()) {
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+        }
+    }
+}
+
+✅ 7. Reverse Words Individually
+Input: i love programming
+Output: i evol gnimmargorp
+
+public class ReverseEachWord {
+    public static void main(String[] args) {
+        String input = "i love programming";
+        String[] words = input.split(" ");
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words) {
+            result.append(new StringBuilder(word).reverse()).append(" ");
+        }
+        System.out.println("Output: " + result.toString().trim());
+    }
+}
+
+✅ 8. Swap Case: First Letter Lower, Rest Upper
+Input: my name is ram → Output: mY nAME iS rAM
+
+public class SwapCase {
+    public static void main(String[] args) {
+        String input = "my name is ram";
+        String[] words = input.split(" ");
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words) {
+            if (word.length() > 0) {
+                result.append(Character.toLowerCase(word.charAt(0)));
+                result.append(word.substring(1).toUpperCase()).append(" ");
+            }
+        }
+        System.out.println("Output: " + result.toString().trim());
+    }
+}
+
+✅ 2. Second Largest Number in an Array
+Input: (106, 14, 46, 47, 94, 94, 52, 86, 36, 99, 101)
+Output: 101
+
+import java.util.*;
+public class SecondLargest {
+    public static void main(String[] args) {
+        int[] arr = {106, 14, 46, 47, 94, 94, 52, 86, 36, 99, 101};
+        TreeSet<Integer> sortedSet = new TreeSet<>();
+
+        for (int num : arr) {
+            sortedSet.add(num);
+        }
+
+        if (sortedSet.size() < 2) {
+            System.out.println("No second largest number.");
+        } else {
+            sortedSet.pollLast(); // Remove largest
+            System.out.println("Second Largest: " + sortedSet.last());
+        }
+    }
+}
+
+✅ 4. Move All Zeros to End
+Input: (1, 5, 0, 2, 0, 3, 0)
+Output: (1, 5, 2, 3, 0, 0, 0)
+
+import java.util.*;
+public class MoveZeros {
+    public static void main(String[] args) {
+        int[] arr = {1, 5, 0, 2, 0, 3, 0};
+        int[] result = new int[arr.length];
+        int index = 0;
+
+        for (int num : arr) {
+            if (num != 0) {
+                result[index++] = num;
+            }
+        }
+        System.out.println("Output: " + Arrays.toString(result));
+    }
+}
+
+✅ 6. Check If Number Is Prime
+Input: 7
+Output: Prime
+Input: 10
+Output: Not Prime
+
+public class PrimeCheck {
+    public static void main(String[] args) {
+        int num = 29;
+        boolean isPrime = num > 1;
+
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                isPrime = false;
+                break;
+            }
+        }
+        System.out.println(num + " is " + (isPrime ? "prime." : "not prime."));
+    }
+}
+
+✅ 7. Print First and Last Position of an Element (Runtime Input)
+Input: array = [2, 4, 6, 4, 8, 4], input = 4
+Output: First position = 1, Last position = 5
+If not found: Element not found in the array
+
+import java.util.*;
+public class FirstLastPosition {
+    public static void main(String[] args) {
+        int[] arr = {1, 5, 3, 5, 2, 5};
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number to find positions: ");
+        int num = sc.nextInt();
+        int first = -1, last = -1;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == num) {
+                if (first == -1) first = i;
+                last = i;
+            }
+        }
+        if (first == -1) {
+            System.out.println("Number not found in array.");
+        } else {
+            System.out.println("First Position: " + first);
+            System.out.println("Last Position: " + last);
+        }
+    }
+}
+
+✅ 7. Return Index of Two Numbers that Add Up to Target (Optimized)
+Input: array = [3, 5, 4, 1, 2], target = 9
+Output: Indices = 1, 2 (because 5 + 4 = 9)
+
+import java.util.*;
+public class TwoSumOptimized {
+    public static void main(String[] args) {
+        int[] arr = {3, 5, 4, 1, 2};
+        int target = 9;
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            int complement = target - arr[i];
+            if (map.containsKey(complement)) {
+                System.out.println("Indices: " + map.get(complement) + ", " + i);
+                return;
+            }
+            map.put(arr[i], i);
+        }
+        System.out.println("No two numbers add up to the target.");
+    }
+}
+
+✅ 8. Extract First Name from "Sridhar, Aswini"
+Input: "Sridhar, Aswini"
+Output: "Aswini"
+
+public class ExtractFirstName {
+    public static void main(String[] args) {
+        String input = "Sridhar, Aswini";
+        String[] parts = input.split(",\\s*"); // comma and optional space
+        if (parts.length == 2) {
+            System.out.println("First Name: " + parts[1]);
+        } else {
+            System.out.println("Invalid format.");
+        }
+    }
+}
+
+✅ 2. Swap Two Strings Without Using a Third Variable
+Input: S1 = Sai, S2 = Mukesh
+Output:
+S1 = Mukesh
+S2 = Sai
+
+public class SwapStrings {
+    public static void main(String[] args) {
+        String s1 = "Sai";
+        String s2 = "Mukesh";
+
+        s1 = s1 + s2;                   // SaiMukesh
+        s2 = s1.substring(0, s1.length() - s2.length()); // Sai
+        s1 = s1.substring(s2.length()); // Mukesh
+
+        System.out.println("s1: " + s1);
+        System.out.println("s2: " + s2);
+    }
+}
+
+✅ 3. Swap Words in a Sentence
+Input: "Hello World" → Output: "World Hello"
+
+public class SwapWords {
+    public static void main(String[] args) {
+        String input = "Hello World";
+        String[] words = input.split(" ");
+        if (words.length == 2) {
+            String output = words[1] + " " + words[0];
+            System.out.println("Output: " + output);
+        } else {
+            System.out.println("Expected exactly 2 words.");
+        }
+    }
+}
+
+✅ 4. Count Vowels in a String
+
+import java.util.*;
+public class CountVowels {
+    public static void main(String[] args) {
+        String x = "hyderabad";
+        int count = 0;
+        List<Character> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
+
+        List<Character> chars = new ArrayList<>();
+        for (char c : x.toLowerCase().toCharArray()) {
+            chars.add(c);
+            if (vowels.contains(c)) count++;
+        }
+        System.out.println("Vowel Count: " + count);
+        System.out.println("Characters: " + chars);
+    }
+}
+
+✅ 5. Verify Strings are anagram or not
+
+import java.util.*;
+class Main {
+    public static void main(String[] args) {
+        String str1 = "listen";
+        String str2 = "silent";
+
+        if (isAnagram(str1, str2)) {
+            System.out.println("The strings are anagrams.");
+        } else {
+            System.out.println("The strings are not anagrams.");
+        }
+    }
+
+    // Method to check if two strings are anagrams
+    public static boolean isAnagram(String str1, String str2) {
+        // If lengths are different, they can't be anagrams
+        if (str1.length() != str2.length()) {
+            return false;
+        }
+
+        // Convert both strings to character arrays and sort them
+        char[] c1 = str1.toCharArray();
+        char[] c2 = str2.toCharArray();
+        
+        Arrays.sort(c1); // Sort the first string
+        Arrays.sort(c2); // Sort the second string
+
+        // Compare sorted arrays
+        return Arrays.equals(c1, c2);
+    }
+}
+
+
