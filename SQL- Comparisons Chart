@@ -1,0 +1,58 @@
+| Category    | Full Form                                     | Purpose                                                                 | Examples                                        |
+| ----------- | --------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------- |
+| **DDL**     | Data Definition Language                      | Defines the structure of database objects such as tables, schemas, etc. | `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `RENAME` |
+| **DML**     | Data Manipulation Language                    | Manipulates data in existing tables.                                    | `INSERT`, `UPDATE`, `DELETE`                    |
+| **DQL/DRL** | Data Query Language / Data Retrieval Language | Retrieves data from the database.                                       | `SELECT`                                        |
+| **TCL**     | Transaction Control Language                  | Controls transactions and maintains the integrity of the database.      | `COMMIT`, `ROLLBACK`, `SAVEPOINT`               |
+| **DCL**     | Data Control Language                         | Controls access to data in the database.                                | `GRANT`, `REVOKE`                               |
+
+| Key Type          | Unique | Not Null | One per Table? | Can be Multiple? | Usage                                   |
+| ----------------- | ------ | -------- | -------------- | ---------------- | --------------------------------------- |
+| **Super Key**     | ✅      | ✅/❌      | ❌              | ✅                | Identifies a row uniquely               |
+| **Candidate Key** | ✅      | ✅        | ❌              | ✅                | Minimal Super Key                       |
+| **Primary Key**   | ✅      | ✅        | ✅              | ❌                | Main unique identifier                  |
+| **Alternate Key** | ✅      | ✅        | ❌              | ✅                | Backup identifiers                      |
+| **Foreign Key**   | ❌      | ❌        | ❌              | ✅                | Relates to primary key of another table |
+
+| GROUP BY                          | ORDER BY                     |
+| --------------------------------- | ---------------------------- |
+| Groups rows by column             | Sorts rows by column         |
+| Usually used with aggregate funcs | Used to sort data (ASC/DESC) |
+| Appears before `ORDER BY`         | Appears last in query        |
+
+| Criteria                       | WHERE                        | HAVING                        |
+| ------------------------------ | ---------------------------- | ----------------------------- |
+| Filters on                     | Rows (before grouping)       | Groups (after grouping)       |
+| Used with                      | `SELECT`, `UPDATE`, `DELETE` | `SELECT` (only)               |
+| Aggregate functions            | ❌ Not allowed                | ✅ Allowed                     |
+| Executes before/after GROUP BY | ✅ Before                     | ✅ After                       |
+| Example                        | `WHERE salary > 50000`       | `HAVING SUM(salary) > 100000` |
+
+| CHAR                          | VARCHAR                       |
+| ----------------------------- | ----------------------------- |
+| Fixed-length                  | Variable-length               |
+| Padding added to match length | Stores only actual characters |
+| Faster for fixed-size columns | More space efficient          |
+
+| Command    | Description                                                  | Can Be Rolled Back?             | Removes Table Structure? |
+| ---------- | ------------------------------------------------------------ | ------------------------------- | ------------------------ |
+| `DELETE`   | Deletes specific rows from a table. Use with `WHERE` clause. | ✅ Yes (if inside a transaction) | ❌ No                     |
+| `TRUNCATE` | Deletes **all rows** from a table quickly (no `WHERE`).      | ❌ No                            | ❌ No                     |
+| `DROP`     | Deletes the entire table structure (schema and data).        | ❌ No                            | ✅ Yes                    |
+
+| Operation                   | MySQL                                                   | SQL Server                                             |
+| --------------------------- | ------------------------------------------------------- | ------------------------------------------------------ |
+| **Modify Column Data Type** | `ALTER TABLE employee MODIFY COLUMN name VARCHAR(100);` | `ALTER TABLE employee ALTER COLUMN name VARCHAR(100);` |
+| **Rename Column**           | `ALTER TABLE employee RENAME COLUMN name TO roll;`      | `EXEC sp_rename 'employee.name', 'roll', 'COLUMN';`    |
+
+
+
+🗂️ What is a Stored Procedure?
+A stored procedure is a precompiled set of SQL statements stored in the database.
+Used to encapsulate logic, reuse code, and improve performance.
+
+CREATE PROCEDURE GetEmployees
+AS
+BEGIN
+  SELECT * FROM Employee;
+END;
