@@ -30,6 +30,8 @@ Not recommended with Explicit Waits (may conflict).
 🔹 2. Explicit Wait (WebDriverWait + ExpectedConditions)
 ✅ Description:
 Waits for a specific condition (like visibility, clickability) for a specific element.
+Uses WebDriverWait
+Fixed timeout and polling interval (every 500ms by default)
 
 ✅ Syntax:
 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -51,6 +53,10 @@ A more configurable form of WebDriverWait:
 Can set polling frequency.
 Can ignore specific exceptions.
 Waits until a custom condition is met.
+Uses FluentWait
+Custom polling interval (e.g., poll every 2 seconds)
+Can ignore multiple exceptions (e.g., NoSuchElementException)
+Suitable for flaky or slow-loading elements
 
 ✅ Syntax:
 Wait<WebDriver> wait = new FluentWait<>(driver)
@@ -65,11 +71,11 @@ Elements appear at irregular intervals.
 You need fine control over polling and exceptions.
 
 🧪 Comparison Table
-| Type          | Applies To          | Custom Conditions                | Polling Interval | Global? |
-| ------------- | ------------------- | -------------------------------- | ---------------- | ------- |
-| Implicit Wait | All `findElement/s` | ❌ No                             | ❌ Fixed          | ✅ Yes   |
-| Explicit Wait | Specific elements   | ✅ Yes (via `ExpectedConditions`) | ❌ Fixed          | ❌ No    |
-| Fluent Wait   | Specific elements   | ✅ Yes                            | ✅ Customizable   | ❌ No    |
+| Type          | Applies To          | Custom Conditions                | Polling Interval                 | Global? |
+| ------------- | ------------------- | -------------------------------- | ---------------- ---------       | ------- |
+| Implicit Wait | All `findElement/s` | ❌ No                             | ❌ Fixed                       | ✅ Yes   |
+| Explicit Wait | Specific elements   | ✅ Yes (via `ExpectedConditions`) | ✅ Fixed (default 500ms)	    | ❌ No    |
+| Fluent Wait   | Specific elements   | ✅ Yes                            | ✅ Customizable                | ❌ No    |
 
 
 Bonus: Custom Wait Condition Example
