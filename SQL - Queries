@@ -1,0 +1,130 @@
+
+📌 1. Create Table
+CREATE TABLE employees (
+    id INT,
+    name VARCHAR(100)
+);
+📌 2. Add Column
+ALTER TABLE employees ADD email VARCHAR(100);
+📌 3. Modify Column
+MySQL	SQL Server
+ALTER TABLE employees MODIFY COLUMN email VARCHAR(200);	ALTER TABLE employees ALTER COLUMN email VARCHAR(200);
+
+📌 4. Rename Column
+MySQL	SQL Server
+ALTER TABLE employees RENAME COLUMN email TO roll;	EXEC sp_rename 'employees.email', 'roll', 'COLUMN';
+
+📌 5. Drop Column
+ALTER TABLE employees DROP COLUMN email;
+📌 6. Rename Table
+MySQL	SQL Server
+ALTER TABLE employees RENAME TO students;	EXEC sp_rename 'employees', 'students';
+
+📌 7. Insert Data
+INSERT INTO employees (id, name) VALUES (1, 'John');
+📌 8. Update Data
+UPDATE employees SET name = 'ABC' WHERE id = 1;
+
+📌 9. Delete, Truncate, Drop
+Command	Use Case	Example
+DELETE	Delete specific rows	DELETE FROM employees WHERE id = 1;
+TRUNCATE	Delete all rows, faster, no rollback	TRUNCATE TABLE employees;
+DROP	Remove table and its structure	DROP TABLE employees;
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🔹 Q1) Find Second Highest Salary
+✅ MySQL:
+SELECT salary
+FROM (
+  SELECT salary
+  FROM employee
+  ORDER BY salary DESC
+  LIMIT 2
+) AS temp
+ORDER BY salary ASC
+LIMIT 1;
+
+✅ SQL Server:
+SELECT MAX(salary)
+FROM employee
+WHERE salary < (SELECT MAX(salary) FROM employee);
+
+🔹 Q2) Delete Duplicate Rows From a Table
+✅ General Steps (using temp table):
+-- Step 1: Create new table with distinct data
+SELECT DISTINCT * INTO new_table FROM old_table;
+
+-- Step 2: Delete all data from original
+DELETE FROM old_table;
+
+-- Step 3: Insert distinct records back
+INSERT INTO old_table SELECT * FROM new_table;
+
+-- Step 4: Drop temp table
+DROP TABLE new_table;
+
+🔹 Q3) Find Duplicate Records
+SELECT emp_id, COUNT(*)
+FROM employee
+GROUP BY emp_id
+HAVING COUNT(*) > 1;
+
+🔹 Q4) Join 3 or More Tables
+✅ Using INNER JOIN:
+SELECT e.ename, d.dname, dp.manager, e.sal
+FROM employees e
+INNER JOIN details d ON e.eid = d.eid
+INNER JOIN department dp ON dp.did = d.did;
+✅ Using WHERE clause:
+SELECT e.ename, d.dname, dp.manager, e.sal
+FROM employees e, details d, department dp
+WHERE e.eid = d.eid AND d.did = dp.did;
+
+🔹 Q5) Remove Duplicate Records (Another Way)
+DELETE FROM employees
+WHERE emp_id IN (
+  SELECT emp_id
+  FROM employees
+  GROUP BY emp_id, dept
+  HAVING COUNT(*) > 1
+);
+
+🔹 Q6) Increase Income by 5%
+UPDATE employees
+SET income = income + (income * 0.05);
+
+🔹 Q7) Find Names Starting with 'A'
+SELECT firstname
+FROM employees
+WHERE firstname LIKE 'A%';
+
+🔹 Q8) Find Employees in Sales Department
+SELECT COUNT(*)
+FROM employees
+WHERE department = 'Sales';
+
+🔹 Q9) Names Ending with 'A' and Exactly 6 Characters
+SELECT *
+FROM employees
+WHERE firstname LIKE '_____A';
+
+🔹 Q10) Employees with Salary Between 10,000 and 50,000
+SELECT *
+FROM employees
+WHERE salary BETWEEN 10000 AND 50000;
+
+🔹 Q11) Create an Empty Table With Same Structure
+SELECT *
+INTO new_table
+FROM old_table
+WHERE 1 = 0;
+
+🔹 Q12) Delete First 1000 Records Based on ID
+DELETE FROM temporary
+WHERE id IN (
+  SELECT TOP 1000 id FROM temporary ORDER BY id
+);
+-- MySQL:
+-- DELETE FROM temporary ORDER BY id LIMIT 1000;
