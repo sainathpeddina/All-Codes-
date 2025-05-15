@@ -1,0 +1,110 @@
+✅ Types of Pop-ups in Selenium and How to Handle Them
+🔹 1. JavaScript Alerts (Browser-based Pop-ups)
+These are created using JavaScript like alert(), confirm(), and prompt().
+
+✅ Handling Example:
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class AlertHandling {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com/alert");
+
+        Alert alert = driver.switchTo().alert();
+
+        System.out.println(alert.getText());   // Get alert message
+        alert.accept();                        // Click OK
+        // alert.dismiss();                    // Click Cancel (for confirm alerts)
+        // alert.sendKeys("text");             // For prompt dialogs
+
+        driver.quit();
+    }
+}
+
+🔹 2. Authentication Pop-ups (Browser Login Dialogs)
+These are OS-level pop-ups (e.g., HTTP basic auth) and cannot be handled by switchTo().alert().
+Option 1: Embed username & password in the URL
+driver.get("https://username:password@the-site.com");
+
+
+🔹 3. File Upload Dialogs (OS-native Dialogs)
+Selenium cannot interact with the OS-level file picker directly. Instead, send the file path directly to the <input type="file"> element.
+
+WebElement upload = driver.findElement(By.id("upload"));
+upload.sendKeys("C:\\path\\to\\file.txt"); // Directly sets file
+
+🔹 4. File Download Pop-ups
+Browsers often show a pop-up for file download confirmation. Selenium can't interact with these, so you handle them via browser settings (e.g., ChromeOptions or FirefoxOptions) to auto-download.
+
+✅ Chrome Example:
+Map<String, Object> prefs = new HashMap<>();
+prefs.put("download.default_directory", "C:\\downloads");
+prefs.put("download.prompt_for_download", false);
+ChromeOptions options = new ChromeOptions();
+options.setExperimentalOption("prefs", prefs);
+
+🔹 5. Window-Based Pop-ups / Child Windows
+Clicking a button opens a new tab/window (child). You must switch between windows.
+
+String mainWindow = driver.getWindowHandle();
+Set<String> allWindows = driver.getWindowHandles();
+
+for (String handle : allWindows) {
+    if (!handle.equals(mainWindow)) {
+        driver.switchTo().window(handle);
+        // Perform actions in child window
+        driver.close(); // Optional
+    }
+}
+driver.switchTo().window(mainWindow); // Back to main
+
+🔹 6. HTML-Based Pop-ups / Modals (In-DOM Dialogs)
+These are styled using HTML/CSS (e.g., Bootstrap modals). Selenium handles them like any normal HTML element.
+
+WebElement modal = driver.findElement(By.id("modal"));
+modal.findElement(By.className("close")).click(); // Close button
+
+🔹 7. Notification Pop-ups (Browser Notifications)
+You can disable browser notifications using browser-specific options.
+
+Map<String, Object> prefs = new HashMap<>();
+prefs.put("profile.default_content_setting_values.notifications", 2);
+
+ChromeOptions options = new ChromeOptions();
+options.setExperimentalOption("prefs", prefs);
+
+Example:
+
+Map<String, Object> contentSettings = new HashMap<>();
+contentSettings.put("notifications", 2);  // Block notifications
+contentSettings.put("images", 2);         // Block images
+
+Map<String, Object> prefs = new HashMap<>();
+prefs.put("profile.default_content_settings", contentSettings);
+
+ChromeOptions options = new ChromeOptions();
+options.setExperimentalOption("prefs", prefs);
+
+✅ Common profile.default_content_settings Attributes
+
+| Attribute Key         | Content Type            | Description / Values          |
+| --------------------- | ----------------------- | ----------------------------- |
+| `notifications`       | Notifications           | `1` = Allow, `2` = Block      |
+| `images`              | Images                  | `1` = Show, `2` = Do not show |
+| `javascript`          | JavaScript              | `1` = Allow, `2` = Block      |
+| `popups`              | Pop-ups                 | `1` = Allow, `2` = Block      |
+| `geolocation`         | Location                | `1` = Allow, `2` = Block      |
+| `media_stream`        | Camera & Microphone     | `1` = Allow, `2` = Block      |
+| `cookies`             | Cookies                 | `1` = Allow, `2` = Block      |
+| `fullscreen`          | Fullscreen              | `1` = Allow, `2` = Block      |
+| `mouselock`           | Mouse Lock              | `1` = Allow, `2` = Block      |
+| `mixed_script`        | Mixed content           | `1` = Allow, `2` = Block      |
+| `automatic_downloads` | Multiple file downloads | `1` = Allow, `2` = Block      |
+| `plugins`             | Plugins (e.g., Flash)   | `1` = Allow, `2` = Block      |
+| `clipboard`           | Clipboard               | `1` = Allow, `2` = Block      |
+| `background_sync`     | Background sync         | `1` = Allow, `2` = Block      |
+
+
+
