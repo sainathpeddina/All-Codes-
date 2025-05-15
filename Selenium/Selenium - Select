@@ -1,0 +1,164 @@
+✅ Types of Dropdowns
+Single-select dropdown	Allows selecting only one option at a time
+Multi-select dropdown	Allows selecting multiple options
+
+✅ HTML Example of Dropdowns
+🔹 1. Single Select Dropdown
+<select id="country">
+  <option value="us">United States</option>
+  <option value="in">India</option>
+  <option value="uk">United Kingdom</option>
+</select>
+
+🔹 2. Multi Select Dropdown
+<select id="skills" multiple>
+  <option value="java">Java</option>
+  <option value="python">Python</option>
+  <option value="js">JavaScript</option>
+</select>
+
+✅ Handling Dropdowns in Selenium
+✅ Methods of Select Class
+| Method                               | Description                                   |
+| ------------------------------------ | --------------------------------------------- |
+| `selectByIndex(int index)`           | Select by index (0-based)                     |
+| `selectByValue(String value)`        | Select option with `value` attribute          |
+| `selectByVisibleText(String text)`   | Select by option text                         |
+| `deselectByIndex(int index)`         | Deselect option by index                      |
+| `deselectByValue(String value)`      | Deselect option by value                      |
+| `deselectByVisibleText(String text)` | Deselect by visible text                      |
+| `deselectAll()`                      | Deselect all (only for multi-select)          |
+| `getOptions()`                       | Returns list of all `<option>` elements       |
+| `getFirstSelectedOption()`           | Gets the first selected option                |
+| `getAllSelectedOptions()`            | Gets all selected options (multi-select only) |
+| `isMultiple()`                       | Checks if dropdown allows multiple selections |
+
+✅ Example: Single Select Dropdown
+WebElement countryDropdown = driver.findElement(By.id("country"));
+Select selectCountry = new Select(countryDropdown);
+
+// Select using different methods
+selectCountry.selectByIndex(1);              // India
+selectCountry.selectByValue("uk");           // United Kingdom
+selectCountry.selectByVisibleText("India");  // India
+
+✅ Example: Multi-Select Dropdown
+WebElement skillsDropdown = driver.findElement(By.id("skills"));
+Select selectSkills = new Select(skillsDropdown);
+
+if (selectSkills.isMultiple()) {
+    selectSkills.selectByVisibleText("Java");
+    selectSkills.selectByValue("python");
+    selectSkills.selectByIndex(2); // JavaScript
+
+    // Get all selected
+    List<WebElement> selectedOptions = selectSkills.getAllSelectedOptions();
+    for (WebElement option : selectedOptions) {
+        System.out.println("Selected: " + option.getText());
+    }
+
+    // Deselect
+    selectSkills.deselectByValue("python");
+    selectSkills.deselectAll();
+}
+
+✅ Get All Options in Dropdown
+List<WebElement> allOptions = selectCountry.getOptions();
+for (WebElement option : allOptions) {
+    System.out.println("Option: " + option.getText());
+}
+
+✅ Summary Table
+| Feature                     | `Single-select`    | `Multi-select` |
+| --------------------------- | ------------------ | -------------- |
+| Allows multiple selection   | ❌                  | ✅              |
+| Uses `selectBy...` methods  | ✅                  | ✅              |
+| Uses `deselect...` methods  | ❌ (not applicable) | ✅              |
+| Use `isMultiple()` to check | ✅                  | ✅              |
+
+
+✅ What Is a Dynamic Dropdown?
+A dynamic dropdown:
+Does not use <select> and <option> tags.
+Populates options via JavaScript or AJAX based on user input or events.
+Common in search boxes, type-ahead suggestions, or modern UI frameworks.
+
+✅ General Steps to Handle Dynamic Dropdown
+Click on the dropdown to expand the options.
+Wait for the dropdown items to be visible (Explicit Wait).
+Find the desired option in the list.
+Click on the option.
+
+✅ Example Scenario
+🔹 Sample HTML (Non-<select>)
+<input type="text" id="search-box" />
+<ul id="suggestions">
+  <li>India</li>
+  <li>Indonesia</li>
+  <li>Indigo</li>
+</ul>
+
+✅ Selenium Code Example
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.*;
+
+import java.time.Duration;
+import java.util.List;
+
+public class DynamicDropdownWithStaleHandling {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Step 1: Type in the search box
+        WebElement inputBox = driver.findElement(By.id("search-box"));
+        inputBox.sendKeys("Ind");
+
+        // Step 2: Wait for suggestions to appear
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("suggestions")));
+
+        // Step 3: Try clicking the desired option, retrying if stale
+        boolean optionClicked = false;
+        int attempts = 0;
+
+        while (!optionClicked && attempts < 3) {
+            try {
+                // Step 3.1: Re-fetch the elements inside try block
+                List<WebElement> suggestions = driver.findElements(By.xpath("//ul[@id='suggestions']/li"));
+
+                for (WebElement option : suggestions) {
+                    if (option.getText().equals("India")) {
+                        option.click();
+                        optionClicked = true;
+                        break;
+                    }
+                }
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Caught stale element, retrying...");
+                attempts++;
+                // Optional: short wait before retrying
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ignored) {}
+            }
+        }
+
+        if (!optionClicked) {
+            System.out.println("Option 'India' not found or failed to click.");
+        }
+
+        driver.quit();
+    }
+}
+
+
+✅ Summary
+| Static Dropdown (`<select>`) | Dynamic Dropdown                       |
+| ---------------------------- | -------------------------------------- |
+| Use `Select` class           | Use `WebElement` and custom logic      |
+| Fixed list in HTML           | Often built dynamically with JS        |
+| Easier to automate           | Requires wait + loop to handle options |
+
