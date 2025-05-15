@@ -171,3 +171,10 @@ Cross-browser: Different browsers are passed as parameters (chrome, edge) using 
 mvn clean test
 Make sure testng.xml is set as your default suite in your IDE or specify it:
 mvn test -DsuiteXmlFile=testng.xml
+
+| Attribute   | Description                                |
+| ----------- | ------------------------------------------ |
+| `methods`   | Runs test methods in parallel              |
+| `classes`   | Runs each class in parallel                |
+| `tests`     | Runs `<test>` blocks in parallel           |
+| `instances` | Runs instances of test classes in parallel |
