@@ -1,0 +1,227 @@
+✅ 1. this Keyword — Refers to Current Object
+🔹 Main Uses of this:
+| Use Case                                       | Description                  |
+| ---------------------------------------------- | ---------------------------- |
+| Distinguish instance variables from parameters | `this.variable = parameter;` |
+| Call another constructor in the same class     | `this();` or `this(args);`   |
+| Pass current object as argument                | `someMethod(this);`          |
+| Return current object                          | `return this;`               |
+
+✅ Example: Disambiguate Instance and Parameter
+public class Student {
+    String name;
+
+    public Student(String name) {
+        this.name = name; // 'this' refers to current object's 'name'
+    }
+
+    public void display() {
+        System.out.println("Student name: " + this.name);
+    }
+}
+
+✅ Example: Call Constructor Using this()
+public class Student {
+    String name;
+    int age;
+
+    public Student() {
+        this("Default", 18);  // calls the parameterized constructor
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+✅ 2. super Keyword — Refers to Parent Class
+🔹 Main Uses of super:
+| Use Case                     | Description                  |
+| ---------------------------- | ---------------------------- |
+| Call superclass constructor  | `super();` or `super(args);` |
+| Access parent class method   | `super.methodName();`        |
+| Access parent class variable | `super.variable;`            |
+
+
+✅ Example: Call Parent Class Constructor
+class Person {
+    String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
+}
+
+class Student extends Person {
+    int age;
+
+    public Student(String name, int age) {
+        super(name);  // Call parent constructor
+        this.age = age;
+    }
+
+    public void display() {
+        System.out.println("Name: " + super.name); // Access parent variable
+        System.out.println("Age: " + age);
+    }
+}
+
+✅ Example: Call Parent Method
+class Animal {
+    public void sound() {
+        System.out.println("Animal makes sound");
+    }
+}
+
+class Dog extends Animal {
+    public void sound() {
+        super.sound(); // Call parent method
+        System.out.println("Dog barks");
+    }
+}
+
+🧠 Summary Table
+| Keyword | Refers to     | Used For                                         |
+| `this`  | Current class | Accessing current object, variables, constructor |
+| `super` | Parent class  | Accessing superclass constructor, method, field  |
+
+
+✅ When to Use What?
+| Situation                                       | Use     |
+| Access current object or constructor            | `this`  |
+| Access parent class constructor or method/field | `super` |
+
+✅ Java Project: this and super Example
+📁 Structure:
+src/
+├── Main.java
+├── Person.java
+└── Student.java
+🔹 Person.java — Superclass
+public class Person {
+    String name;
+    int age;
+
+    // Constructor
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public void displayInfo() {
+        System.out.println("Person Name: " + name);
+        System.out.println("Person Age: " + age);
+    }
+}
+
+🔹 Student.java — Subclass using super and this
+public class Student extends Person {
+    String course;
+
+    // Constructor using 'super' and 'this'
+    public Student(String name, int age, String course) {
+        super(name, age);      // Call Person's constructor
+        this.course = course;  // 'this' refers to current class field
+    }
+
+    // Method to override parent method
+    @Override
+    public void displayInfo() {
+        super.displayInfo(); // Call parent class method
+        System.out.println("Student Course: " + this.course);
+    }
+}
+
+🔹 Main.java — Entry Point
+public class Main {
+    public static void main(String[] args) {
+        Student student = new Student("Alice", 22, "Computer Science");
+        student.displayInfo();
+    }
+}
+
+✅ Output:
+Person Name: Alice
+Person Age: 22
+Student Course: Computer Science
+
+💡 Concepts Shown in This Project:
+| Concept                | Where Used                                           |
+| ---------------------- | ---------------------------------------------------- |
+| `this.variable`        | Assigning local `course` to class field in `Student` |
+| `super()`              | Calling parent class constructor                     |
+| `super.method()`       | Calling parent class method from overridden method   |
+| Inheritance & Override | `Student extends Person`, overrides `displayInfo()`  |
+
+//if we have 2 constarctors in parent class, while calling super how it fetch and can we call multiple supper in subclass
+
+✅ If a Class Has Two Constructors – How super() Works?
+In Java:
+You cannot call multiple super() constructors in the same subclass constructor.
+You can only call one super(...) and it must be the first line in the subclass constructor.
+Java uses constructor overloading, and the version of super(...) called depends on the arguments you pass.
+
+📘 Example: Two Constructors in Parent Class
+public class Parent {
+    public Parent() {
+        System.out.println("Parent default constructor");
+    }
+
+    public Parent(String message) {
+        System.out.println("Parent parameterized constructor: " + message);
+    }
+}
+
+📗 Subclass: Call One super(...)
+public class Child extends Parent {
+
+    public Child() {
+        super("Hello from Child");  // This will call the parameterized constructor
+        System.out.println("Child constructor");
+    }
+}
+
+✅ Output:
+Parent parameterized constructor: Hello from Child
+Child constructor
+
+❌ Can We Call Multiple super() in One Constructor?
+No. Java does not allow calling more than one super(...) constructor in a single constructor.
+
+// ❌ This will cause a compilation error
+public Child() {
+    super();              // First call
+    super("Invalid");     // ❌ Second call - Not allowed
+}
+❗ Error: Constructor call must be the first statement in a constructor
+
+✅ What Can You Do Instead?
+You can use constructor chaining using this() in the subclass to indirectly trigger different super() constructors.
+
+✅ Example:
+public class Child extends Parent {
+
+    public Child() {
+        this("Default Message");
+        System.out.println("Child default constructor");
+    }
+
+    public Child(String message) {
+        super(message); // Only one super call here
+        System.out.println("Child parameterized constructor");
+    }
+}
+
+✅ Output:
+Parent parameterized constructor: Default Message
+Child parameterized constructor
+Child default constructor
+
+🧠 Summary
+| Rule                               | Can Do? | Notes                                     |
+| ---------------------------------- | ------- | ----------------------------------------- |
+| Call one `super()` in constructor  | ✅ Yes   | Must be the first line                    |
+| Call multiple `super()`s           | ❌ No    | Compile-time error                        |
+| Overloaded parent constructors     | ✅ Yes   | Use matching arguments                    |
+| Constructor chaining with `this()` | ✅ Yes   | Can chain and choose `super()` indirectly |
