@@ -1,0 +1,77 @@
+📊 Java Collections Comparison: List vs Set vs Map
+
+| Feature                | **List**                                   | **Set**                                | **Map**                                     |
+| ---------------------- | ------------------------------------------ | -------------------------------------- | ------------------------------------------- |
+| Package                | `java.util`                                | `java.util`                            | `java.util`                                 |
+| Interface Type         | `Collection`                               | `Collection`                           | **Not** a `Collection`                      |
+| Allows Duplicates      | ✅ Yes                                      | ❌ No                                   | ✅ Keys: No<br>✅ Values: Yes                 |
+| Maintains Order        | ✅ Yes (insertion order)                    | 🔸 `LinkedHashSet` only                | 🔸 `LinkedHashMap` keeps insertion order    |
+| Allows null            | ✅ Yes (any number)                         | 🔸 `HashSet`/`LinkedHashSet`: one null | 🔸 One null key, many null values (HashMap) |
+| Access by Index        | ✅ Yes (e.g., `get(0)`)                     | ❌ No                                   | 🔸 By key (`get(key)`)                      |
+| Key-Value Pair         | ❌ No                                       | ❌ No                                   | ✅ Yes                                       |
+| Best Use Case          | Ordered collection with duplicates         | Unique elements                        | Mapping unique keys to values               |
+| Common Implementations | `ArrayList`, `LinkedList`, `Vector`        | `HashSet`, `LinkedHashSet`, `TreeSet`  | `HashMap`, `LinkedHashMap`, `TreeMap`       |
+| Thread-Safe Versions   | `Vector`, `Collections.synchronizedList()` | `Collections.synchronizedSet()`        | `Collections.synchronizedMap()`             |
+
+🔧 Key Methods Comparison
+| Operation       | `List`                     | `Set`                      | `Map`                                 |
+| --------------- | -------------------------- | -------------------------- | ------------------------------------- |
+| `add(E e)`      | Adds to end                | Adds if not present        | `put(K, V)`                           |
+| `add(index, e)` | Inserts at specific index  | ❌ Not supported            | ❌ Not applicable                      |
+| `get(index)`    | Returns element at index   | ❌ Not supported            | ❌ Use `get(key)` instead              |
+| `contains(e)`   | Checks if value exists     | Checks if element exists   | `containsKey(k)` / `containsValue(v)` |
+| `remove(e)`     | Removes element            | Removes element            | `remove(key)`                         |
+| `clear()`       | Empties collection         | Empties collection         | Empties map                           |
+| `size()`        | Returns number of elements | Returns number of elements | Returns number of entries             |
+| `isEmpty()`     | Returns true if empty      | Returns true if empty      | Returns true if empty                 |
+
+🔎 Real-World Examples
+| Use Case                               | Use `List`                    | Use `Set`       | Use `Map`                |
+| -------------------------------------- | ----------------------------- | --------------- | ------------------------ |
+| Student roll numbers (with duplicates) | ✅ `List<Integer>`             | ❌               | ❌                        |
+| Unique usernames                       | ❌                             | ✅ `Set<String>` | ❌                        |
+| Product ID → Product name mapping      | ❌                             | ❌               | ✅ `Map<Integer, String>` |
+| Task queue                             | ✅ `LinkedList` or `ArrayList` | ❌               | ❌                        |
+| Dictionary / Word → Meaning            | ❌                             | ❌               | ✅ `Map<String, String>`  |
+
+List<String> synchronizedList = Collections.synchronizedList(list);
+Set<String> synchronizedList = Collections.synchronizedSet(set);
+Map<String, Integer> synchronizedList = Collections.synchronizedMap(map);
+
+📘 Java Collections A–Z Method Comparison Table
+| **Method**              | **List** | **Set** | **Map** | **Description**                                    |
+| ----------------------- | :------: | :-----: | :-----: | -------------------------------------------------- |
+| `add(E e)`              |     ✅    |    ✅    |    ❌    | Adds an element to the collection                  |
+| `add(int index, E e)`   |     ✅    |    ❌    |    ❌    | Inserts element at specific index                  |
+| `addAll(Collection)`    |     ✅    |    ✅    |    ❌    | Adds all elements from another collection          |
+| `clear()`               |     ✅    |    ✅    |    ✅    | Removes all elements or mappings                   |
+| `clone()`               |     ❌    |    ❌    |   ✅\*   | Returns shallow copy (`HashMap`, `Hashtable` etc.) |
+| `contains(Object o)`    |     ✅    |    ✅    |    ❌    | Checks if collection contains the element          |
+| `containsKey(Object k)` |     ❌    |    ❌    |    ✅    | Checks if key exists in the map                    |
+| `containsValue(Object)` |     ❌    |    ❌    |    ✅    | Checks if value exists in the map                  |
+| `entrySet()`            |     ❌    |    ❌    |    ✅    | Returns a set view of map's key-value pairs        |
+| `equals(Object o)`      |     ✅    |    ✅    |    ✅    | Compares the collections/maps for equality         |
+| `forEach()`             |     ✅    |    ✅    |    ✅    | Iterates using lambda expressions (Java 8+)        |
+| `get(int index)`        |     ✅    |    ❌    |    ❌    | Returns element at given index                     |
+| `get(Object key)`       |     ❌    |    ❌    |    ✅    | Returns value mapped to key                        |
+| `hashCode()`            |     ✅    |    ✅    |    ✅    | Returns hash code of the object                    |
+| `indexOf(Object o)`     |     ✅    |    ❌    |    ❌    | Returns first index of specified element           |
+| `isEmpty()`             |     ✅    |    ✅    |    ✅    | Checks if empty                                    |
+| `iterator()`            |     ✅    |    ✅    |    ❌    | Returns iterator (use `entrySet()` for Map)        |
+| `keySet()`              |     ❌    |    ❌    |    ✅    | Returns set view of keys                           |
+| `lastIndexOf(Object o)` |     ✅    |    ❌    |    ❌    | Returns last index of specified element            |
+| `listIterator()`        |     ✅    |    ❌    |    ❌    | Returns bidirectional iterator for List            |
+| `put(K key, V value)`   |     ❌    |    ❌    |    ✅    | Maps key to value                                  |
+| `putAll(Map)`           |     ❌    |    ❌    |    ✅    | Copies all key-value mappings                      |
+| `remove(int index)`     |     ✅    |    ❌    |    ❌    | Removes element at given index                     |
+| `remove(Object o)`      |     ✅    |    ✅    |    ✅    | Removes element (List/Set) or key (Map)            |
+| `replace(K, V)`         |     ❌    |    ❌    |    ✅    | Replaces value for specified key                   |
+| `retainAll(Collection)` |     ✅    |    ✅    |    ❌    | Retains only matching elements                     |
+| `set(int index, E)`     |     ✅    |    ❌    |    ❌    | Replaces element at given index                    |
+| `size()`                |     ✅    |    ✅    |    ✅    | Returns number of elements/mappings                |
+| `sort(Comparator)`      |     ✅    |    ❌    |    ❌    | Sorts list using comparator                        |
+| `stream()`              |     ✅    |    ✅    |    ✅    | Returns sequential stream                          |
+| `subList(int, int)`     |     ✅    |    ❌    |    ❌    | Returns portion of the list                        |
+| `toArray()`             |     ✅    |    ✅    |    ❌    | Converts collection to array                       |
+| `values()`              |     ❌    |    ❌    |    ✅    | Returns collection view of values                  |
+
