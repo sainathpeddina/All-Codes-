@@ -1,0 +1,59 @@
+✅ What is char in Java?
+It’s a primitive data type.
+Represents a single 16-bit Unicode character.
+Declared using single quotes 'A'.
+char letter = 'A';
+
+✅ What is Character in Java?
+It’s a wrapper class for the char type (in java.lang package).
+Provides utility methods to work with characters.
+Supports autoboxing (auto conversion between char and Character).
+
+Character ch = 'A'; // autoboxing
+char c = ch;        // unboxing
+
+🔤 Character Methods A–Z with Examples
+| Method                           | Description                   | Example                                |
+| -------------------------------- | ----------------------------- | -------------------------------------- |
+| `charValue()`                    | Returns primitive `char`      | `Character.valueOf('A').charValue()`   |
+| `compare(char x, char y)`        | Compares 2 chars              | `Character.compare('a','b')` → `-1`    |
+| `digit(char ch, int radix)`      | Returns digit value of a char | `Character.digit('A', 16)` → `10`      |
+| `getNumericValue(char ch)`       | Numeric value                 | `Character.getNumericValue('9')` → `9` |
+| `getType(char ch)`               | Unicode type                  | `Character.getType('A')`               |
+| `isAlphabetic(int codePoint)`    | Checks if alphabet            | `Character.isAlphabetic('A')`          |
+| `isDigit(char ch)`               | Checks if digit               | `Character.isDigit('5')`               |
+| `isLetter(char ch)`              | Checks if letter              | `Character.isLetter('c')`              |
+| `isLetterOrDigit(char ch)`       | Checks letter or digit        | `Character.isLetterOrDigit('7')`       |
+| `isLowerCase(char ch)`           | Checks if lowercase           | `Character.isLowerCase('a')`           |
+| `isUpperCase(char ch)`           | Checks if uppercase           | `Character.isUpperCase('A')`           |
+| `isWhitespace(char ch)`          | Checks whitespace             | `Character.isWhitespace(' ')`          |
+| `isDefined(char ch)`             | Checks if Unicode defined     | `Character.isDefined('!')`             |
+| `isJavaIdentifierStart(char ch)` | Valid start for variable name | `Character.isJavaIdentifierStart('_')` |
+| `isJavaIdentifierPart(char ch)`  | Valid part of identifier      | `Character.isJavaIdentifierPart('1')`  |
+| `toLowerCase(char ch)`           | Converts to lowercase         | `Character.toLowerCase('A')` → `'a'`   |
+| `toUpperCase(char ch)`           | Converts to uppercase         | `Character.toUpperCase('a')` → `'A'`   |
+| `toString(char ch)`              | Converts to string            | `Character.toString('Z')` → `"Z"`      |
+
+✅ Example Demonstrating Character Methods
+public class CharacterDemo {
+    public static void main(String[] args) {
+        char ch = 'A';
+
+        System.out.println("Character: " + ch);
+        System.out.println("Is Letter: " + Character.isLetter(ch));
+        System.out.println("Is Digit: " + Character.isDigit(ch));
+        System.out.println("Is Uppercase: " + Character.isUpperCase(ch));
+        System.out.println("Is Lowercase: " + Character.isLowerCase(ch));
+        System.out.println("To Lowercase: " + Character.toLowerCase(ch));
+        System.out.println("To Uppercase: " + Character.toUpperCase('b'));
+        System.out.println("Is Whitespace: " + Character.isWhitespace(' '));
+        System.out.println("Is Java Identifier Start: " + Character.isJavaIdentifierStart(ch));
+        System.out.println("Char to String: " + Character.toString(ch));
+    }
+}
+
+🧠 Notes
+Character class provides static methods — no need to create an object.
+Useful in parsing strings, validation, and formatting.
+Use Character.toLowerCase() and Character.toUpperCase() for case-insensitive operations.
+
