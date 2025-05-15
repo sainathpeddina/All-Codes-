@@ -1,0 +1,155 @@
+<pre>
+
+✅ Features Included:
+Parallel Execution using TestNG
+Cross-Browser Support (Chrome & Edge)
+config.properties file for configuration
+Thread-safe WebDriver (ThreadLocal)
+Cucumber BDD with Step Definitions
+Maven project structure
+
+📁 Project Structure Overview
+SeleniumCucumberCrossBrowserParallel/
+│
+├── pom.xml
+├── testng.xml
+├── src/
+│   ├── test/
+│   │   ├── java/
+│   │   │   ├── features/
+│   │   │   │   └── login.feature
+│   │   │   ├── hooks/
+│   │   │   │   └── TestHooks.java
+│   │   │   ├── runners/
+│   │   │   │   └── ParallelTestRunner.java
+│   │   │   └── stepDefinitions/
+│   │   │       └── LoginSteps.java
+│   │   └── resources/
+│   │       └── config.properties
+│   └── main/
+│       └── java/
+│           └── utilities/
+│               └── DriverFactory.java
+
+⚙️ 1. Parallel Execution using TestNG
+Defined in testng.xml
+Runs two tests in parallel:
+One with Chrome
+One with Edge
+
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="2">
+  <test name="ChromeTest">
+    <parameter name="browser" value="chrome"/>
+    <system-property name="browser" value="chrome"/>
+    <classes>
+      <class name="runners.ParallelTestRunner"/>
+    </classes>
+  </test>
+  <test name="EdgeTest">
+    <parameter name="browser" value="edge"/>
+    <system-property name="browser" value="edge"/>
+    <classes>
+      <class name="runners.ParallelTestRunner"/>
+    </classes>
+  </test>
+</suite>
+
+✅ Result:
+Same tests run simultaneously on two browsers.
+
+🌐 2. Cross-Browser Testing with ThreadLocal WebDriver
+DriverFactory.java
+public class DriverFactory {
+    private static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
+
+    public static WebDriver getDriver() {
+        return tlDriver.get();
+    }
+
+    public static void initDriver(String browser) {
+        WebDriver driver;
+        switch (browser.toLowerCase()) {
+            case "edge": driver = new EdgeDriver(); break;
+            case "chrome":
+            default: driver = new ChromeDriver(); break;
+        }
+        tlDriver.set(driver);
+    }
+
+    public static void quitDriver() {
+        getDriver().quit();
+        tlDriver.remove();
+    }
+}
+
+📄 3. config.properties file
+Path: src/test/resources/config.properties
+baseURL=https://example.com
+browser=chrome
+
+🧪 4. Cucumber Feature File
+Path: src/test/java/features/login.feature
+Feature: Login feature
+  Scenario: Valid Login
+    Given I am on login page
+    Then I should see the title "Example Domain"
+
+🧩 5. Step Definitions
+Path: stepDefinitions/LoginSteps.java
+public class LoginSteps {
+    WebDriver driver = DriverFactory.getDriver();
+
+    @Given("I am on login page")
+    public void i_am_on_login_page() {
+        driver.get("https://example.com");
+    }
+
+    @Then("I should see the title {string}")
+    public void i_should_see_title(String expectedTitle) {
+        assert driver.getTitle().contains(expectedTitle);
+    }
+}
+
+🔄 6. Cucumber Hooks for Setup and Teardown
+Path: hooks/TestHooks.java
+public class TestHooks {
+    @Before
+    public void setUp() {
+        String browser = System.getProperty("browser", "chrome");
+        DriverFactory.initDriver(browser);
+    }
+
+    @After
+    public void tearDown() {
+        DriverFactory.quitDriver();
+    }
+}
+
+🚀 7. Parallel Runner
+Path: runners/ParallelTestRunner.java
+@CucumberOptions(
+    features = "src/test/java/features",
+    glue = {"stepDefinitions", "hooks"},
+    plugin = {"pretty", "html:target/cucumber-html-report", "json:target/cucumber.json"},
+    monochrome = true
+)
+public class ParallelTestRunner extends AbstractTestNGCucumberTests {
+
+    @Override
+    @DataProvider(parallel = true)
+    public Object[][] scenarios() {
+        return super.scenarios();
+    }
+}
+
+🧪 How to Run
+mvn clean test -DsuiteXmlFile=testng.xml
+
+🧩 Extending the Framework
+You can easily enhance this framework by:
+Adding Excel data source utility
+Integrating logging (e.g., Log4j)
+Adding SparkReport for reporting
+Adding Screenshot capturing for failed steps
+
+</pre>
