@@ -1,0 +1,135 @@
+🧰 What is Jenkins?
+Jenkins is an open-source automation server used to automate the building, testing, and deployment of applications. It's a key tool in Continuous Integration (CI) and Continuous Delivery/Deployment (CD).
+
+✅ Key Features:
+Supports CI/CD pipelines
+Integrates with GitHub, GitLab, Bitbucket, Docker, Maven, etc.
+Supports plugins (over 1800 available)
+Can run jobs on schedule, trigger by commits, pull requests, etc.
+Supports pipeline-as-code (Jenkinsfile)
+
+🔄 CI/CD in Jenkins
+✅ Continuous Integration (CI):
+Automatically building and testing code whenever a developer pushes changes to a shared repository (like GitHub).
+
+✅ Continuous Delivery/Deployment (CD):
+Automatically delivering or deploying code to staging/production environments after successful CI.
+
+🔗 How to Integrate Jenkins with GitHub (CI/CD)
+Here’s how you connect GitHub with Jenkins and set up CI/CD:
+
+🧱 Step 1: Install Jenkins
+Download from https://www.jenkins.io/download/
+Run Jenkins on your machine (http://localhost:8080)
+Unlock using the admin password
+Install recommended plugins
+
+🧩 Step 2: Install Required Plugins
+In Manage Jenkins > Plugins, install:
+Git plugin
+GitHub Integration Plugin
+Pipeline Plugin
+
+🔐 Step 3: Configure GitHub Credentials in Jenkins
+Go to: Jenkins > Manage Jenkins > Credentials
+Add credentials:
+Kind: Username with password or Personal Access Token (GitHub)
+ID: something like github-token
+Scope: Global
+
+🔗 Step 4: Create a Jenkins Job for GitHub Project
+Option 1: Freestyle Project
+New Item → Select Freestyle project
+Under Source Code Management, choose Git and paste your GitHub repo URL
+Add credentials if needed
+Under Build Triggers, check:
+✅ “GitHub hook trigger for GITScm polling” (if using webhooks)
+Or use poll SCM like H/5 * * * * for polling every 5 minutes
+Under Build, add your build script (Maven, Gradle, Shell, etc.)
+Save and Build
+
+🔁 Step 5: Add Webhook in GitHub (Optional but Recommended)
+Go to your GitHub repo → Settings → Webhooks
+Add webhook:
+URL: http://<your-jenkins-server>:8080/github-webhook/
+Content type: application/json
+Event: Just the push event
+Now, any push to GitHub triggers Jenkins build automatically
+
+🔁 Workflow Summary
+| Action                  | Tool                   |
+| ----------------------- | ---------------------- |
+| Developer pushes code   | GitHub                 |
+| GitHub triggers Jenkins | Webhook                |
+| Jenkins pulls code      | Git plugin             |
+| Builds/tests/deploys    | Jenkins CI/CD Pipeline |
+
+
+✅ Benefits of CI/CD with Jenkins + GitHub
+Early bug detection – Code is tested on every push
+Faster releases – Automates build, test, deploy
+Consistent workflow – Avoids human error
+Better collaboration – Feedback on PRs and commits
+
+🔧 1. General Options
+Project Name: Unique identifier for your job.
+Description: Helps document the job purpose.
+Discard Old Builds:
+Keep build logs for only a specific number of days or builds.
+This Project is Parameterized:
+Define build parameters (e.g., string, boolean, choice, file, etc.).
+Useful for dynamic builds (e.g., deploy to different environments).
+
+🔁 2. Source Code Management (SCM)
+For Git:
+Repository URL: e.g., https://github.com/yourname/repo.git
+Credentials: GitHub token or SSH key.
+Branches to build: e.g., */main, */develop, or use a parameter like ${branch}.
+
+⏱️ 3. Build Triggers (When to Build)
+Trigger Type	Description
+Build periodically (cron)	Run at intervals (e.g., H/15 * * * * = every 15 min)
+Poll SCM	Check Git repo at intervals for changes
+GitHub hook trigger	Trigger build on GitHub push
+Trigger builds remotely	Build via an external URL (requires token)
+After other projects are built	Chain jobs together
+On PR creation/update (GitHub plugin)	Trigger builds on Pull Requests
+
+🏗️ 4. Build Environment (Pre-build Setup)
+Delete workspace before build starts
+Use secret text(s) or file(s)
+Inject environment variables
+Add timestamps to the Console Output
+Run build as a specific user
+
+🔨 5. Build Steps (What to Run)
+You can define what the job should do, using:
+For Freestyle Project:
+mvn clean install
+
+📦 6. Post-build Actions (What to Do After Build)
+Archive the artifacts:
+Save build outputs like .jar, .war, .zip files
+Example: target/*.jar
+Publish JUnit test result report:
+Parse test results (e.g., target/surefire-reports/*.xml)
+Email Notifications:
+Send emails on success/failure to team members
+Deploy artifacts to a server:
+Using SCP, FTP, or custom scripts
+Publish HTML reports or Allure Reports
+Trigger other jobs:
+Downstream job build on success/failure
+
+| Category        | Key Options                                                         |
+| --------------- | ------------------------------------------------------------------- |
+| **General**     | Name, description, keep old builds, parameters                      |
+| **SCM**         | Git repo URL, credentials, branch                                   |
+| **Triggers**    | GitHub webhook, poll SCM, periodic, after another build             |
+| **Environment** | Set environment variables, delete workspace, credentials            |
+| **Build Steps** | Shell/batch scripts, Maven, Gradle, Python, Docker                  |
+| **Post-build**  | Archive artifacts, send emails, publish reports, trigger other jobs |
+
+
+
+
