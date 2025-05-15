@@ -16,11 +16,16 @@ public class SwitchByTitle {
 
         // Wait until the number of windows is 2
         wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-
+       
         Set<String> windowHandles = driver.getWindowHandles();
 
         for (String handle : windowHandles) {
             driver.switchTo().window(handle);
+
+        // Use explicit waits like:
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login")));
+        // Use correct locators, and ensure the right frame or window is selected.
+
             String title = driver.getTitle();
             if (title.equals("Expected Window Title")) {
                 System.out.println("Switched to correct window.");
