@@ -1,0 +1,84 @@
+🔷 Overview: Collections Utility Class
+Package: java.util
+Type: Final class with only static methods
+Purpose: Operate on or return collections like List, Set, Map, etc.
+Common Use Cases: Sorting, synchronization, immutability, frequency count, etc.
+
+✅ A–Z Methods of Collections Class (with Examples)
+| **Method**                                | **Description**                                                  | **Example**                                          |
+| ----------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------- |
+| `addAll(Collection, elements...)`         | Adds multiple elements to a collection                           | `Collections.addAll(list, 1, 2, 3)`                  |
+| `binarySearch(List, key)`                 | Searches sorted list using binary search                         | `Collections.binarySearch(list, 10)`                 |
+| `checkedCollection(Collection, type)`     | Ensures runtime type-safety                                      | `Collections.checkedList(list, String.class)`        |
+| `copy(destList, srcList)`                 | Copies elements from `srcList` to `destList` (must be same size) | `Collections.copy(dest, src)`                        |
+| `disjoint(Collection1, Collection2)`      | Returns true if two collections have no common elements          | `Collections.disjoint(list1, list2)`                 |
+| `emptyList()`, `emptySet()`, `emptyMap()` | Returns immutable empty collection                               | `Collections.emptyList()`                            |
+| `fill(List, val)`                         | Replaces all elements with specified value                       | `Collections.fill(list, "X")`                        |
+| `frequency(Collection, element)`          | Returns count of element in collection                           | `Collections.frequency(list, "A")`                   |
+| `indexOfSubList(source, target)`          | Finds starting index of sublist in source                        | `Collections.indexOfSubList(list1, list2)`           |
+| `lastIndexOfSubList(source, target)`      | Finds last starting index of sublist in source                   | `Collections.lastIndexOfSubList(list1, list2)`       |
+| `max(Collection)`                         | Returns maximum element (natural order)                          | `Collections.max(list)`                              |
+| `min(Collection)`                         | Returns minimum element                                          | `Collections.min(list)`                              |
+| `nCopies(count, element)`                 | Returns immutable list with n copies of given element            | `Collections.nCopies(5, "X")`                        |
+| `replaceAll(List, oldVal, newVal)`        | Replaces all oldVal with newVal                                  | `Collections.replaceAll(list, "A", "Z")`             |
+| `reverse(List)`                           | Reverses the order of elements                                   | `Collections.reverse(list)`                          |
+| `reverseOrder()`                          | Returns a comparator that imposes reverse of natural order       | `Collections.sort(list, Collections.reverseOrder())` |
+| `rotate(List, distance)`                  | Rotates elements by distance (right shift)                       | `Collections.rotate(list, 2)`                        |
+| `shuffle(List)`                           | Randomly permutes the elements                                   | `Collections.shuffle(list)`                          |
+| `singleton(element)`                      | Returns immutable singleton set                                  | `Collections.singleton("A")`                         |
+| `singletonList(element)`                  | Returns immutable singleton list                                 | `Collections.singletonList("A")`                     |
+| `sort(List)`                              | Sorts list in ascending order                                    | `Collections.sort(list)`                             |
+| `sort(List, Comparator)`                  | Sorts list using a custom comparator                             | `Collections.sort(list, comp)`                       |
+| `synchronizedCollection(Collection)`      | Returns thread-safe view of collection                           | `Collections.synchronizedCollection(list)`           |
+| `synchronizedList(List)`                  | Returns synchronized list                                        | `Collections.synchronizedList(list)`                 |
+| `synchronizedMap(Map)`                    | Returns synchronized map                                         | `Collections.synchronizedMap(map)`                   |
+| `synchronizedSet(Set)`                    | Returns synchronized set                                         | `Collections.synchronizedSet(set)`                   |
+| `swap(List, i, j)`                        | Swaps elements at specified indices                              | `Collections.swap(list, 1, 3)`                       |
+| `unmodifiableCollection(Collection)`      | Returns unmodifiable view                                        | `Collections.unmodifiableCollection(list)`           |
+| `unmodifiableList(List)`                  | Returns unmodifiable list                                        | `Collections.unmodifiableList(list)`                 |
+| `unmodifiableMap(Map)`                    | Returns unmodifiable map                                         | `Collections.unmodifiableMap(map)`                   |
+| `unmodifiableSet(Set)`                    | Returns unmodifiable set                                         | `Collections.unmodifiableSet(set)`                   |
+
+
+🔸 Example Code for Common Methods
+import java.util.*;
+public class CollectionsExample {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>(Arrays.asList("B", "A", "D", "C"));
+
+        // Sort
+        Collections.sort(list);
+        System.out.println("Sorted: " + list); // [A, B, C, D]
+
+        // Reverse
+        Collections.reverse(list);
+        System.out.println("Reversed: " + list); // [D, C, B, A]
+
+        // Shuffle
+        Collections.shuffle(list);
+        System.out.println("Shuffled: " + list);
+
+        // Frequency
+        int freq = Collections.frequency(list, "A");
+        System.out.println("Frequency of A: " + freq);
+
+        // Rotate
+        Collections.rotate(list, 2);
+        System.out.println("Rotated: " + list);
+
+        // Swap
+        Collections.swap(list, 0, 1);
+        System.out.println("Swapped: " + list);
+
+        // Synchronize
+        List<String> syncList = Collections.synchronizedList(list);
+        System.out.println("Synchronized List: " + syncList);
+    }
+}
+
+✅ Notes
+Collections.copy() requires destination list to be of the same size or larger than source.
+
+
+
+
