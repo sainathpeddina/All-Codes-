@@ -1,0 +1,283 @@
+✅ 1. @CucumberOptions – Full Explanation
+This annotation configures how your Cucumber tests run. It's used inside your Runner class.
+
+🔹 Syntax:
+@CucumberOptions(
+    features = "path_to_feature_files",
+    glue = "path_to_step_definitions",
+    tags = "@Regression",
+    plugin = {"pretty", "html:target/report.html"},
+    dryRun = false,
+    monochrome = true,
+    publish = true
+)
+
+🔹 All Key Options Explained:
+| Option       | Description                                                                   |
+| ------------ | ----------------------------------------------------------------------------- |
+| `features`   | Path to your `.feature` files                                                 |
+| `glue`       | Path(s) to your `step definitions`, `hooks`, and `supporting code`            |
+| `tags`       | Runs only scenarios tagged with specified tag (`@Smoke`, `@Regression`, etc.) |
+| `plugin`     | Used for output formats: `pretty`, `html`, `json`, `rerun`, etc.              |
+| `dryRun`     | `true`: checks if all steps have matching step definitions (no execution)     |
+| `monochrome` | `true`: makes console output readable (removes weird characters)              |
+| `publish`    | `true`: publishes report to [Cucumber Reports](https://reports.cucumber.io)   |
+| `name`       | Filter by scenario names (like grep): `name = {"^Login.*"}`                   |
+| `snippets`   | Style of generated step defs: `CAMELCASE`, `UNDERSCORE`                       |
+
+
+✅ 2. Annotations in BDD Framework
+Cucumber uses Java annotations to map Gherkin steps to Java methods. Here's a list:
+
+🔸 Gherkin to Java Mapping:
+| Gherkin Keyword | Java Annotation            | Description                      |
+| --------------- | -------------------------- | -------------------------------- |
+| `Given`         | `@Given`                   | Sets up the test precondition    |
+| `When`          | `@When`                    | Executes the main test action    |
+| `Then`          | `@Then`                    | Validates result                 |
+| `And` / `But`   | `@Given`, `@When`, `@Then` | Treated same as previous keyword |
+
+
+@Given("user is on login page")
+public void userOnLoginPage() {
+    System.out.println("Navigating to login page...");
+}
+
+🔸 Lifecycle Hooks:
+Hooks are in a Hooks.java class and control test setup/teardown.
+  | Annotation    | Purpose                          |
+| ------------- | -------------------------------- |
+| `@Before`     | Runs before each scenario        |
+| `@After`      | Runs after each scenario         |
+| `@BeforeStep` | Runs before each individual step |
+| `@AfterStep`  | Runs after each individual step  |
+
+@Before(order = 1)
+public void beforeScenario1() {
+    System.out.println("Before - order 1");
+}
+
+@Before(order = 2)
+public void beforeScenario2() {
+    System.out.println("Before - order 2");
+}
+
+🔸 Parameterized Steps:
+Use {} or regex in your Gherkin steps.
+
+Given user logs in with username "admin" and password "admin123"
+
+@Given("user logs in with username {string} and password {string}")
+public void login(String username, String password) {
+    System.out.println(username + ", " + password);
+}
+
+✅ Summary Cheatsheet
+| Component                  | Purpose                          |
+| -------------------------- | -------------------------------- |
+| `@CucumberOptions`         | Configures test run              |
+| `@Given`, `@When`, `@Then` | Maps feature steps to Java       |
+| `@Before`, `@After`        | Setup and teardown for scenarios |
+| `plugin = "rerun"`         | Logs failed scenarios            |
+| `tags = "@Smoke"`          | Filter tests by tag              |
+
+
+✅ Use Case: Running Tests with Multiple Tags
+You have scenarios tagged as @Smoke, @Regression, @Sanity, etc. You want to run:
+Scenario: Quick check
+  @Smoke
+  Given the app is running
+
+Scenario: Full regression
+  @Regression
+  Given the user is on login page
+
+Scenario: Combined test
+  @Smoke @Sanity
+  Given the user is logged in
+
+
+✅ Runner with Multiple Tag Conditions
+🔹 1. Run Scenarios with either @Smoke or @Sanity (OR logic):
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = "stepdefs",
+    tags = "@Smoke or @Sanity"
+)
+
+🔹 2. Run Scenarios with both @Smoke and @Sanity (AND logic):
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = "stepdefs",
+    tags = "@Smoke and @Sanity"
+)
+
+🔹 3. Run Scenarios with NOT @Regression:
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = "stepdefs",
+    tags = "not @Regression"
+)
+
+🔹 4. Run Scenarios with only @Smoke:
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = "stepdefs",
+    tags = "@Smoke"
+)
+
+✅ Final Example Runner Class
+package runners;
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = {"stepdefs", "hooks"},
+    plugin = {
+        "pretty",
+        "html:target/cucumber-reports.html"
+    },
+    tags = "@Smoke or @Sanity",  // change logic here as needed
+    monochrome = true
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+}
+
+✅ Tip
+You can combine complex tag expressions:
+tags = "(@Smoke or @Sanity) and not @Regression"
+
+✅ Common Keywords in a Feature File
+| Keyword            | Purpose                                                                        |                                
+| ------------------ | ------------------------------------------------------------------------------ |
+| `Feature`          | Describes the overall business functionality being tested                      |            
+| `Scenario`         | Describes a specific test case or user story                                   |                                   
+| `Scenario Outline` | Used for data-driven testing (run scenario multiple times with different data) |                                
+| `Examples`         | Provides the data set for `Scenario Outline`                                   |                                 
+| `Given`            | Describes the initial context or state (preconditions)                         |                                   
+| `When`             | Describes the main action or event (user action)                               |                                   
+| `Then`             | Describes the expected result or outcome                                       |                                   
+| `And`              | Adds more steps to Given/When/Then (same meaning as the previous step)         |                                   
+| `But`              | Adds a negative condition (same meaning as previous step)                      |                                   
+| `Background`       | Defines common Given steps for all scenarios in a feature                      |                                   
+| `@tags`            | Used to tag scenarios or features for filtering                                |                                   
+| `"""` (Doc String) | Used to define multi-line input (e.g., JSON or text body)                      |                                   
+
+
+✅ Example Feature File with All Keywords
+@LoginFeature
+Feature: Login Functionality
+
+  Background:
+    Given the application is running
+    And the user is on the login page
+
+  @Smoke @ValidLogin
+  Scenario: Successful login with valid credentials
+    Given the user enters username "admin"
+
+  @InvalidLogin
+  Scenario Outline: Unsuccessful login with invalid credentials
+    Given the user enters username "<username>"
+
+    Examples:
+      | username | password | error                      |
+      | admin    | wrong123 | Invalid credentials        |
+      | user     | admin123 | Invalid credentials        |
+
+✅ Description of Each Keyword
+🔹 Feature
+Top-level description of what you’re testing.
+Only one Feature per file.
+
+🔹 Background
+Defines steps common to all scenarios in the feature.
+Runs before each scenario.
+
+🔹 Scenario
+Defines a single test case with Given-When-Then steps.
+
+🔹 Scenario Outline + Examples
+Defines a parameterized scenario for data-driven tests.
+Uses <placeholders> replaced by Examples data.
+
+🔹 Given / When / Then / And / But
+Given: Preconditions
+When: User actions
+Then: Expected outcomes
+And / But: Additional steps (same type as the previous)
+
+🔹 @tags
+Used for grouping or filtering scenarios in runners:
+tags = "@Smoke and not @WIP"
+
+🔹 """ (Doc String)
+Used when you want to pass a multi-line string, such as JSON or XML:
+
+Given I send the following request body:
+  """
+  {
+    "username": "admin",
+    "password": "admin123"
+  }
+  """
+
+🔹 | (Data Table)
+Used to pass multiple inputs as a table:
+
+Given the following users exist:
+  | name  | email           |
+  | John  | john@email.com  |
+  | Alice | alice@email.com |
+
+✅ What is Scenario Outline?
+Scenario Outline allows you to run the same scenario multiple times with different sets of data, similar to how @DataProvider works in TestNG.
+
+✅ Syntax of Scenario Outline + Examples
+  Scenario Outline: Login with multiple credentials
+    Given the user enters username "<username>"
+    And the user enters password "<password>"
+    When the user clicks the login button
+    Then the login should be "<status>"
+
+    Examples:
+      | username | password | status  |
+      | admin    | admin123 | success |
+      | user1    | wrong123 | failure |
+Each row in Examples is like one data set in a DataProvider.
+
+✅ Matching Step Definition
+In your Java Step Definitions:
+
+@Given("the user enters username {string}")
+public void enterUsername(String username) {
+    System.out.println("Username: " + username);
+}
+
+@And("the user enters password {string}")
+public void enterPassword(String password) {
+    System.out.println("Password: " + password);
+}
+
+@Then("the login should be {string}")
+public void verifyLoginStatus(String status) {
+    System.out.println("Expected login result: " + status);
+}
+
+✅ How It Works (Internally)
+Cucumber reads the Scenario Outline.
+It replaces each <placeholder> with values from Examples table.
+It creates a separate scenario run for each row.
+Each run is passed the corresponding data as arguments to the step definitions.
+✅ This is functionally the same as a loop through a @DataProvider in TestNG.
+
+🟨 Comparison: TestNG @DataProvider vs Cucumber Scenario Outline
+| Feature                 | TestNG                     | Cucumber                        |
+| ----------------------- | -------------------------- | ------------------------------- |
+| Keyword                 | `@DataProvider`            | `Scenario Outline` + `Examples` |
+| Data format             | 2D array / Object\[]\[]    | Table in Gherkin syntax         |
+| Usage                   | Call method multiple times | Run scenario multiple times     |
+| Parameter binding       | Via method parameters      | Via placeholder tags `<...>`    |
+| Supports multiple data? | ✅ Yes                     | ✅ Yes                         |
+
