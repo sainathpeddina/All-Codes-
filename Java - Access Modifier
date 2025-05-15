@@ -1,0 +1,28 @@
+| Access Modifier         | Class (same class) | Package (same package) | Subclass (other package)           | World (anywhere) |
+| ----------------------- | ------------------ | ---------------------- | ---------------------------------- | ---------------- |
+| `private`               | ✅ Yes              | ❌ No                   | ❌ No                               | ❌ No             |
+| *no modifier* (default) | ✅ Yes              | ✅ Yes                  | ❌ No                               | ❌ No             |
+| `protected`             | ✅ Yes              | ✅ Yes                  | ✅ Yes *(only through inheritance)* | ❌ No             |
+| `public`                | ✅ Yes              | ✅ Yes                  | ✅ Yes                              | ✅ Yes            |
+
+default = Package-Private
+protected = Package + Subclass Access
+
+package animals;
+public class Animal {
+    private int id;               // Only within Animal
+    int age;                      // Default → Only in same package
+    protected String species;     // Subclasses can access (even in other packages)
+    public String name;           // Accessible everywhere
+}
+
+package zoo;
+import animals.Animal;
+public class Dog extends Animal {
+    public void printInfo() {
+        // System.out.println(id);        // ❌ private → Not accessible
+        // System.out.println(age);       // ❌ default → Not accessible from different package
+        System.out.println(species);      // ✅ protected → Accessible in subclass
+        System.out.println(name);         // ✅ public → Accessible anywhere
+    }
+}
