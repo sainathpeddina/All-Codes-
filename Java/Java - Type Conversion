@@ -1,0 +1,214 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+| Method                     | Description                                           | Example                                    |
+| -------------------------- | ----------------------------------------------------- | ------------------------------------------ |
+| `Integer.valueOf(String)`  | Converts a String to an Integer object                | `Integer.valueOf("123");` → `Integer(123)` |
+| `String.valueOf(Object)`   | Converts any object (including primitive) to a String | `String.valueOf(100);` → `"100"`           |
+| `Integer.parseInt(String)` | Converts a String to a primitive int                  | `Integer.parseInt("123");` → `123`         |
+| `String.toString()`        | Converts anY object to its String representation       | `Integer(123).toString();` → `"123"`       |
+| `Integer.toString()`       | Converts an Integer object to a String                | `Integer(123).toString();` → `"123"`       |
+| `String.format()`               | Formats data into a `String`                          | `String.format("Hello %s", "world")` |
+| `Integer.valueOf(String, int)`  | Converts a `String` to `Integer` with a specific base | `Integer.valueOf("1011", 2)`         |
+| `Integer.parseInt(String, int)` | Parses a `String` to `int` with a specific base       | `Integer.parseInt("1011", 2)`        |
+
+        Integer intObj = 456;
+        String str = intObj.toString();
+        System.out.println(str);  // Output: "456"
+
+        // You can also use the static version
+        int primitiveInt = 789;
+        String str2 = Integer.toString(primitiveInt);
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+📋 String ⇄ Character[]
+String → Character[]		String str = "cat";
+                        Character[] arr = new Character[str.length()];
+                        for (int i = 0; i < str.length(); i++) 
+                        arr[i] = str.charAt(i);
+Character[] → String		StringBuilder sb = new StringBuilder();
+                        for (Character c : arr) sb.append(c);
+                        String str = sb.toString();
+
+🔠 Character[] ⇄ List<Character>
+Character[] → List<Character>		  List<Character> list = Arrays.asList(array);
+List<Character> → Character[]		  Character[] array = list.toArray(new Character[0]);
+
+
+📋 String[] ⇄ List<String>
+String[] → List<String>		      List<String> list = Arrays.asList(array);
+List<String> → String[]		      String[] array = list.toArray(new String[0]);
+
+
+🔣 char[] ⇄ List<Character>
+char[] → List<Character>		List<Character> list = new ArrayList<>();
+                            for (char c : charArray) list.add(c);
+List<Character> → char[]		char[] arr = new char[list.size()];
+                            for (int i = 0; i < list.size(); i++) .
+                            arr[i] = list.get(i);
+
+
+🔢 int[] ⇄ List<Integer> (Requires boxing/unboxing)
+int[] → List<Integer>		    List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+List<Integer> → int[]	    	int[] arr = list.stream().mapToInt(i -> i).toArray();
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🧠Convert char[] to List<Character>
+char[] charArray = {'a', 'b', 'c', 'd'};
+// Convert to List<Character>
+List<Character> charList = new ArrayList<>();
+for (char c : charArray) {
+    charList.add(c);  // autoboxing from char to Character
+}
+
+🧠Convert List<Character> to char[]
+List<Character> charList = Arrays.asList('a', 'b', 'c');
+char[] charArray = new char[charList.size()];
+for (int i = 0; i < charList.size(); i++) {
+    charArray[i] = charList.get(i);
+}
+
+🧠Convert char[] to Character[]
+Character[] characterArray = new Character[charArray.length];
+// Convert each char element to a Character and store in the new array
+ for (int i = 0; i < charArray.length; i++) {
+  characterArray[i] = Character.valueOf(charArray[i]);}
+
+🧠Convert Character[] to char[]
+char[] charArray = new char[characterArray.length];
+for (int i = 0; i < characterArray.length; i++) {
+charArray[i] = characterArray[i];} // Unboxing from Character to char
+
+🧠Convert Character[] to List<Character> 
+Character[] charArray = {'a', 'b', 'c'};
+List<Character> charList = Arrays.asList(charArray);
+Note: The returned list is backed by the array, so it's fixed-size. 
+You cannot add or remove elements, only modify existing ones.
+
+Character[] charArray = {'a', 'b', 'c'};
+List<Character> charList = new ArrayList<>(Arrays.asList(charArray));
+
+🧠Convert List<Character> to Character[]
+List<Character> charList = Arrays.asList('a', 'b', 'c');
+Character[] charArray = charList.toArray(new Character[0]);
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🧠Convert String to string[]
+String[] result = input.split(" "): Splits based on spaces.
+String[] result = input.split(","): Splits based on commas.
+String[] result = input.split("[, ]+"): Splits based on one or more spaces or commas.
+
+🧠Convert string[] to String
+String[] array = {"apple", "banana", "orange"};
+1. Using String.join()
+String result = String.join(", ", array);  // Joins with a comma and space
+System.out.println(result);
+Output:
+apple, banana, orange
+
+2. Using Arrays.toString()
+String result = Arrays.toString(array);
+System.out.println(result);
+Output:
+[apple, banana, orange]
+
+3. Manual Concatenation (if you need more control)
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < array.length; i++) {
+    sb.append(array[i]);
+    if (i < array.length - 1) {
+        sb.append(", ");  // Add a comma between elements
+    }
+}
+String result = sb.toString();
+System.out.println(result);
+Output:
+apple, banana, orange
+
+🧠Convert String to char[]
+String str = "cat";
+char[] charArray = str.toCharArray();
+
+🧠Convert char[] to String
+char[] array = {'c', 'a', 't'};
+
+String result = Arrays.toString(array);
+System.out.println(result);
+
+String result = new String(array);  
+ System.out.println(result); 
+
+🧠Convert char[] to String
+🧠Convert Character[] to String
+StringBuilder result = new StringStringBuilder(); 
+for(char c:array)
+{
+result.append(c);
+}
+System.out.println(result.toString()); 
+
+StringBuilder sb = new StringBuilder();
+String str = sb.append(charArray)toString();
+
+🧠Convert String[] to List<String>
+String[] array = {"apple", "banana", "cherry"};
+List<String> list = Arrays.asList(array);
+NOTE: fixed-size — you can't add or remove elements, but you can modify existing ones.
+
+List<String> list = new ArrayList<>(Arrays.asList(array));
+
+🧠Convert List<String> to String[]
+List<String> list = Arrays.asList("apple", "banana", "cherry");
+String[] array = list.toArray(new String[0]); // Convert to array
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🧠Convert int to int[]
+int num = 12345;
+String str = Integer.toString(num);
+int[] result = new int[str.length()];
+        for (int i = 0; i < str.length(); i++) {
+            result[i] = str.charAt(i) - '0'; // Convert char to int (Converts each character of the string back to an integer
+by subtracting the ASCII value of '0' from the character.)
+        }       
+        for (int i : result) {
+            System.out.print(i + " "); }
+
+🧠Convert int[] to List<Integer>
+int[] intArray = {1, 2, 3, 4};
+List<Integer> intList = new ArrayList<>();
+for (int i : intArray) {
+    intList.add(i);  // autoboxing from int to Integer
+}
+
+🧠Convert List<Integer> to int[]
+List<Integer> intList = Arrays.asList(1, 2, 3, 4);
+int[] intArray = new int[intList.size()];
+for (int i = 0; i < intList.size(); i++) {
+    intArray[i] = intList.get(i); // unboxing happens automatically
+}
+
+🧠Convert int[] to Integer[]
+Integer[] integerArray = new Integer[intArray.length];
+// Convert each int element to a Integer and store in the new array
+ for (int i = 0; i < intArray.length; i++) {
+  integerArray[i] = Integer.valueOf(intArray[i]);}
+
+🧠Convert Integer[] to int[]        
+int[] intArray = new int[integerArray.length];
+for (int i = 0; i < integerArray.length; i++) {
+intArray[i] = integerArray[i]; } // Unboxing: converting Integer to int
+
+🧠Convert Integer[] to List<Integer> 
+Integer[] integerArray = {1, 2, 3, 4};
+List<Integer> integerList = Arrays.asList(integerArray);
+NOTE: This creates a fixed-size list ,You can’t add or remove elements from it, but you can modify existing ones.
+
+Integer[] integerArray = {1, 2, 3, 4};
+List<Integer> integerList = new ArrayList<>(Arrays.asList(integerArray));
+
+🧠Convert List<Integer> to Integer[]
+List<Integer> intList = Arrays.asList(1, 2, 3, 4);
+Integer[] intArray = intList.toArray(new Integer[0]);
+
