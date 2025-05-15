@@ -1,0 +1,80 @@
+<pre>
+
+1. @DataProvider Annotation
+TestNG provides @DataProvider to pass different sets of data to a test method.
+
+@DataProvider(name = "loginData")
+public Object[][] loginDataProvider() {
+    return new Object[][] {
+        {"user1", "pass1"},
+        {"user2", "pass2"}
+    };
+}
+
+@Test(dataProvider = "loginData")
+public void loginTest(String username, String password) {
+    // Use username and password in Selenium steps
+}
+
+2. @Parameters with testng.xml
+Pass parameters from the testng.xml file using the @Parameters annotation.
+
+testng.xml:
+<parameter name="browser" value="chrome"/>
+
+@Parameters("browser")
+@Test
+public void setup(String browser) {
+    if (browser.equals("chrome")) {
+        // Setup ChromeDriver
+    }
+}
+You can also use @BeforeClass or @BeforeMethod instead of @Test for setup configuration.
+
+3. Reading from External Files (Excel, CSV, JSON, etc.)
+Use libraries like Apache POI, Jackson, or OpenCSV to read data from:
+
+Excel (.xls/.xlsx)
+FileInputStream fis = new FileInputStream("testdata.xlsx");
+Workbook workbook = new XSSFWorkbook(fis);
+Sheet sheet = workbook.getSheet("Sheet1");
+String username = sheet.getRow(0).getCell(0).getStringCellValue();
+
+4. Using Environment Variables or System Properties
+Set values in the command line and read in code.
+mvn test -Dbrowser=firefox
+
+String browser = System.getProperty("browser");
+
+5. Using Properties Files
+Use .properties files for configuration data like URLs, credentials, browser names.
+config.properties:
+url=https://example.com
+username=testuser
+password=testpass
+
+Properties prop = new Properties();
+prop.load(new FileInputStream("config.properties"));
+String url = prop.getProperty("url");
+
+6. Using JSON/YAML Configs (with Jackson or SnakeYAML)
+For complex structured data, JSON or YAML files are preferred.
+
+testdata.json:
+{
+  "username": "admin",
+  "password": "admin123"
+}
+Java code using Jackson:
+
+ObjectMapper mapper = new ObjectMapper();
+User user = mapper.readValue(new File("testdata.json"), User.class);
+
+7. Using a Database
+If your tests require dynamic or large-scale data, query a database (e.g., MySQL, PostgreSQL).
+
+Connection conn = DriverManager.getConnection(dbURL, user, password);
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+
+</pre>
