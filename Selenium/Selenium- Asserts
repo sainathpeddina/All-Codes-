@@ -1,0 +1,96 @@
+✅ Types of Assertions in Java Testing
+Assertions fall into two main categories:
+
+Type	Description
+Hard Assert	Stops test execution immediately if the assertion fails.
+Soft Assert	Continues executing remaining test steps even if the assertion fails.
+
+🔴 1. Hard Assert (TestNG)
+➤ Features:
+Stops test execution on failure.
+Commonly used for critical verifications.
+
+➤ Example:
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class HardAssertExample {
+
+    @Test
+    public void testLogin() {
+        System.out.println("Step 1: Open Login Page");
+        Assert.assertEquals("Title", "Title"); // Pass
+        System.out.println("Step 2: Enter Username");
+
+        Assert.assertTrue(false); // Fails here, test stops
+        System.out.println("Step 3: Enter Password"); // Not executed
+    }
+}
+
+🔍 Output:
+Step 1: Open Login Page
+Step 2: Enter Username
+FAILED: testLogin
+java.lang.AssertionError: expected [true] but found [false]
+
+🟢 2. Soft Assert (TestNG)
+➤ Features:
+Does not stop the test after failure.
+Collects all failures and reports at the end.
+Requires assertAll() at the end to report the result.
+
+➤ Example:
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+public class SoftAssertExample {
+
+    @Test
+    public void testProfileUpdate() {
+        SoftAssert softAssert = new SoftAssert();
+
+        System.out.println("Step 1: Open Profile");
+        softAssert.assertEquals("John", "Johnny", "Name mismatch");
+
+        System.out.println("Step 2: Update Email");
+        softAssert.assertTrue(false, "Email format invalid");
+
+        System.out.println("Step 3: Save Changes");
+
+        softAssert.assertAll(); // Mandatory to check all soft asserts
+    }
+}
+🔍 Output:
+Step 1: Open Profile
+Step 2: Update Email
+Step 3: Save Changes
+FAILED: testProfileUpdate
+java.lang.AssertionError: The following asserts failed:
+	Name mismatch expected [John] but found [Johnny],
+	Email format invalid expected [true] but found [false]
+
+🔁 Comparison Table
+| Feature                    | Hard Assert       | Soft Assert         |
+| -------------------------- | ----------------- | ------------------- |
+| Stops execution on fail    | ✅ Yes             | ❌ No                |
+| Collects multiple failures | ❌ No              | ✅ Yes               |
+| `assertAll()` needed       | ❌ No              | ✅ Yes               |
+| Use case                   | Critical failures | Non-critical checks |
+
+
+📘 Common TestNG Assert Methods
+| Method                              | Description                  |
+| ----------------------------------- | ---------------------------- |
+| `assertEquals(actual, expected)`    | Checks if actual == expected |
+| `assertTrue(condition)`             | Passes if condition is true  |
+| `assertFalse(condition)`            | Passes if condition is false |
+| `assertNotEquals(actual, expected)` | Passes if actual != expected |
+| `assertNull(object)`                | Passes if object == null     |
+| `assertNotNull(object)`             | Passes if object != null     |
+| `assertSame(obj1, obj2)`            | Passes if obj1 == obj2       |
+| `assertNotSame(obj1, obj2)`         | Passes if obj1 != obj2       |
+
+
+🧪 JUnit Note:
+JUnit provides only hard asserts by default using org.junit.Assert.
+If you want soft assertions in JUnit, you can use third-party libraries like AssertJ.
