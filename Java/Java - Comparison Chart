@@ -1,0 +1,71 @@
+| Feature        | `Actions`                                                | `Action`                                             |
+| -------------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| Type           | Class                                                    | Interface                                            |
+| Purpose        | To build a chain of actions                              | To represent a built (composite) action              |
+| Common Methods | `moveToElement()`, `click()`, `sendKeys()`, `perform()`  | `perform()`                                          |
+| Usage          | Used to **build** and optionally **perform** immediately | Used to **store and perform later**                  |
+| Example        | `new Actions(driver).click().perform();`                 | `Action action = actions.build(); action.perform();` |
+
+| Feature              | `throw`                                  | `throws`                                            |
+| -------------------- | ---------------------------------------- | --------------------------------------------------- |
+| Purpose              | Actually **throws an exception**         | Declares that a method **might throw** an exception |
+| Used For             | Throwing a specific exception at runtime | Declaring checked exceptions in method signature    |
+| Used Inside          | Method body                              | Method signature (declaration)                      |
+| Follows With         | An **exception object** (`new`)          | An **exception class name**                         |
+| Number of Exceptions | One at a time                            | Can declare multiple, comma-separated               |
+
+| Feature              | `array`                                        | `Arrays`                                                      |
+| -------------------- | ---------------------------------------------- | ------------------------------------------------------------- |
+| Type                 | **Language construct**                         | **Utility class**                                             |
+| Package              | Built-in (no import needed)                    | `java.util.Arrays`                                            |
+| Purpose              | Used to store multiple values of the same type | Provides **methods** to operate on arrays (like sort, search) |
+| Syntax Example       | `int[] numbers = new int[5];`                  | `Arrays.sort(numbers);`                                       |
+| Can be instantiated? | Yes (e.g., `new int[5]`)                       | No (it's a class with static methods)                         |
+
+| Feature          | `Collection`                                           | `Collections`                                              |
+| ---------------- | ------------------------------------------------------ | ---------------------------------------------------------- |
+| Type             | **Interface**                                          | **Utility class**                                          |
+| Package          | `java.util.Collection`                                 | `java.util.Collections`                                    |
+| Purpose          | Base **interface** for List, Set, Queue collection types | Contains **static utility methods** for collections      |
+| Instantiable     | ❌ No (it's an interface)                              | ❌ No (contains only static methods)                      |
+| Extended/Used by | List, Set, Queue, etc.                                  | Used to perform `sort()`, `reverse()`, `shuffle()`        |
+| Common Usage     | Defining a collection type                              | Performing algorithms on collections                      |
+
+| Feature               | Static Method             | Non-Static Method                  |
+| --------------------- | ------------------------- | ---------------------------------- |
+| Belongs to            | Class                     | Object                             |
+| Accessed via          | Class name                | Object reference                   |
+| Can access static     | ✅ Yes                     | ✅ Yes                              |
+| Can access non-static | ⚠️ Only via object        | ✅ Yes                              |
+| Common uses           | Utility methods, `main()` | Business logic using instance data |
+
+| Feature / Aspect           | `Arrays` Class                                     | `Collections` Class                          |
+| -------------------------- | -------------------------------------------------- | -------------------------------------------- |
+| **Package**                | `java.util.Arrays`                                 | `java.util.Collections`                      |
+| **Type**                   | Final class with static methods                    | Final class with static methods              |
+| **Works With**             | Arrays (primitive and object types)                | Collections (`List`, `Set`, `Map`, etc.)     |
+| **Sorting**                | `sort()`, `parallelSort()`                         | `sort()`                                     |
+| **Searching**              | `binarySearch()`                                   | `binarySearch()` (only for `List`)           |
+| **Copying**                | `copyOf()`, `copyOfRange()`                        | `copy()` (between lists only)                |
+| **Filling**                | `fill()`                                           | `fill()` (only for `List`)                   |
+| **Conversion**             | `asList()`, `stream()`                             | `singletonList()`, `unmodifiableList()`      |
+| **Comparison**             | `equals()`, `deepEquals()`, `compare()`            | `disjoint()`, `frequency()`                  |
+| **Reversal / Rotation**    | ❌ (not directly supported)                         | `reverse()`, `rotate()`                      |
+| **Randomization**          | ❌                                                  | `shuffle()`                                  |
+| **Synchronization**        | ❌                                                  | `synchronizedList()`, `synchronizedMap()`    |
+| **Immutability**           | ❌                                                  | `unmodifiableList()`, `singletonList()`      |
+| **Frequency Count**        | ❌                                                  | `frequency()`                                |
+| **Stream Support**         | ✅ `stream()`, `stream(arr, from, to)`              | ❌ (Use collection.stream() directly)         |
+| **Thread Safety**          | ❌                                                  | Provided via synchronized wrappers           |
+| **Custom Operations**      | `setAll()`, `parallelSetAll()`, `parallelPrefix()` | ❌                                            |
+| **Data Structure Backing** | Raw arrays (fixed size)                            | Collection interfaces (`List`, `Set`, `Map`) |
+| **Typical Use Case**       | Array manipulation, low-level performance ops      | Collection utilities like sort, search, sync |
+| **Example Use**            | `Arrays.sort(intArr)`                              | `Collections.sort(list)`                     |
+
+| Feature      | `String`         | `StringBuilder`                        | `StringBuffer`                     |
+| ------------ | ---------------- | -------------------------------------- | ---------------------------------- |
+| Mutable?     | ❌ No             | ✅ Yes                                  | ✅ Yes                              |
+| Thread-safe? | ✅ Yes            | ❌ No                                   | ✅ Yes                              |
+| Performance  | ❌ Slow           | ✅ Fastest                              | ⚠️ Moderate                        |
+| Use Case     | Constant strings | Frequent modifications (single thread) | Multi-threaded string manipulation |
+
