@@ -1,0 +1,157 @@
+MYSQL
+
+Here is a consolidated canvas of all the major SQL queries and concepts you've shared, grouped by category. This will give you a simple reference sheet for interviews or study purposes:
+
+🗂️ SQL Cheat Sheet (Queries & Concepts)
+
+1. Table Creation & Basic Operations
+
+\-- Create table
+CREATE TABLE student (id INT, name VARCHAR(100), deptId INT);
+
+\-- Add new column
+ALTER TABLE student ADD email VARCHAR(100);
+
+\-- Modify column
+ALTER TABLE student MODIFY COLUMN name VARCHAR(150); -- MySQL
+ALTER TABLE student ALTER COLUMN name VARCHAR(150); -- SQL Server
+
+\-- Rename column
+ALTER TABLE student RENAME COLUMN name TO full\_name; -- MySQL
+EXEC sp\_rename 'student.name', 'full\_name', 'COLUMN'; -- SQL Server
+
+\-- Rename table
+ALTER TABLE student RENAME TO pupil;
+
+\-- Insert data
+INSERT INTO student (id, name) VALUES (1, 'John');
+
+\-- Update data
+UPDATE student SET name = 'Johnny' WHERE id = 1;
+
+\-- Delete data
+DELETE FROM student WHERE id = 1;
+
+\-- Truncate table
+TRUNCATE TABLE student;
+
+\-- Drop table
+DROP TABLE student;
+
+2. SQL Command Types
+
+* DDL (Data Definition Language): CREATE, ALTER, DROP, TRUNCATE, RENAME
+* DML (Data Manipulation Language): INSERT, UPDATE, DELETE
+* DCL (Data Control Language): GRANT, REVOKE
+* TCL (Transaction Control Language): COMMIT, ROLLBACK, SAVEPOINT
+* DQL (Data Query Language): SELECT
+
+3 🔐 Constraints 
+
+* NOT NULL: Ensures a column cannot have NULL values.
+* UNIQUE: Ensures all values in a column are different.
+* PRIMARY KEY: Combines NOT NULL and UNIQUE constraints.
+* FOREIGN KEY: Enforces referential integrity between tables.
+* CHECK: Restricts the values in a column based on a condition.
+* DEFAULT: Assigns a default value if none is provided during insert.
+
+4. 🔑 Keys
+* Super Key: Any set of attributes that uniquely identifies a row in a table.
+* Candidate Key: Minimal super key (no redundant attributes).
+* Primary Key: Unique + Not Null; the main identifier of table rows.
+* Alternate Key: Candidate key not chosen as the primary key.
+* Foreign Key: A field that refers to the primary key in another table.
+
+5. Joins
+
+* INNER JOIN: fetch matching records
+  SELECT a.name, b.dept FROM employee a INNER JOIN department b ON a.dept\_id = b.dept\_id;
+
+* LEFT JOIN
+  SELECT a.name, b.dept FROM employee a LEFT JOIN department b ON a.dept\_id = b.dept\_id;
+
+* RIGHT JOIN
+  SELECT a.name, b.dept FROM employee a RIGHT JOIN department b ON a.dept\_id = b.dept\_id;
+
+* FULL OUTER JOIN
+  SELECT a.name, b.dept FROM employee a FULL OUTER JOIN department b ON a.dept\_id = b.dept\_id;
+
+* CROSS JOIN
+  SELECT \* FROM employee CROSS JOIN department;
+
+* SELF JOIN
+  SELECT e.name FROM employee e JOIN employee m ON e.manager\_id = m.id;
+
+6. Aggregate Functions
+
+SELECT MAX(salary), MIN(salary), AVG(salary), COUNT(\*), SUM(salary) FROM employee;
+
+7. GROUP BY vs ORDER BY
+
+GROUP BY: used with aggregation
+ORDER BY: used to sort result
+
+8. WHERE vs HAVING
+
+* WHERE: filters before grouping
+* HAVING: filters after grouping
+
+9. Pattern Matching
+
+SELECT \* FROM employee WHERE name LIKE 'A%'; -- Starts with A
+SELECT \* FROM employee WHERE name LIKE '%A'; -- Ends with A
+SELECT \* FROM employee WHERE name LIKE 'A%Z'; -- Starts A, ends Z
+
+10. Subqueries
+
+\-- Scalar subquery
+SELECT name FROM employee WHERE id = (SELECT MAX(id) FROM employee);
+
+\-- Correlated subquery
+SELECT \* FROM employee e WHERE EXISTS (SELECT 1 FROM dept d WHERE e.id = d.emp\_id);
+
+\-- IN vs EXISTS
+SELECT \* FROM employee WHERE id IN (SELECT emp\_id FROM dept);
+SELECT \* FROM employee WHERE EXISTS (SELECT 1 FROM dept WHERE dept.emp\_id = employee.id);
+
+11. Set Operators
+
+SELECT \* FROM A UNION SELECT \* FROM B; -- Removes duplicates
+SELECT \* FROM A UNION ALL SELECT \* FROM B; -- Keeps duplicates
+SELECT \* FROM A INTERSECT SELECT \* FROM B; -- Common rows
+SELECT \* FROM A MINUS SELECT \* FROM B; -- In A, not in B (not supported in MySQL)
+
+12. Duplicate Handling
+
+\-- Find duplicates
+SELECT name, COUNT(*) FROM employee GROUP BY name HAVING COUNT(*) > 1;
+
+\-- Delete duplicates (MySQL-style)
+DELETE e1 FROM employee e1
+INNER JOIN employee e2
+WHERE e1.id > e2.id AND e1.name = e2.name;
+
+13. Top-N Queries
+
+\-- Second highest salary
+SELECT MAX(salary) FROM employee WHERE salary < (SELECT MAX(salary) FROM employee);
+
+\-- 10th highest salary (MySQL 8+)
+SELECT salary FROM (SELECT salary, DENSE\_RANK() OVER (ORDER BY salary DESC) as rnk FROM employee) AS ranked WHERE rnk = 10;
+
+14. Sample Join 3 Tables
+
+SELECT a.name, b.subject, c.marks
+FROM student a
+LEFT JOIN enrollment b ON a.id = b.student\_id
+RIGHT JOIN marks c ON c.enroll\_id = b.id;
+
+15. Miscellaneous
+
+\-- Get departments with most students
+SELECT deptid, COUNT(*) FROM student GROUP BY deptid ORDER BY COUNT(*) DESC LIMIT 1;
+
+\-- Get students joined in last 6 months
+SELECT \* FROM student WHERE join\_date >= CURDATE() - INTERVAL 6 MONTH;
+
+If you want this exported as a PDF, Markdown file, or printable cheat sheet — let me know!
