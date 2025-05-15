@@ -1,0 +1,166 @@
+🔹 1. Switching Between Windows by Window Title
+This is useful when:
+You know the title of the window you want to interact with.
+The order of window handles is not guaranteed.
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.Set;
+
+public class SwitchByTitle {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://example.com"); // Main window
+        // Open a new window/tab somehow (e.g., via clicking a link)
+
+        // Wait until the number of windows is 2
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+
+        Set<String> windowHandles = driver.getWindowHandles();
+
+        for (String handle : windowHandles) {
+            driver.switchTo().window(handle);
+            String title = driver.getTitle();
+            if (title.equals("Expected Window Title")) {
+                System.out.println("Switched to correct window.");
+                break;
+            }
+        }
+        // Perform actions on the target window
+
+        driver.quit();
+    }
+}
+
+
+🔹 2. Switching Between Windows by Position (Index)
+Selenium returns window handles as a Set (unordered), 
+so you must convert it to a List to use indexing.
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class SwitchByIndex {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://example.com"); // Main window
+
+        // Assume a new window opens here
+        Set<String> handles = driver.getWindowHandles();
+        List<String> windowList = new ArrayList<>(handles);
+
+        // Switch to second window (index 1)
+        driver.switchTo().window(windowList.get(1));
+
+        System.out.println("Switched to: " + driver.getTitle());
+
+        driver.quit();
+    }
+}
+
+🔄 Switch Back to Main Window
+If you want to return to the first (main) window:
+
+String mainWindow = driver.getWindowHandle();
+// ... open and switch to other windows ...
+driver.switchTo().window(mainWindow); // Return
+
+
+The method driver.switchTo().newWindow(WindowType.TAB) is used in Selenium 4+ to open a new tab or window (without relying on user interaction like Ctrl+Click) and automatically switch focus to it.
+
+
+driver.switchTo().newWindow(WindowType.TAB);     // Open new tab
+driver.switchTo().newWindow(WindowType.WINDOW);  // Open new window
+
+This returns a new WebDriver instance pointing to the newly opened tab or window.
+
+🔹 Example 1: Open a New Tab and Navigate to Another URL
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WindowType;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class OpenNewTab {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://example.com");
+        System.out.println("Main Tab Title: " + driver.getTitle());
+
+        // Open new tab and switch to it
+        driver.switchTo().newWindow(WindowType.TAB);
+        driver.get("https://www.google.com");
+        System.out.println("New Tab Title: " + driver.getTitle());
+
+        driver.quit();
+    }
+}
+
+🔹 Example 2: Switch Between Tabs Using getWindowHandles()
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WindowType;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class SwitchTabs {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com");
+
+        // Open two new tabs
+        driver.switchTo().newWindow(WindowType.TAB).get("https://www.google.com");
+        driver.switchTo().newWindow(WindowType.TAB).get("https://www.github.com");
+
+        // Get all tab/window handles
+        Set<String> handles = driver.getWindowHandles();
+        List<String> tabs = new ArrayList<>(handles);
+
+        // Switch back to first tab (example.com)
+        driver.switchTo().window(tabs.get(0));
+        System.out.println("Back to: " + driver.getTitle());
+
+        driver.quit();
+    }
+}
+
+🔹 Example 3: Perform Actions in a New Window
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WindowType;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+
+public class ActionsInNewWindow {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://example.com");
+
+        // Open a new window
+        WebDriver newWindow = driver.switchTo().newWindow(WindowType.WINDOW);
+        newWindow.get("https://www.google.com");
+
+        // Search something
+        newWindow.findElement(By.name("q")).sendKeys("Selenium WebDriver\n");
+
+        // Back to original window
+        driver.switchTo().window(driver.getWindowHandles().iterator().next());
+
+        driver.quit();
+    }
+}
+
+✅ Key Points
+| Feature                      | Description                                  |
+| ---------------------------- | -------------------------------------------- |
+| `WindowType.TAB`             | Opens a **new browser tab**                  |
+| `WindowType.WINDOW`          | Opens a **completely new window**            |
+| Automatically switches focus | Selenium auto-switches to the new tab/window |
+| Works in Selenium 4+ only    | Introduced in Selenium 4                     |
+
