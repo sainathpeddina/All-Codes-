@@ -1,0 +1,80 @@
+✅ Step 1: Create the Database
+
+CREATE DATABASE LibraryDB;
+USE LibraryDB;
+
+✅ Step 2: Create Tables
+📘 Books Table
+
+CREATE TABLE Books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100),
+    genre VARCHAR(50),
+    price DECIMAL(6,2),
+    author_id INT
+);
+
+🧑 Authors Table
+CREATE TABLE Authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    country VARCHAR(50)
+);
+
+✅ Step 3: Insert Sample Data
+Authors:
+
+INSERT INTO Authors (name, country)
+VALUES
+('Robert Martin', 'USA'),
+('J.R.R. Tolkien', 'UK'),
+('James Clear', 'USA');
+
+Books:
+
+INSERT INTO Books (title, genre, price, author_id)
+VALUES
+('Clean Code', 'Programming', 450.00, 1),
+('Clean Architecture', 'Programming', 480.00, 1),
+('The Hobbit', 'Fantasy', 350.00, 2),
+('The Silmarillion', 'Fantasy', 370.00, 2),
+('Atomic Habits', 'Self-help', 320.00, 3);
+
+✅ Step 4: Use SQL Queries
+
+🔹 Get all books with author names:
+SELECT b.title, b.genre, b.price, a.name AS author
+FROM Books b
+JOIN Authors a ON b.author_id = a.author_id;
+
+🔹 Find all programming books under ₹500:
+SELECT title, price
+FROM Books
+WHERE genre = 'Programming' AND price < 500;
+
+🔹 Get number of books per author:
+SELECT a.name, COUNT(*) AS total_books
+FROM Books b
+JOIN Authors a ON b.author_id = a.author_id
+GROUP BY a.name;
+
+🔹 Get authors with total book prices above ₹800:
+SELECT a.name, SUM(b.price) AS total_value
+FROM Books b
+JOIN Authors a ON b.author_id = a.author_id
+GROUP BY a.name
+HAVING SUM(b.price) > 800;
+
+🔹 Find books where title starts with 'C':
+SELECT title FROM Books
+WHERE title LIKE 'C%';
+
+🖨️ Expected Output (for some queries)
+Books with authors:
+| title              | genre       | price  | author         |
+| ------------------ | ----------- | ------ | -------------- |
+| Clean Code         | Programming | 450.00 | Robert Martin  |
+| Clean Architecture | Programming | 480.00 | Robert Martin  |
+| The Hobbit         | Fantasy     | 350.00 | J.R.R. Tolkien |
+| The Silmarillion   | Fantasy     | 370.00 | J.R.R. Tolkien |
+| Atomic Habits      | Self-help   | 320.00 | James Clear    |
