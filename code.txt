@@ -1,0 +1,253 @@
+<pre>
+
+✅ Features Included
+Maven project structure
+TestNG
+Page Object Model using PageFactory
+Excel-based data input (path fixed, dynamic sheet/row/column)
+Extent SparkReports
+Log4j logging
+Screenshot capture on failure
+Retry (re-run) for failed tests
+
+📁 Project Structure
+selenium-testng-framework/
+├── pom.xml
+├── testng.xml
+├── config/
+│   └── config.properties
+├── logs/
+├── reports/
+├── screenshots/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── base/
+│   │   │   │   └── BaseTest.java
+│   │   │   ├── pages/
+│   │   │   │   └── LoginPage.java
+│   │   │   ├── utils/
+│   │   │   │   ├── ExcelUtil.java
+│   │   │   │   ├── Log.java
+│   │   │   │   ├── ScreenshotUtil.java
+│   │   │   │   └── RetryAnalyzer.java
+│   ├── test/
+│   │   ├── java/
+│   │   │   └── tests/
+│   │   │       └── LoginTest.java
+
+  
+🔧 Step-by-Step Implementation
+  
+1. ✅ pom.xml Dependencies
+<dependencies>
+    <!-- Selenium -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.18.1</version>
+    </dependency>
+
+    <!-- TestNG -->
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.8.0</version>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- Apache POI for Excel -->
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi-ooxml</artifactId>
+        <version>5.2.3</version>
+    </dependency>
+
+    <!-- Extent SparkReport -->
+    <dependency>
+        <groupId>com.aventstack</groupId>
+        <artifactId>extentreports</artifactId>
+        <version>5.1.1</version>
+    </dependency>
+
+    <!-- WebDriverManager -->
+    <dependency>
+        <groupId>io.github.bonigarcia</groupId>
+        <artifactId>webdrivermanager</artifactId>
+        <version>5.7.0</version>
+    </dependency>
+
+    <!-- Log4j -->
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+    </dependency>
+</dependencies>
+  
+2. 🧾 config.properties
+url=https://example.com/login
+excelSheetName=LoginData
+  
+3. 📄 ExcelUtil.java
+public class ExcelUtil {
+    private static final String FILE_PATH = "src/test/resources/testdata.xlsx";
+
+    public static String getCellData(String sheetName, int rowNum, String colName) {
+        try (FileInputStream fis = new FileInputStream(FILE_PATH);
+             Workbook workbook = WorkbookFactory.create(fis)) {
+
+            Sheet sheet = workbook.getSheet(sheetName);
+            Row row = sheet.getRow(0);
+            int colNum = -1;
+
+            for (Cell cell : row) {
+                if (cell.getStringCellValue().trim().equalsIgnoreCase(colName)) {
+                    colNum = cell.getColumnIndex();
+                    break;
+                }
+            }
+
+            return sheet.getRow(rowNum).getCell(colNum).toString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read Excel", e);
+        }
+    }
+}
+
+4. 💻 BaseTest.java
+public class BaseTest {
+    public static WebDriver driver;
+    public static ExtentReports extent;
+    public static ExtentTest test;
+
+    @BeforeSuite
+    public void setupReport() {
+        ExtentSparkReporter spark = new ExtentSparkReporter("reports/SparkReport.html");
+        extent = new ExtentReports();
+        extent.attachReporter(spark);
+    }
+
+    @BeforeMethod
+    public void setup(Method method) {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        test = extent.createTest(method.getName());
+        driver.get(ConfigReader.get("url"));
+    }
+
+    @AfterMethod
+    public void teardown(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE) {
+            ScreenshotUtil.capture(driver, result.getName());
+            test.fail(result.getThrowable());
+        }
+        driver.quit();
+    }
+
+    @AfterSuite
+    public void flushReport() {
+        extent.flush();
+    }
+}
+
+5. 🌐 LoginPage.java (POM with PageFactory)
+public class LoginPage {
+    WebDriver driver;
+
+    @FindBy(id = "username")
+    WebElement username;
+
+    @FindBy(id = "password")
+    WebElement password;
+
+    @FindBy(id = "loginBtn")
+    WebElement loginBtn;
+
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    public void login(String user, String pass) {
+        username.sendKeys(user);
+        password.sendKeys(pass);
+        loginBtn.click();
+    }
+}
+
+6. 🧪 LoginTest.java
+public class LoginTest extends BaseTest {
+
+    @Test(retryAnalyzer = RetryAnalyzer.class)
+    public void loginTest() {
+        String sheet = ConfigReader.get("excelSheetName");
+        String username = ExcelUtil.getCellData(sheet, 1, "username");
+        String password = ExcelUtil.getCellData(sheet, 1, "password");
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(username, password);
+
+        test.pass("Login test executed");
+    }
+}
+  
+7. 📷 ScreenshotUtil.java
+public class ScreenshotUtil {
+    public static void capture(WebDriver driver, String name) {
+        try {
+            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(src, new File("screenshots/" + name + ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+8. 🔁 RetryAnalyzer.java
+public class RetryAnalyzer implements IRetryAnalyzer {
+    private int count = 0;
+    private static final int MAX_RETRY = 1;
+
+    @Override
+    public boolean retry(ITestResult result) {
+        return count++ < MAX_RETRY;
+    }
+}
+
+9. 📑 testng.xml
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+    <test name="Login Test">
+        <classes>
+            <class name="tests.LoginTest"/>
+        </classes>
+    </test>
+</suite>
+
+🔟 🧾 Log.java (Simple Logger)
+public class Log {
+    static Logger log = Logger.getLogger(Log.class);
+
+    public static void info(String message) {
+        log.info(message);
+    }
+
+    public static void error(String message) {
+        log.error(message);
+    }
+}
+
+🧪 How to Run
+mvn clean test
+
+✅ Result
+Test runs using Excel input
+SparkReport generated: /reports/SparkReport.html
+Logs generated in /logs
+Screenshots saved on failure
+Failed test retried once
+Uses Page Object Model with PageFactory.
+</pre>
