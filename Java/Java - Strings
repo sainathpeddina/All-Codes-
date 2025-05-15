@@ -137,8 +137,6 @@ Immutable: Strings cannot be changed once created.
 Stored in String Pool: Literals are reused from the pool for memory efficiency.
 For mutable strings, use StringBuilder or StringBuffer.
 
-
-
 🧠 When to Use
 | Use Case                                | Best Option     |
 | --------------------------------------- | --------------- |
