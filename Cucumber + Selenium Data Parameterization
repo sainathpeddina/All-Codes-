@@ -1,0 +1,82 @@
+<pre>
+
+In a Cucumber + Selenium Java framework, data can be sent to your Selenium automation code in several
+ways depending on your test design and architecture.Here are the most common and effective methods:
+
+✅ 1. Using Cucumber Feature File Step Parameters
+You can pass data directly from your .feature file into step definitions.
+Feature File Example:
+Scenario: Login with valid credentials
+  Given I login with username "user1" and password "pass123"
+Step Definition:
+@Given("I login with username {string} and password {string}")
+public void login(String username, String password) {
+    loginPage.login(username, password);
+}
+
+✅ 2. DataTable in Feature Files
+Use Cucumber's DataTable to send structured data (like rows and columns).
+Feature File:
+Scenario: Login using a data table
+  Given I login with the following credentials
+    | username | password |
+    | user1    | pass123  |
+Step Definition:
+@Given("I login with the following credentials")
+public void loginWithDataTable(DataTable table) {
+    List<Map<String, String>> data = table.asMaps();
+    String username = data.get(0).get("username");
+    String password = data.get(0).get("password");
+    loginPage.login(username, password);
+}
+
+
+✅ 3. Hooks and Shared Test Context
+Use a shared context (e.g., singleton or ScenarioContext) to share data between steps or classes.
+public class ScenarioContext {
+    private Map<String, Object> context = new HashMap<>();
+
+    public void set(String key, Object value) {
+        context.put(key, value);
+    }
+
+    public Object get(String key) {
+        return context.get(key);
+    }
+}
+
+✅ 4. Property Files / Config Files
+Load test data from external .properties or .yaml files.
+Properties prop = new Properties();
+prop.load(new FileInputStream("config.properties"));
+String username = prop.getProperty("username");
+
+✅ 5. Excel / CSV Files
+Use Apache POI or OpenCSV to read test data and pass it into your Selenium methods.
+FileInputStream fis = new FileInputStream("testdata.xlsx");
+Workbook wb = new XSSFWorkbook(fis);
+Sheet sheet = wb.getSheetAt(0);
+String username = sheet.getRow(1).getCell(0).getStringCellValue();
+
+✅ 6. Environment Variables or Command Line Arguments
+Use JVM system properties to pass data at runtime.
+mvn test -Dusername=user1 -Dpassword=pass123
+String username = System.getProperty("username");
+
+✅ 7. Using JSON/YAML Test Data Files
+Use libraries like Jackson or SnakeYAML to deserialize structured test data files.
+ObjectMapper mapper = new ObjectMapper();
+LoginData data = mapper.readValue(new File("data.json"), LoginData.class);
+
+
+✅ 8. Scenario Outline with Examples Table
+Cucumber’s native support for parameterized testing.
+Feature File:
+Scenario Outline: Login with multiple credentials
+  Given I login with username "<username>" and password "<password>"
+
+  Examples:
+    | username | password |
+    | user1    | pass123  |
+    | user2    | pass456  |
+</pre>
