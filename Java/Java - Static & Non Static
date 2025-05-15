@@ -1,0 +1,84 @@
+✅ Static vs Non-Static Methods in Java — Full Explanation
+🔹 What is a Static Method?
+A static method belongs to the class, not to any specific object.
+You do not need to create an object to call it.
+Declared using the static keyword.
+
+
+public class Example {
+    public static void staticMethod() {
+        System.out.println("This is a static method.");
+    }
+}
+
+🔸 Usage:
+Example.staticMethod(); // called using class name
+
+🔹 What is a Non-Static Method?
+A non-static method belongs to an instance (object) of a class.
+You must create an object of the class to call it.
+No static keyword used.
+
+public class Example {
+    public void nonStaticMethod() {
+        System.out.println("This is a non-static method.");
+    }
+}
+
+🔸 Usage:
+
+Example obj = new Example();
+obj.nonStaticMethod(); // called using object
+
+🔄 Accessing Each Other
+| From                     | Access to Static Method             | Access to Non-Static Method   |
+| ------------------------ | ----------------------------------- | ----------------------------- |
+| Inside Static Method     | ✅ Yes — directly or with class name | ⚠️ Yes — **via object only**  |
+| Inside Non-Static Method | ✅ Yes — directly or with class name | ✅ Yes — directly (same class) |
+
+
+✅ Example: Static and Non-Static Interaction
+public class Demo {
+
+    // Static method
+    public static void staticMethod() {
+        System.out.println("Inside static method");
+
+        // Accessing non-static method via object
+        Demo obj = new Demo();
+        obj.nonStaticMethod();
+    }
+
+    // Non-static method
+    public void nonStaticMethod() {
+        System.out.println("Inside non-static method");
+
+        // Accessing static method directly
+        staticMethod(); // or Demo.staticMethod();
+    }
+
+    public static void main(String[] args) {
+        // Calling static method
+        Demo.staticMethod();
+
+        // Calling non-static method
+        Demo demo = new Demo();
+        demo.nonStaticMethod();
+    }
+}
+
+✅ Output:
+Inside static method
+Inside non-static method
+Inside static method
+Inside non-static method
+Inside static method
+
+🧠 Summary
+| Feature               | Static Method             | Non-Static Method                  |
+| --------------------- | ------------------------- | ---------------------------------- |
+| Belongs to            | Class                     | Object                             |
+| Accessed via          | Class name                | Object reference                   |
+| Can access static     | ✅ Yes                     | ✅ Yes                              |
+| Can access non-static | ⚠️ Only via object        | ✅ Yes                              |
+| Common uses           | Utility methods, `main()` | Business logic using instance data |
