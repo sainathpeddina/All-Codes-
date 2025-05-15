@@ -169,3 +169,28 @@ public class ActionsInNewWindow {
 | Automatically switches focus | Selenium auto-switches to the new tab/window |
 | Works in Selenium 4+ only    | Introduced in Selenium 4                     |
 
+✅ Selenium Handling (Same for Both)
+Regardless of <frame> or <iframe>, in Selenium you switch context like this:
+
+<frame>	
+Defines a frame inside a <frameset>
+Parent tag	Must be inside a <frameset>
+Used to split browser window into multiple sections (old method)
+
+<iframe>
+Embeds another HTML page within the current page
+Can be used anywhere in <body>
+Used for embedding videos, ads, maps, etc.
+
+By Index
+driver.switchTo().frame(0);  // Switch to the first frame
+
+By Name or ID
+driver.switchTo().frame("frameName");
+
+By WebElement
+WebElement frameElement = driver.findElement(By.tagName("iframe"));
+driver.switchTo().frame(frameElement);
+
+To go back to the main page:
+driver.switchTo().defaultContent();
