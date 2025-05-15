@@ -1,0 +1,198 @@
+
+1. Set Up Your MySQL Database
+First, you need to set up a MySQL database and create a table. You can execute the following SQL queries to create a students table in your MySQL database:
+
+CREATE DATABASE testdb;
+
+USE testdb;
+
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    grade VARCHAR(10)
+);
+
+2. JDBC Setup in Java
+Ensure you have the JDBC driver for MySQL (MySQL Connector/J) in your project dependencies. You can include it in a Maven pom.xml as:
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.28</version>
+</dependency>
+If you're not using Maven, download the JDBC driver and add it to your project classpath.
+
+3. Complete Java Program for Database Operations
+Here's the complete Java code that demonstrates reading and writing into the students table using PreparedStatement and a simple Selenium test.
+
+import java.sql.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class MySQLSeleniumExample {
+
+    // JDBC URL, username, and password for MySQL
+    static final String DB_URL = "jdbc:mysql://localhost:3306/testdb";
+    static final String USER = "root";  // Update with your MySQL username
+    static final String PASS = "password";  // Update with your MySQL password
+
+    public static void main(String[] args) {
+
+        // Set up Selenium WebDriver (Chrome in this case)
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.google.com");
+
+        // Perform database operations
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
+
+            // Create table (if not exists)
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS students (" +
+                                      "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                                      "name VARCHAR(100), " +
+                                      "age INT, " +
+                                      "grade VARCHAR(10))";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(createTableQuery);
+            }
+
+            // Insert data into students table
+            String insertQuery = "INSERT INTO students (name, age, grade) VALUES (?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+                insertStmt.setString(1, "John Doe");
+                insertStmt.setInt(2, 20);
+                insertStmt.setString(3, "A");
+                insertStmt.executeUpdate();
+
+                insertStmt.setString(1, "Jane Smith");
+                insertStmt.setInt(2, 22);
+                insertStmt.setString(3, "B");
+                insertStmt.executeUpdate();
+            }
+
+            // Read data from students table
+            String selectQuery = "SELECT * FROM students";
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectQuery);
+                 ResultSet rs = selectStmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    int age = rs.getInt("age");
+                    String grade = rs.getString("grade");
+                    System.out.println("ID: " + id + ", Name: " + name + ", Age: " + age + ", Grade: " + grade);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Close Selenium WebDriver
+        driver.quit();
+    }
+}
+
+4. Explanation of Code
+Database Connection:
+Connection: Establishes a connection to the MySQL database using the JDBC URL, username, and password.
+PreparedStatement: Used for inserting and querying data in a secure and efficient way (preventing SQL injection).
+ResultSet: Used to fetch the results of the query when selecting data.
+Writing to the Database:
+Insert Data: Inserting records into the students table using PreparedStatement. The ? placeholders in the SQL query are replaced with actual values using setString(), setInt(), etc.
+Reading from the Database:
+Select Data: Using PreparedStatement to execute a SELECT query and fetch the results with ResultSet. It then prints out the data from each row.
+Selenium Setup:
+WebDriver: Using ChromeDriver to open a webpage (https://www.google.com in this case). You can replace it with any other Selenium logic you need.
+Closing Resources:
+The connection, statement, and result set are properly closed using try-with-resources to ensure that resources are released.
+
+5. Running the Code
+Make sure the MySQL server is running and your database (testdb) is set up with the students table.
+Also, ensure that Selenium WebDriver (like ChromeDriver) is properly installed and configured in your project.
+
+6. Dependencies
+Selenium WebDriver (for web automation): You can add Selenium WebDriver as a Maven dependency:
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.1.2</version>
+</dependency>
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+import java.sql.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+class DatabaseUtility {
+    private static final String URL = "jdbc:mysql://localhost:3306/testdb";
+    private static final String USER = "root"; // change as needed
+    private static final String PASSWORD = "password"; // change as needed
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+}
+
+class StudentDatabaseManager {
+
+    public void createStudentTable() throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS student ("
+                     + "id INT AUTO_INCREMENT PRIMARY KEY, "
+                     + "name VARCHAR(50), "
+                     + "email VARCHAR(100), "
+                     + "marks INT)";
+        try (Connection conn = DatabaseUtility.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(query);
+            System.out.println("Table created (if not exists).\n");
+        }
+    }
+
+    public void insertStudent(String name, String email, int marks) throws SQLException {
+        String query = "INSERT INTO student (name, email, marks) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseUtility.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, marks);
+            pstmt.executeUpdate();
+            System.out.println("Student inserted: " + name);
+        }
+    }
+
+    public void readAllStudents() throws SQLException {
+        String query = "SELECT * FROM student";
+        try (Connection conn = DatabaseUtility.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            System.out.println("\nStudent Records:");
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " | " +
+                                   rs.getString("name") + " | " +
+                                   rs.getString("email") + " | " +
+                                   rs.getInt("marks"));
+            }
+        }
+    }
+}
+
+public class SeleniumMySQLExample {
+    public static void main(String[] args) throws SQLException {
+        StudentDatabaseManager dbManager = new StudentDatabaseManager();
+        dbManager.createStudentTable();
+
+        dbManager.insertStudent("Ram", "ram@example.com", 85);
+        dbManager.insertStudent("Sita", "sita@example.com", 92);
+
+        dbManager.readAllStudents();
+
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.google.com");
+        System.out.println("Opened browser to search for student-related info.");
+        driver.quit();
+    }
+}
