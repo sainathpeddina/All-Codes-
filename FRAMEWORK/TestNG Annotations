@@ -1,0 +1,229 @@
+✅ What Are TestNG Annotations?
+In TestNG, annotations are used to define the execution flow of test methods. Each annotation has a specific role in the lifecycle of a test class or suite.
+
+✅ Commonly Used TestNG Annotations with Examples
+| Annotation            | Description                                                           |
+| --------------------- | --------------------------------------------------------------------- |
+| `@BeforeSuite`        | Runs once before all tests in the suite                               |
+| `@AfterSuite`         | Runs once after all tests in the suite                                |
+| `@BeforeTest`         | Runs before each `<test>` in `testng.xml`                             |
+| `@AfterTest`          | Runs after each `<test>` in `testng.xml`                              |
+| `@BeforeClass`        | Runs once before the first method in the current class                |
+| `@AfterClass`         | Runs once after all methods in the current class                      |
+| `@BeforeMethod`       | Runs before **each `@Test` method**                                   |
+| `@AfterMethod`        | Runs after **each `@Test` method**                                    |
+| `@Test`               | Marks a method as a test method                                       |
+| `@DataProvider`       | Provides data to a test method (used for parameterization)            |
+| `@Parameters`         | Passes parameters from `testng.xml` file                              |
+| `@Listeners`          | Hooks custom listeners for reporting, logging, etc.                   |
+| `@Factory`            | Used to run test methods multiple times with different data or config |
+| `@DependsOnMethods`   | Makes a test dependent on the execution of another test               |
+| `@Ignore` / `enabled` | Used to skip a test method                                            |
+
+
+✅ Example: Full Flow Using All Main Annotations
+import org.testng.annotations.*;
+
+public class TestNGAnnotationsExample {
+
+    @BeforeSuite
+    public void beforeSuite() {
+        System.out.println("==> Before Suite");
+    }
+
+    @AfterSuite
+    public void afterSuite() {
+        System.out.println("==> After Suite");
+    }
+
+    @BeforeTest
+    public void beforeTest() {
+        System.out.println("==> Before Test");
+    }
+
+    @AfterTest
+    public void afterTest() {
+        System.out.println("==> After Test");
+    }
+
+    @BeforeClass
+    public void beforeClass() {
+        System.out.println("==> Before Class");
+    }
+
+    @AfterClass
+    public void afterClass() {
+        System.out.println("==> After Class");
+    }
+
+    @BeforeMethod
+    public void beforeMethod() {
+        System.out.println("==> Before Method");
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        System.out.println("==> After Method");
+    }
+
+    @Test
+    public void testCase1() {
+        System.out.println("Test Case 1");
+    }
+
+    @Test
+    public void testCase2() {
+        System.out.println("Test Case 2");
+    }
+}
+
+✅ Output (Execution Order)
+==> Before Suite
+==> Before Test
+==> Before Class
+==> Before Method
+Test Case 1
+==> After Method
+==> Before Method
+Test Case 2
+==> After Method
+==> After Class
+==> After Test
+==> After Suite
+
+✅ Example: Using @DataProvider
+
+@DataProvider(name = "loginData")
+public Object[][] dataProvider() {
+    return new Object[][] {
+        {"admin", "admin123"},
+        {"user", "user123"}
+    };
+}
+
+@Test(dataProvider = "loginData")
+public void testLogin(String username, String password) {
+    System.out.println("Login with " + username + " / " + password);
+}
+
+✅ Example: Skipping Tests
+
+@Test(enabled = false)
+public void skippedTest() {
+    System.out.println("This won't run.");
+}
+
+✅ Example: @DependsOnMethods
+
+@Test
+public void launchApp() {
+    System.out.println("App launched");
+}
+
+@Test(dependsOnMethods = "launchApp")
+public void login() {
+    System.out.println("Logged in");
+}
+
+✅ Example: Using @Parameters with testng.xml
+In testng.xml:
+
+<parameter name="browser" value="chrome"/>
+In code:
+
+@Parameters("browser")
+@Test
+public void openBrowser(String browserName) {
+    System.out.println("Open browser: " + browserName);
+}
+
+✅ Summary Table
+| Annotation      | Scope       | Runs When?                    |
+| --------------- | ----------- | ----------------------------- |
+| `@BeforeSuite`  | Suite       | Once before all tests         |
+| `@AfterSuite`   | Suite       | Once after all tests          |
+| `@BeforeTest`   | <test> tag  | Before each test group        |
+| `@AfterTest`    | <test> tag  | After each test group         |
+| `@BeforeClass`  | Test class  | Once before first test method |
+| `@AfterClass`   | Test class  | Once after last test method   |
+| `@BeforeMethod` | Test method | Before each test method       |
+| `@AfterMethod`  | Test method | After each test method        |
+
+✅ Using invocationCount in @Test
+This tells TestNG how many times to invoke a specific test method.
+
+🔹 Example:
+import org.testng.annotations.Test;
+public class RepeatTestExample {
+
+    @Test(invocationCount = 5)
+    public void runMultipleTimes() {
+        System.out.println("Running test method");
+    }
+}
+
+🔹 Output:
+Running test method
+Running test method
+Running test method
+Running test method
+Running test method
+
+// TestNG will execute the method 5 times.
+
+✅ How priority Works in TestNG
+By default, TestNG runs test methods in alphabetical order if no priority is specified.
+When you use priority, TestNG will execute methods in ascending order of priority.
+Lower the number → higher the priority.
+You can assign positive, zero, or negative priority values.
+
+✅ Syntax
+@Test(priority = <number>)
+public void testMethod() {
+    // test logic
+}
+
+✅ Example: Using priority to Control Execution Order
+import org.testng.annotations.Test;
+public class PriorityExample {
+
+    @Test(priority = 2)
+    public void testC() {
+        System.out.println("Test C");
+    }
+
+    @Test(priority = 1)
+    public void testB() {
+        System.out.println("Test B");
+    }
+
+    @Test(priority = 0)
+    public void testA() {
+        System.out.println("Test A");
+    }
+
+    @Test
+    public void testD() {
+        System.out.println("Test D (no priority)");
+    }
+}
+
+✅ Output (Execution Order)
+Test A        → priority = 0  
+Test B        → priority = 1  
+Test C        → priority = 2  
+Test D        → no priority, runs after priority-specified tests (alphabetically if multiple)
+
+✅ Key Notes
+If multiple methods have the same priority, they run alphabetically by method name.
+If a test method has no priority, it's considered as priority = 0 (but order with others is not guaranteed).
+You should not rely solely on priority for critical dependency control—use dependsOnMethods when there's a strict requirement.
+
+✅ Best Practice
+Use priority only when execution order matters and there's no dependency between tests.
+If tests depend on the result of others, use:
+
+@Test(dependsOnMethods = "login")
+public void performTransaction() {
+    // depends on login
+}
