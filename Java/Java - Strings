@@ -1,0 +1,148 @@
+✅ What is a String in Java?
+String s = "Hello, World!";
+Internally, String is a final class backed by a char[] array.
+
+✅ Types of String Creation
+String Literal
+String s1 = "Java"; // stored in string pool
+Using new Keyword
+String s2 = new String("Java"); // stored in heap memory
+
+🔤 String Methods A–Z with Examples
+| Method                       | Description                         | Example                              |
+| ---------------------------- | ----------------------------------- | ------------------------------------ |
+| `charAt(int)`                | Returns char at given index         | `"Java".charAt(2)` → `'v'`           |
+| `compareTo(String)`          | Compares lexicographically          | `"A".compareTo("B")` → `-1`          |
+| `concat(String)`             | Concatenates string                 | `"Hello".concat(" World")`           |
+| `contains(CharSequence)`     | Checks if substring exists          | `"Java".contains("va")`              |
+| `contentEquals()`            | Compares with CharSequence          | `"Java".contentEquals("Java")`       |
+| `endsWith(String)`           | Checks suffix                       | `"test.txt".endsWith(".txt")`        |
+| `equals(Object)`             | Compares contents                   | `"Java".equals("Java")`              |
+| `equalsIgnoreCase(String)`   | Ignores case in comparison          | `"JAVA".equalsIgnoreCase("java")`    |
+| `format()`                   | Formats a string                    | `String.format("Hi %s", "Tom")`      |
+| `getBytes()`                 | Converts to byte array              | `"Java".getBytes()`                  |
+| `indexOf(String)`            | First index of substring            | `"Hello".indexOf("l")` → `2`         |
+| `intern()`                   | Returns canonical representation    | `"Java".intern()`                    |
+| `isEmpty()`                  | Checks if empty string              | `"".isEmpty()` → `true`              |
+| `join()`                     | Joins with delimiter                | `String.join("-", "A", "B")` → `A-B` |
+| `lastIndexOf(String)`        | Last index of substring             | `"ababc".lastIndexOf("b")`           |
+| `length()`                   | Number of characters                | `"Java".length()` → `4`              |
+| `matches(String)`            | Regex matching                      | `"abc".matches("[a-z]+")`            |
+| `repeat(int)`                | Repeats the string                  | `"A".repeat(3)` → `"AAA"`            |
+| `replace(char, char)`        | Replaces char                       | `"ball".replace('l', 'p')` → `bapp`  |
+| `replaceAll(String, String)` | Replaces using regex                | `"a1b2".replaceAll("\\d", "")`       |
+| `split(String)`              | Splits string                       | `"a,b,c".split(",")`                 |
+| `startsWith(String)`         | Checks prefix                       | `"Java".startsWith("Ja")`            |
+| `strip()`                    | Removes leading/trailing spaces     | `"  test ".strip()`                  |
+| `substring(int, int)`        | Extracts substring                  | `"Java".substring(1, 3)` → `av`      |
+| `toCharArray()`              | Converts to char array              | `"Hi".toCharArray()`                 |
+| `toLowerCase()`              | Converts to lowercase               | `"JAVA".toLowerCase()`               |
+| `toUpperCase()`              | Converts to uppercase               | `"java".toUpperCase()`               |
+| `trim()`                     | Removes leading/trailing whitespace | `" test ".trim()`                    |
+| `valueOf()`                  | Converts value to string            | `String.valueOf(123)` → `"123"`      |
+
+✅ Example Demonstrating Common Methods
+public class StringMethodsDemo {
+    public static void main(String[] args) {
+        String str = " Java Programming ";
+
+        System.out.println("Original: '" + str + "'");
+        System.out.println("Trimmed: '" + str.trim() + "'");
+        System.out.println("Length: " + str.length());
+        System.out.println("Upper: " + str.toUpperCase());
+        System.out.println("Lower: " + str.toLowerCase());
+        System.out.println("Substring (5–16): " + str.substring(5, 16));
+        System.out.println("Replace 'a' with '@': " + str.replace('a', '@'));
+        System.out.println("Starts with ' Java': " + str.startsWith(" Java"));
+        System.out.println("Ends with 'ing ': " + str.endsWith("ing "));
+        System.out.println("Char at index 2: " + str.charAt(2));
+        System.out.println("Index of 'Pro': " + str.indexOf("Pro"));
+        System.out.println("Is Empty: " + str.isEmpty());
+        System.out.println("Split by space:");
+        for (String part : str.trim().split(" ")) {
+            System.out.println(part);
+        }
+    }
+}
+
+🔤 A–Z Methods of StringBuilder and StringBuffer
+Most methods are identical in both StringBuilder and StringBuffer since both extend AbstractStringBuilder.
+| Method             | Description                                    | Example                  |
+| ------------------ | ---------------------------------------------- | ------------------------ |
+| `append()`         | Adds string to end                             | `sb.append("Java")`      |
+| `insert()`         | Inserts string at given position               | `sb.insert(2, "X")`      |
+| `delete()`         | Deletes from start to end index                | `sb.delete(1, 3)`        |
+| `deleteCharAt()`   | Deletes char at index                          | `sb.deleteCharAt(2)`     |
+| `replace()`        | Replaces chars from start to end with new text | `sb.replace(0, 3, "Hi")` |
+| `reverse()`        | Reverses string                                | `sb.reverse()`           |
+| `capacity()`       | Current buffer capacity                        | `sb.capacity()`          |
+| `ensureCapacity()` | Sets minimum capacity                          | `sb.ensureCapacity(50)`  |
+| `length()`         | Current string length                          | `sb.length()`            |
+| `charAt()`         | Character at index                             | `sb.charAt(1)`           |
+| `setCharAt()`      | Change character at index                      | `sb.setCharAt(0, 'X')`   |
+| `substring()`      | Returns part of string                         | `sb.substring(1, 4)`     |
+| `toString()`       | Converts to string                             | `sb.toString()`          |
+| `indexOf()`        | Index of substring                             | `sb.indexOf("av")`       |
+| `lastIndexOf()`    | Last index of substring                        | `sb.lastIndexOf("a")`    |
+| `trimToSize()`     | Trims capacity to string size                  | `sb.trimToSize()`        |
+
+✅ Example: StringBuilder
+public class StringBuilderDemo {
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder("Hello");
+
+        sb.append(" World");
+        System.out.println("After append: " + sb);
+
+        sb.insert(6, "Java ");
+        System.out.println("After insert: " + sb);
+
+        sb.delete(0, 5);
+        System.out.println("After delete: " + sb);
+
+        sb.replace(0, 4, "Hi");
+        System.out.println("After replace: " + sb);
+
+        sb.reverse();
+        System.out.println("After reverse: " + sb);
+
+        System.out.println("Capacity: " + sb.capacity());
+        System.out.println("Length: " + sb.length());
+    }
+}
+
+✅ Example: StringBuffer (same usage as StringBuilder)
+public class StringBufferDemo {
+    public static void main(String[] args) {
+        StringBuffer sb = new StringBuffer("Open");
+
+        sb.append("AI");
+        sb.insert(4, " ");
+        sb.replace(0, 4, "Chat");
+        sb.reverse();
+
+        System.out.println("Result: " + sb); // Output: IA tahC
+    }
+}
+
+| Feature      | `String`         | `StringBuilder`                        | `StringBuffer`                     |
+| ------------ | ---------------- | -------------------------------------- | ---------------------------------- |
+| Mutable?     | ❌ No             | ✅ Yes                                  | ✅ Yes                              |
+| Thread-safe? | ✅ Yes            | ❌ No                                   | ✅ Yes                              |
+| Performance  | ❌ Slow           | ✅ Fastest                              | ⚠️ Moderate                        |
+| Use Case     | Constant strings | Frequent modifications (single thread) | Multi-threaded string manipulation |
+
+🧠 Key Points
+Immutable: Strings cannot be changed once created.
+Stored in String Pool: Literals are reused from the pool for memory efficiency.
+For mutable strings, use StringBuilder or StringBuffer.
+
+
+
+🧠 When to Use
+| Use Case                                | Best Option     |
+| --------------------------------------- | --------------- |
+| Constant or minimal changes             | `String`        |
+| Frequent modifications (single thread)  | `StringBuilder` |
+| Frequent modifications (multi-threaded) | `StringBuffer`  |
+
