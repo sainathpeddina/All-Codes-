@@ -1,0 +1,60 @@
+📂 java.io.File Class – Methods A to Z
+| Method                     | Description                                                            |
+| -------------------------- | ---------------------------------------------------------------------- |
+| `canExecute()`             | Checks if the file is executable.                                      |
+| `canRead()`                | Checks if the file is readable.                                        |
+| `canWrite()`               | Checks if the file is writable.                                        |
+| `compareTo(File pathname)` | Compares two pathnames lexicographically.                              |
+| `createNewFile()`          | Creates a new empty file (if it doesn’t exist).                        |
+| `delete()`                 | Deletes the file or directory.                                         |
+| `deleteOnExit()`           | Schedules file for deletion on JVM exit.                               |
+| `exists()`                 | Checks whether the file or directory exists.                           |
+| `getAbsolutePath()`        | Returns the absolute pathname string.                                  |
+| `getCanonicalPath()`       | Returns the canonical pathname (resolves `.` and `..`).                |
+| `getName()`                | Returns the name of the file or directory.                             |
+| `getParent()`              | Returns the parent pathname string.                                    |
+| `getPath()`                | Returns the pathname string used to create the `File` object.          |
+| `getTotalSpace()`          | Returns the size of the partition (in bytes).                          |
+| `getUsableSpace()`         | Returns the available usable space (in bytes).                         |
+| `getFreeSpace()`           | Returns the unallocated space (in bytes).                              |
+| `hashCode()`               | Returns the hash code for the abstract pathname.                       |
+| `isAbsolute()`             | Checks if the pathname is absolute.                                    |
+| `isDirectory()`            | Checks if it is a directory.                                           |
+| `isFile()`                 | Checks if it is a regular file.                                        |
+| `isHidden()`               | Checks if the file is hidden.                                          |
+| `lastModified()`           | Returns the last modification time (milliseconds since epoch).         |
+| `length()`                 | Returns the size of the file in bytes.                                 |
+| `list()`                   | Returns an array of strings of file/directory names in a directory.    |
+| `listFiles()`              | Returns an array of `File` objects representing contents of directory. |
+| `mkdir()`                  | Creates a single directory.                                            |
+| `mkdirs()`                 | Creates directory, including any necessary parent directories.         |
+| `renameTo(File dest)`      | Renames or moves the file.                                             |
+| `setReadable(boolean)`     | Sets file’s read permission.                                           |
+| `setWritable(boolean)`     | Sets file’s write permission.                                          |
+| `setExecutable(boolean)`   | Sets file’s execute permission.                                        |
+| `toPath()`                 | Converts `File` object to a `Path` (from `java.nio.file`).             |
+| `toString()`               | Returns the string representation of the file path.                    |
+
+📘 Example: Using the File class
+import java.io.File;
+import java.io.IOException;
+
+class Main {
+    public static void main(String[] args) throws IOException {
+        File file = new File("example.txt");
+
+        if (!file.exists()) {
+            file.createNewFile();
+            System.out.println("File created: " + file.getName());
+        } else {
+            System.out.println("File already exists.");
+        }
+
+        System.out.println("Path: " + file.getPath());
+        System.out.println("Absolute Path: " + file.getAbsolutePath());
+        System.out.println("Can Read: " + file.canRead());
+        System.out.println("Can Write: " + file.canWrite());
+        System.out.println("Is File: " + file.isFile());
+        System.out.println("Length: " + file.length() + " bytes");
+    }
+}
