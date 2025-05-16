@@ -1,0 +1,146 @@
+✅ Java vs C# Keyword & Concept Mapping Table
+
+| Java Keyword     | C# Keyword(s)        | Notes / Explanation                                                |
+| ---------------- | -------------------- | ------------------------------------------------------------------ |
+| `abstract`       | `abstract`           | Declares abstract class or method.                                 |
+| `assert`         | `-`                  | No direct equivalent. Use `Debug.Assert()` or testing libraries.   |
+| `boolean`        | `bool`               | Same purpose, different keyword.                                   |
+| `break`          | `break`              | Breaks loop/switch.                                                |
+| `byte`           | `byte`               | Same.                                                              |
+| `case`           | `case`               | In `switch` statements.                                            |
+| `catch`          | `catch`              | For exception handling.                                            |
+| `char`           | `char`               | Character type.                                                    |
+| `class`          | `class`              | Class declaration.                                                 |
+| `const`          | `const`              | Compile-time constant.                                             |
+| `continue`       | `continue`           | Skips current loop iteration.                                      |
+| `default`        | `default`            | `switch` fallback or default generic value.                        |
+| `do`             | `do`                 | `do-while` loops.                                                  |
+| `double`         | `double`             | Same.                                                              |
+| `else`           | `else`               | Conditional branching.                                             |
+| `enum`           | `enum`               | Enumerated types.                                                  |
+| `extends`        | `:`                  | Used for class inheritance.                                        |
+| `final`          | `readonly`, `sealed` | `readonly`: runtime constant; `sealed`: prevent inheritance.       |
+| `finally`        | `finally`            | Always executes after try/catch.                                   |
+| `float`          | `float`              | Same.                                                              |
+| `for`            | `for`                | Same.                                                              |
+| `goto`           | `goto`               | Exists in C#, rarely used.                                         |
+| `if`             | `if`                 | Conditional execution.                                             |
+| `implements`     | `:`                  | C# uses `:` for both inheritance and interface implementation.     |
+| `import`         | `using`              | For importing namespaces.                                          |
+| `instanceof`     | `is`, `as`           | Type checking/casting.                                             |
+| `int`            | `int`                | Same.                                                              |
+| `interface`      | `interface`          | Same.                                                              |
+| `long`           | `long`               | Same.                                                              |
+| `native`         | `-`                  | Not applicable in C#.                                              |
+| `new`            | `new`                | Object creation.                                                   |
+| `null`           | `null`               | Null value.                                                        |
+| `package`        | `namespace`          | Organize classes/modules.                                          |
+| `private`        | `private`            | Access modifier.                                                   |
+| `protected`      | `protected`          | Access modifier.                                                   |
+| `public`         | `public`             | Access modifier.                                                   |
+| `return`         | `return`             | Returns value from method.                                         |
+| `short`          | `short`              | Same.                                                              |
+| `static`         | `static`             | Belongs to class, not instance.                                    |
+| `strictfp`       | `-`                  | Not required in C# (handles floating-point precision differently). |
+| `super`          | `base`               | Refers to parent class.                                            |
+| `switch`         | `switch`             | Same.                                                              |
+| `synchronized`   | `lock`               | Locking object for thread safety.                                  |
+| `this`           | `this`               | Refers to current instance.                                        |
+| `throw`          | `throw`              | Throws exception.                                                  |
+| `throws`         | *Handled internally* | Not declared in method signature in C#.                            |
+| `transient`      | `[NonSerialized]`    | Attribute used to skip serialization.                              |
+| `try`            | `try`                | Exception handling.                                                |
+| `void`           | `void`               | Method return type.                                                |
+| `volatile`       | `volatile`           | Marks variable to prevent compiler optimization.                   |
+| `while`          | `while`              | Same.                                                              |
+
+| Java                   | C#                   | Description / Notes                                                     |
+| ---------------------- | -------------------- | ----------------------------------------------------------------------- |
+| `package`              | `namespace`          | Defines a logical container for classes.                                |
+| `import`               | `using`              | Used to include libraries or namespaces.                                |
+| `public class`         | `public class`       | Same keyword for class declaration.                                     |
+| `final`                | `readonly`, `const`  | `readonly` = set once in constructor; `const` = compile-time constant.  |
+| `this`                 | `this`               | Refers to current object instance.                                      |
+| `super`                | `base`               | Refers to parent class.                                                 |
+| `null`                 | `null`               | Represents no value.                                                    |
+| `extends`              | `:`                  | Inheritance.                                                            |
+| `implements`           | `:`                  | Same symbol used for both inheritance and interface implementation.     |
+| `interface`            | `interface`          | Declares an interface.                                                  |
+| `abstract`             | `abstract`           | Abstract class or method.                                               |
+| `instanceof`           | `is`                 | Type checking.                                                          |
+| `synchronized`         | `lock`               | Thread synchronization.                                                 |
+| `throws`               | `throw`, `try-catch` | `C#` does not require method declarations to declare thrown exceptions. |
+| `try-catch-finally`    | `try-catch-finally`  | Same structure.                                                         |
+| `enum`                 | `enum`               | Enumerations (works similarly).                                         |
+| `static`               | `static`             | Shared across instances.                                                |
+| `new`                  | `new`                | Creates a new instance.                                                 |
+| `void`                 | `void`               | Method returns no value.                                                |
+| `boolean`              | `bool`               | `bool` is lowercase in C#.                                              |
+| `String`               | `string`             | `string` is a lowercase alias in C#.                                    |
+| `ArrayList<T>`         | `List<T>`            | Dynamic array structure.                                                |
+| `HashMap<K,V>`         | `Dictionary<K,V>`    | Key-value map.                                                          |
+| `Set<T>`               | `HashSet<T>`         | Unordered unique collection.                                            |
+| `System.out.println`   | `Console.WriteLine`  | Output to console.                                                      |
+| `@Test` (JUnit/TestNG) | `[Test]` (NUnit)     | Denotes a test method.                                                  |
+| `@BeforeMethod`        | `[SetUp]`            | Runs before each test.                                                  |
+| `@AfterMethod`         | `[TearDown]`         | Runs after each test.                                                   |
+| `@BeforeClass`         | `[OneTimeSetUp]`     | Runs once before all tests.                                             |
+| `@AfterClass`          | `[OneTimeTearDown]`  | Runs once after all tests.                                              |
+| `assertEquals()`       | `Assert.AreEqual()`  | Asserts expected vs actual.                                             |
+| `assertTrue()`         | `Assert.IsTrue()`    | Checks condition is true.                                               |
+| `assertFalse()`        | `Assert.IsFalse()`   | Checks condition is false.                                              |
+| `assertNull()`         | `Assert.IsNull()`    | Checks value is null.                                                   |
+| `assertNotNull()`      | `Assert.IsNotNull()` | Checks value is not null.                                               |
+
+✅ 1. Industry Popularity for Selenium Automation
+| Feature                 | Java with Selenium                           | C# with Selenium                                  |
+| ----------------------- | -------------------------------------------- | ------------------------------------------------- |
+| Community Support       | Very large and active                        | Smaller but strong (especially in .NET community) |
+| Job Market Share        | Widely used across companies                 | Common in Microsoft-based companies               |
+| Openings on Job Portals | More (globally, especially in Asia & Europe) | Less, but decent in North America & Europe        |
+| Ecosystem & Libraries   | Huge (TestNG, Cucumber, Allure, Maven, etc.) | Rich (.NET, NUnit, SpecFlow, etc.)                |
+🔹 Verdict: Java has broader demand globally; C# is great in .NET-heavy environments.
+
+✅ 2. Language Ecosystem for Test Automation
+| Criteria               | Java                              | C#                                          |
+| ---------------------- | --------------------------------- | ------------------------------------------- |
+| Test Frameworks        | TestNG, JUnit, Cucumber           | NUnit, MSTest, xUnit, SpecFlow              |
+| Build Tools            | Maven, Gradle                     | MSBuild, NuGet                              |
+| IDE Support            | IntelliJ, Eclipse, VS Code        | Visual Studio, Rider                        |
+| Cross-Platform         | Yes (Java is cross-platform)      | Yes (.NET Core is cross-platform)           |
+| CI/CD Tool Integration | Strong (Jenkins, GitLab CI, etc.) | Strong (Azure DevOps, GitHub Actions, etc.) |
+
+
+✅ 3. Learning Curve and Maintenance
+| Feature                  | Java         | C#                    |
+| ------------------------ | ------------ | --------------------- |
+| Language Verbosity       | More verbose | Slightly less verbose |
+| Learning Curve           | Moderate     | Moderate              |
+| Object-Oriented Concepts | Strong       | Strong                |
+| Maintainability          | High         | High                  |
+
+
+✅ 4. Selenium Framework Compatibility
+Both support all Selenium-related features:
+WebDriver
+Page Object Model
+Data-Driven Testing
+Cross-browser testing
+Integration with Excel, JSON, DB
+Parallel test execution
+
+🧪 Popular Tech Stacks
+| Java Automation Stack            | C# Automation Stack                |
+| -------------------------------- | ---------------------------------- |
+| Java + Selenium + TestNG + Maven | C# + Selenium + NUnit + .NET Core  |
+| Java + Selenium + Cucumber       | C# + Selenium + SpecFlow           |
+| Java + Jenkins + Allure          | C# + Azure DevOps + Extent Reports |
+
+🔚 Recommendation
+| If you...                                                               | Use...                             |
+| ----------------------------------------------------------------------- | ---------------------------------- |
+| Want to work in large enterprises, startups, or on Android      | ✅ Java + Selenium              |
+| Work in Microsoft stack environments or Windows desktop testing | ✅ C# + Selenium                |
+| Are targeting global automation roles                               | ✅ Java (more common worldwide) |
+| Prefer Visual Studio tooling and .NET simplicity                    | ✅ C#                           |
+
