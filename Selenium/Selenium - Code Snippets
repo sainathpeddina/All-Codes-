@@ -1,8 +1,75 @@
+✅ How to Handle StaleElementReferenceException
+✅ 1. Re-locate the element before interacting again
+WebElement element = driver.findElement(By.id("submit")); // fresh reference
+element.click();
+
+✅ 2. Use try-catch and retry mechanism
+You can handle the exception using a loop and retry locating the element.
+public void clickElement(By locator) {
+    int retries = 3;
+    while (retries > 0) {
+        try {
+            driver.findElement(locator).click();
+            break;
+        } catch (StaleElementReferenceException e) {
+            retries--;
+            try {
+                Thread.sleep(500); // wait a bit before retrying
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        }
+    }
+}
+
+✅ 3. Use WebDriverWait to wait for element to be stable
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+wait.ignoring(StaleElementReferenceException.class)
+    .until(driver -> driver.findElement(By.id("submit")).isDisplayed());
+
+✅ 4. Use ExpectedConditions to ensure the element is visible/stable
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement element = wait.until(ExpectedConditions.refreshed(
+    ExpectedConditions.elementToBeClickable(By.id("submit"))));
+element.click();
+
+✅ Step-by-Step: How to Handle Web Tables in Selenium (Java)
+tagnames >>> table (<tbody>) and rows (<tr>) and columns (<td>) and headers (<th>) 
+✅ 1. Locate the Table
+WebElement table = driver.findElement(By.id("employeeTable"));
+✅ 2. Get All Rows
+List<WebElement> rows = table.findElements(By.tagName("tr"));
+✅ 3. Loop Through Rows and Columns
+for (WebElement row : rows) {
+    List<WebElement> columns = row.findElements(By.tagName("td")); // skip header
+    for (WebElement cell : columns) {
+        System.out.print(cell.getText() + "\t");
+    }
+    System.out.println();
+}
+✅ 4. Handling Header Separately (Optional)
+List<WebElement> headers = table.findElements(By.tagName("th"));
+for (WebElement header : headers) {
+    System.out.print(header.getText() + "\t");
+}
+System.out.println();
+✅ 5. Get Specific Cell Data (e.g., Row 2, Column 1)
+WebElement secondRowFirstCell = table.findElements(By.tagName("tr")).get(2)
+                                     .findElements(By.tagName("td")).get(0);
+System.out.println("Cell Data: " + secondRowFirstCell.getText());
+✅ 6. Example: Click a Button Inside a Table Cell
+for (WebElement row : rows) {
+    List<WebElement> cols = row.findElements(By.tagName("td"));
+    if (!cols.isEmpty() && cols.get(0).getText().equals("Jane")) {
+        cols.get(3).findElement(By.tagName("button")).click(); // Assuming button is in 4th column
+        break;
+    }
+}
+
 driver.navigate().to("https://example.com");
 driver.navigate().back();     // Go back in browser history
 driver.navigate().forward();  // Go forward
 driver.navigate().refresh();  // Refresh the current page
-
 
 ✅ Java Selenium Example: Finding Broken Links
 import org.openqa.selenium.By;
