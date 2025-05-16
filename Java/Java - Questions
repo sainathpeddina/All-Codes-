@@ -1,0 +1,136 @@
+Anonymous Class (without creating a separate class) - You can also create an object of an anonymous inner class that implements the interface:
+Animal cat = new Animal() {  // Animal is an Interface
+    public void makeSound() {  // makeSound() abstarct method in Animal Interface
+        System.out.println("Meow");
+    }
+};
+cat.makeSound();
+
+Lambda (for functional interfaces) - If the interface has only one abstract method (i.e., it's a functional interface), you can use a lambda expression:
+@FunctionalInterface
+interface Greet {
+    void sayHello();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Greet greeting = () -> System.out.println("Hello!");
+        greeting.sayHello();
+    }
+}
+
+Accessing methods or fields on a null object:
+String str = null;
+int len = str.length(); // NPE
+Returning null from methods and using it without checks.
+
+✅ How to Handle or Avoid NullPointerException
+✅ 1. Check for null before useif (str != null) {
+    System.out.println(str.length());
+}
+✅ 2. Use try-catch to handle it
+Use this if null is unexpected and you want to handle the crash gracefully:
+try {
+    System.out.println(str.length());
+} catch (NullPointerException e) {
+    System.out.println("Caught NullPointerException");
+}
+✅ 3. Initialize objects properly
+Ensure objects are initialized before use:
+List<String> list = new ArrayList<>(); // not null
+
+❌ Avoid Doing This:
+String str = null;
+if (str.equals("test")) {  // NPE here
+    // ...
+}
+✅ Instead:
+if ("test".equals(str)) {  // Safe
+    // ...
+}
+
+In Java we can overload the main method(static method), but we cannot truly override it in the traditional sense used with inheritance.
+| Feature     | Allowed? | Description                                                                                                |
+| ----------- | -------- | ---------------------------------------------------------------------------------------------------------- |
+| Overloading | ✅ Yes    | You can define multiple `main` methods with different parameters. Only `String[] args` is JVM entry point. |
+| Overriding  | ❌ No     | `main` is `static`, and static methods can't be overridden. They can only be hidden.                       |
+
+| Scenario                                | Allowed? | Notes                              |
+| --------------------------------------- | -------- | ---------------------------------- |
+| Declaring a top-level class as `static` | ❌ No     | Only nested classes can be static. |
+| Extending a static nested class         | ✅ Yes    | Works like extending any class extends (Outer.StaticNested)    |
+
+| Feature                | Abstract Class                                            | Interface                                                             |
+| ---------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Methods            | Can have both abstract and concrete methods               | Can have abstract methods (Java 8+ allows default and static methods) |
+| Instance Variables | Can have instance variables (fields)                      | Cannot have instance variables (except constants)                     |
+| Inheritance        | A class can extend only one abstract class                | A class can implement multiple interfaces                             |
+| Constructor        | Can have constructors                                     | Cannot have constructors                                              |
+| Access Modifiers   | Can have any access modifier (private, protected, public) | All methods are implicitly `public`                                   |
+
+✅ Static methods: Hidden, resolved at compile-time → based on reference type
+✅ Non-static methods: Overridden, resolved at runtime → based on actual object
+
+| Element      | Can be `final`? | Effect of `final`                                 |
+| ------------ | --------------- | ------------------------------------------------- |
+| Variable | ✅ Yes           | Value cannot be changed once assigned             |
+| Method   | ✅ Yes           | Cannot be overridden in a subclass                |
+| Class    | ✅ Yes           | Cannot be extended (i.e., no subclassing allowed) |
+🔒 Example: Java's Built-in Final Class
+The java.lang.String class is a final class
+Interface wont be final, because it should be implemented by some class to use it.
+
+| Feature          | Overloading                          | Overriding                           |
+| ---------------- | ------------------------------------ | ------------------------------------ |
+| Based on         | Method signature (name + params) | Method name & params, across classes |
+| Inheritance?     | Not required                         | Required                             |
+| Static allowed?  | Yes                                  | No (only for non-static methods),
+                                                            Access modifier in child should be same or more accessible.     |
+| Runtime/Dynamic? | ❌ Compile time                       | ✅ Runtime polymorphism               |
+
+| Method Type          | Overloading | Overriding | Notes                                                                                                                |
+| -------------------- | ----------- | ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| `main` method        | ✅ Yes       | ❌ No       | You can overload `main`, but the JVM calls only `main(String[] args)`. Overriding not possible as it's `static`. |
+| `static` methods     | ✅ Yes       | ❌ No       | Overloading allowed, overriding not allowed. You can hide static methods (method hiding), not override.          |
+| `non-static` methods | ✅ Yes       | ✅ Yes      | Both overloading and overriding are supported. True overriding happens here.                                         |
+
+| Keyword | Context      | Variables     | Methods            | Constructors                      | Allowed in `static`? |
+| ------- | ------------ | ------------- | ------------------ | --------------------------------- | -------------------- |
+| `this`  | Same class   | ✅ `this.var`  | ✅ `this.method()`  | ✅ `this()` (constructor chaining) | ❌ No                 |
+| `super` | Parent class | ✅ `super.var` | ✅ `super.method()` | ✅ `super()` (must be 1st line)    | ❌ No                 |
+
+🔹 Methods:
+| Feature          | Overridable?                                 | Notes |
+| -------------------- | ------------------------------------------------ | --------- |
+| Abstract Method  | ✅ Must be overridden unless subclass is abstract |           |
+| Interface Method | ✅ Must override all (unless abstract class)      |           |
+| Final Method     | ❌ Cannot be overridden                           |           |
+| Static Method    | ❌ Hidden, not overridden                         |           |
+| Private Method   | ❌ Not visible to subclass                        |           |
+| Constructor      | ❌ Not inherited, can't be overridden             |           |
+
+🔹 Classes:
+| Feature             | Extendable?   | Notes                                                     |
+| ----------------------- | ----------------- | ------------------------------------------------------------- |
+| Abstract Class      | ✅ Yes             | Must be extended; cannot be instantiated directly             |
+| Concrete Class      | ✅ Yes             | Regular class can be extended unless declared `final`         |
+| Final Class         | ❌ No              | Cannot be extended by any subclass                            |
+| Static Nested Class | ✅ Yes (limited)   | Can be extended but access is limited by scope                |
+| Private Class       | ❌ No              | Not visible outside enclosing class                           |
+| Constructor         | ❌ Not inheritable | Can be invoked via `super()`, but not inherited or overridden |
+
+🔹 Interfaces:
+| Feature                          | Overridable / Extendable?    | Notes                                                             |
+| Constant (`public static final`) | ❌ No                             | Constants in interfaces are static and final by default               |
+| Extending Interface              | ✅ Yes                            | Interfaces can extend other interfaces (multiple inheritance allowed) |
+| Implementing Interface           | ✅ Yes                            | Classes can implement multiple interfaces                             |
+| Functional Interface             | ✅ Yes (only one abstract method) | Can be implemented using lambdas or method references                 |
+
+🔹 Variables:
+| Instance Variable                | ❌ No             | ✅ Yes          | Hidden if re-declared in subclass  |
+| Static Variable                  | ❌ No             | ✅ Yes          | Class-level, hidden not overridden |
+| Final Variable                   | ❌ No             | ✅ Yes          | Value cannot be changed            |
+| Private Variable                 | ❌ No             | ❌ No           | Not accessible to subclass         |
+| Protected Variable               | ❌ No             | ✅ Yes          | Accessible in subclass             |
+| Public Variable                  | ❌ No             | ✅ Yes          | Fully accessible                   |
+| Constant (`public static final`) | ❌ No             | ✅ Yes          | Compile-time constant              |
