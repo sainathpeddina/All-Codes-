@@ -1,0 +1,45 @@
+🔹 1. Local Variables
+Declared inside a method, constructor, or block.
+Only accessible within that method or block.
+Not automatically initialized — you must assign a value before use.
+public void greet() {
+    String message = "Hello!";  // local variable
+    System.out.println(message);
+}
+
+🔹 2. Instance Variables
+Declared inside a class, but outside any method.
+Each object gets its own copy.
+Also called non-static fields.
+Initialized to default values if not explicitly set.
+public class Person {
+    String name;   // instance variable
+    int age;
+
+    public void sayName() {
+        System.out.println(name);
+    }
+}
+
+🔹 3. Static Variables
+Declared with the static keyword.
+Belong to the class, not to individual objects.
+Shared among all instances of the class.
+Often used for constants or class-wide counters.
+public class Car {
+    static int numberOfWheels = 4;  // static variable
+}
+
+🔹 4. Parameters
+Variables passed into methods or constructors.
+Act like local variables, but their values come from method callers.
+public void setAge(int age) {  // 'age' is a parameter
+    this.age = age;
+}
+
+| Type              | Declared In                | Scope                   | Stored In   | Example                    |
+| ----------------- | -------------------------- | ----------------------- | ----------- | -------------------------- |
+| Local Variable    | Method/constructor/block   | Only that method/block  | Stack       | `int x = 5;` inside method |
+| Instance Variable | Inside class               | Whole object            | Heap        | `String name;`             |
+| Static Variable   | Inside class with `static` | Shared by all instances | Method area | `static int count;`        |
+| Parameter         | Method/constructor header  | Only that method        | Stack       | `void foo(int x)`          |
