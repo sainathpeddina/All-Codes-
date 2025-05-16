@@ -89,6 +89,10 @@ LoginTest class inherits setup and teardown methods from BaseTest.
 ✅ 4. Polymorphism
 🔹 Concept:
 Compile-time (Method Overloading): Same method name with different parameters.
+Number of parameters, or
+Type of parameters, or
+Order of parameters
+
 Runtime (Method Overriding): Subclass provides specific implementation of a superclass method.
 
 🔹 In Selenium:
