@@ -278,3 +278,34 @@ public class LoginTest extends BaseTest {
 | Encapsulation | `LoginPage` methods & locators      |
 | Polymorphism  | `ElementUtils` (method overloading) |
 | Abstraction   | `WebDriver` interface               |
+
+✅ Interface Declaration:
+interface MyInterface {
+
+    // A constant field (implicitly public, static, and final)
+    int MAX_COUNT = 10;
+
+    // Abstract method (implicitly public and abstract)
+    void doSomething();
+
+    // Default method (can have a body)
+    default void defaultMethod() {
+        System.out.println("Default method");
+        System.out.println("MAX_COUNT is: " + MAX_COUNT);
+    }
+
+    // Static method (can be called without an instance)
+    static void staticMethod() {
+        System.out.println("Static method in interface");
+    }
+
+    // Private helper method (Java 9+)
+    private void helperMethod() {
+        System.out.println("Private helper method");
+    }
+}
+
+| `protected` methods/fields | ❌ No                  | Not allowed in interfaces                |
+
+
+
