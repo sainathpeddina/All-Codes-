@@ -69,11 +69,11 @@
 | Performance  | ❌ Slow           | ✅ Fastest                              | ⚠️ Moderate                        |
 | Use Case     | Constant strings | Frequent modifications (single thread) | Multi-threaded string manipulation |
 
-| Feature                | Abstract Class                                            | Interface                                                             |
-| ---------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
-| **Methods**            | Can have both abstract and concrete methods               | Can have abstract methods (Java 8+ allows default and static methods) |
-| **Instance Variables** | Can have instance variables (fields)                      | Cannot have instance variables (except constants)                     |
-| **Inheritance**        | A class can extend only one abstract class                | A class can implement multiple interfaces                             |
-| **Constructor**        | Can have constructors                                     | Cannot have constructors                                              |
-| **Access Modifiers**   | Can have any access modifier (private, protected, public) | All methods are implicitly `public`                                   |
+| Concept     | Role                              | Example                                 |
+| ----------- | --------------------------------- | --------------------------------------- |
+| `throw`     | Actually **throws** an exception  | `throw new IllegalArgumentException();` |
+| `throws`    | **Declares** possible exceptions  | `public void foo() throws IOException`  |
+| `Throwable` | Root of all exceptions and errors | `Throwable t = new Exception();`        |
+
+
 
