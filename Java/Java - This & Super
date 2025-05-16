@@ -1,3 +1,56 @@
+
+class Parent {
+    Parent(String message) {
+        System.out.println("Parent constructor: " + message);
+    }
+}
+
+class Child extends Parent {
+    Child() {
+        super("Hello from Child"); // 👈 Calls Parent's constructor
+        System.out.println("Child constructor");
+    }
+}
+
+🔍 Key Rules for super():
+Must be the first statement in the subclass constructor.
+If you don't explicitly call super(), Java will automatically insert a super() call to the no-arg constructor of the parent class.
+If the parent class doesn’t have a no-arg constructor, and you don’t explicitly call another one, it will cause a compile-time error.
+
+❌ Error Example (No no-arg constructor in parent):
+class Parent {
+    Parent(String message) { }  // No no-arg constructor
+}
+
+class Child extends Parent {
+    Child() {
+        // Java will try to insert super(); → Error
+    }
+}
+
+✅ Fix: Call the correct parent constructor
+class Child extends Parent {
+    Child() {
+        super("From Child"); // ✅ Correctly calls the available constructor
+    }
+}
+
+🔁 Calling Different Parent Constructors:
+class Parent {
+    Parent() {
+        System.out.println("Parent default constructor");
+    }
+
+    Parent(String msg) {
+        System.out.println("Parent constructor with message: " + msg);
+    }
+}
+class Child extends Parent {
+    Child() {
+        super("Custom message"); // You can choose which one to call
+    }
+}
+
 ✅ 1. this Keyword — Refers to Current Object
 🔹 Main Uses of this:
 | Use Case                                       | Description                  |
