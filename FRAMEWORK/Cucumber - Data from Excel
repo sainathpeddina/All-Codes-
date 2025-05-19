@@ -1,0 +1,126 @@
+Read Excel and Use Scenario Without Outline (With DataTable)
+
+📝 login.feature
+Feature: User Login with Excel data
+
+  Scenario: Login with credentials from Excel
+    Given I test login functionality with data from Excel
+
+📘 ExcelReader.java
+
+import org.apache.poi.ss.usermodel.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExcelReader {
+    public static List<String[]> readExcelData(String filePath, String sheetName) throws Exception {
+        FileInputStream fis = new FileInputStream(new File(filePath));
+        Workbook workbook = WorkbookFactory.create(fis);
+        Sheet sheet = workbook.getSheet(sheetName);
+        List<String[]> data = new ArrayList<>();
+
+        for (Row row : sheet) {
+            if (row.getRowNum() == 0) continue; // Skip header
+
+            String username = row.getCell(0).getStringCellValue();
+            String password = row.getCell(1).getStringCellValue();
+            String expectedResult = row.getCell(2).getStringCellValue().toLowerCase(); // "success" or "failure"
+
+            data.add(new String[]{username, password, expectedResult});
+        }
+
+        workbook.close();
+        return data;
+    }
+}
+
+
+📘 LoginPage.java
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+    WebDriver driver;
+
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public void enterUsername(String username) {
+        driver.findElement(By.id("username")).sendKeys(username);
+    }
+
+    public void enterPassword(String password) {
+        driver.findElement(By.id("password")).sendKeys(password);
+    }
+
+    public void clickLogin() {
+        driver.findElement(By.id("loginBtn")).click();
+    }
+
+    public void verifyLoginResult(String expected) {
+        String message = driver.findElement(By.id("message")).getText();
+
+        if (expected.equals("success")) {
+            assert message.contains("Success") : "Expected success but got: " + message;
+        } else if (expected.equals("failure")) {
+            assert message.contains("Invalid") || message.contains("Failure") || !message.contains("Success")
+                : "Expected failure but got: " + message;
+        } else {
+            throw new IllegalArgumentException("Unknown expected result: " + expected);
+        }
+    }
+}
+
+📘 StepDefinitions.java
+
+package stepDefinitions;
+import io.cucumber.java.en.Given;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import pages.LoginPage;
+import java.util.List;
+
+public class StepDefinitions {
+    WebDriver driver;
+    LoginPage loginPage;
+
+    @Given("I test login functionality with data from Excel")
+    public void testLoginWithExcelData() throws Exception {
+    List<String[]> data = ExcelReader.readExcelData("src/test/resources/test-data.xlsx", "Sheet1");
+
+    for (String[] row : data) {
+        String username = row[0];
+        String password = row[1];
+        String expected = row[2];
+
+        driver = new ChromeDriver();
+        driver.get("https://example.com/login");
+
+        loginPage = new LoginPage(driver);
+        loginPage.enterUsername(username);
+        loginPage.enterPassword(password);
+        loginPage.clickLogin();
+        loginPage.verifyLoginResult(expected);
+
+        driver.quit();
+    }
+}
+}
+
+📘 TestRunner.java
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = {"stepDefinitions"},
+    plugin = {"pretty", "html:target/cucumber-reports.html"}
+)
+public class TestRunner { }
