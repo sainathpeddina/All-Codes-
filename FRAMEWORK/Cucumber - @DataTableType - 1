@@ -1,0 +1,418 @@
+Data Driven Testing using BDD Cucumber 
+Use Scenario Outline with Hardcoded Data
+
+✅ Example Scenario
+📄 1. Feature File (Gherkin)
+Feature: Login Functionality
+  Scenario Outline: Login with valid and invalid credentials
+    Given I am on the login page
+    When I enter username "<username>" and password "<password>"
+    Then I should see a message "<message>"
+
+    Examples:
+      | username | password | message              |
+      | user1    | pass1    | Login successful     |
+      | user2    | wrong    | Invalid credentials  |
+      | admin    | admin123 | Login successful     |
+
+💡 2. Step Definitions (Java - Cucumber + Selenium Example)
+
+@Given("I am on the login page")
+public void i_am_on_the_login_page() {
+    driver.get("https://example.com/login");
+}
+
+@When("I enter username {string} and password {string}")
+public void i_enter_username_and_password(String username, String password) {
+    driver.findElement(By.id("username")).sendKeys(username);
+    driver.findElement(By.id("password")).sendKeys(password);
+    driver.findElement(By.id("loginButton")).click();
+}
+
+@Then("I should see a message {string}")
+public void i_should_see_a_message(String expectedMessage) {
+    String actualMessage = driver.findElement(By.id("message")).getText();
+    assertEquals(expectedMessage, actualMessage);
+}
+
+1. Feature File (products.feature)
+In this scenario, we'll define a list of products to be added to the e-commerce platform:
+
+Feature: Product management
+
+  Scenario: Adding multiple products to the system
+    Given the following products exist:
+      | name        | price | category     |
+      | Laptop      | 1000  | Electronics  |
+      | T-shirt     | 20    | Clothing     |
+      | Headphones  | 150   | Electronics  |
+      | Coffee Mug  | 10    | Kitchenware  |
+
+2. Java Model Class (Product.java)
+Now, let’s define the Product class to store product information.
+
+public class Product {
+    private String name;
+    private double price;
+    private String category;
+
+    // Constructor
+    public Product(String name, double price, String category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
+    // Getters
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{name='" + name + "', price=" + price + ", category='" + category + "'}";
+            // ✅ System.out.println(data) → calls data.toString() automatically
+    }
+}
+
+3. Step Definitions (ProductStepDefinitions.java)
+Here we define the step that will handle the DataTable mapping and print out the details of each product.
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.DataTableType;
+import java.util.List;
+import java.util.Map;
+
+public class ProductStepDefinitions {
+
+    private List<Product> products;
+
+    // DataTableType to map each row to a Product object
+    @DataTableType
+    public Product productEntry(Map<String, String> entry) {
+        return new Product(
+            entry.get("name"),
+            Double.parseDouble(entry.get("price")),
+            entry.get("category")
+        );
+    }
+
+    // Step definition that uses the List<Product>
+    @Given("the following products exist:")
+    public void the_following_products_exist(List<Product> products) {
+        this.products = products;
+
+        // Print products to simulate adding them to the system
+        System.out.println("Products added to the system:");
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+}
+
+4. Example of Output
+
+Products added to the system:
+Product{name='Laptop', price=1000.0, category='Electronics'}
+Product{name='T-shirt', price=20.0, category='Clothing'}
+Product{name='Headphones', price=150.0, category='Electronics'}
+Product{name='Coffee Mug', price=10.0, category='Kitchenware'}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🏗️ Project Structure
+bdd-datadriven-cucumber/
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       └── models/
+│   │           └── LoginData.java
+│   ├── test/
+│   │   └── java/
+│   │       ├── stepdefs/
+│   │       │   └── LoginSteps.java
+│   │       ├── testrunners/
+│   │       │   └── TestRunner.java
+│   │       └── support/
+│   │           └── DataTableMapper.java
+│   │   └── resources/
+│   │       └── features/
+│   │           └── login.feature
+├── pom.xml
+
+✅ Common Setup for All Options
+🔢 1. LoginData.java (Model class)
+package models;
+
+public class LoginData {
+    private String username;
+    private String password;
+    private String message;
+
+    public LoginData(String username, String password, String message) {
+        this.username = username;
+        this.password = password;
+        this.message = message;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginData{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+}
+
+📄 2. login.feature (Gherkin feature)
+
+Feature: Login functionality
+  Scenario: Login with multiple credentials
+    Given I am on the login page
+    When I try to login with the following data:
+      | username | password | message             |
+      | user1    | pass1    | Login successful    |
+      | user2    | wrong    | Invalid credentials |
+      | admin    | admin123 | Login successful    |
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+🧠 3. DataTableMapper.java (Map table to custom object)
+package support;
+import io.cucumber.java.DataTableType;
+import models.LoginData;
+import java.util.Map;
+
+public class DataTableMapper {
+
+    @DataTableType
+    public LoginData mapLoginData(Map<String, String> entry) {
+    String username = entry.get("username");
+    String password = entry.get("password");
+    String message = entry.get("message");
+
+    LoginData loginData = new LoginData(username, password, message);
+    return loginData;
+}
+}
+//This class maps/converts each row of the table to a LoginData object using @DataTableType.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+✅ 4. LoginSteps.java (Step Definitions)
+
+package stepdefs;
+import io.cucumber.java.en.*;
+import models.LoginData;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+
+public class LoginSteps {
+
+    WebDriver driver;
+
+    @Given("I am on the login page")
+    public void i_am_on_the_login_page() {
+        driver = new ChromeDriver(); // Make sure ChromeDriver is in your PATH
+        driver.get("https://example.com/login"); // Replace with your actual URL
+    }
+
+    @When("I try to login with the following data:")
+    public void i_try_to_login_with_the_following_data(List<LoginData> loginDataList) {
+        for (LoginData data : loginDataList) {
+            driver.findElement(By.id("username")).clear();
+            driver.findElement(By.id("username")).sendKeys(data.username);
+            driver.findElement(By.id("password")).clear();
+            driver.findElement(By.id("password")).sendKeys(data.password);
+            driver.findElement(By.id("loginButton")).click();
+
+            String actualMessage = driver.findElement(By.id("message")).getText();
+            assertEquals(data.message, actualMessage);
+        }
+        driver.quit();
+    }
+}
+
+🧪 5. TestRunner.java (Cucumber + JUnit4)
+
+package testrunners;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "src/test/resources/features",       // Path to .feature files
+    glue = {"stepdefs", "support"},                 // Packages with step defs & datatable type
+    plugin = {"pretty", "html:target/cucumber.html"}, // Reporting plugins
+    monochrome = true,                              // Cleaner console output
+    dryRun = false                                  // Set to true to validate steps without execution
+)
+public class TestRunner {
+}
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Option 1: Use @DataTableType to Auto-Map Each Row
+DataTableMapper.java
+
+package support;
+import io.cucumber.java.DataTableType;
+import models.LoginData;
+import java.util.Map;
+
+public class DataTableMapper {
+
+    @DataTableType
+    public LoginData mapLoginData(Map<String, String> entry) {
+        return new LoginData(
+            entry.get("username"),
+            entry.get("password"),
+            entry.get("message")
+        );
+    }
+}
+
+package stepdefs;
+import io.cucumber.java.en.Given;
+import models.LoginData;
+import java.util.List;
+
+public class LoginSteps {
+
+    @Given("the following login credentials")
+    public void the_following_login_credentials(List<LoginData> loginDataList) {
+        for (LoginData data : loginDataList) {
+            System.out.println(data);
+        }
+    }
+}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+🔹 Option 2: Manual Mapping from DataTable
+LoginSteps.java
+
+package stepdefs;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import models.LoginData;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class LoginSteps {
+
+    @Given("the following login credentials")
+    public void the_following_login_credentials(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        List<LoginData> loginDataList = new ArrayList<>();
+
+        for (Map<String, String> row : rows) {
+            LoginData data = new LoginData(
+                row.get("username"),
+                row.get("password"),
+                row.get("message")
+            );
+            loginDataList.add(data);
+        }
+
+        for (LoginData data : loginDataList) {
+            System.out.println(data);
+        }
+    }
+}
+//You do not need @DataTableType mapping for this approach.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Option 3: POJO Auto-Mapping Using Setters
+LoginData.java (Modified with Setters and No-Args Constructor)
+
+package models;
+
+public class LoginData {
+    private String username;
+    private String password;
+    private String message;
+
+    public LoginData() {
+        // Required for POJO mapping
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginData{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+}
+
+LoginSteps.java
+
+package stepdefs;
+import io.cucumber.java.en.Given;
+import models.LoginData;
+import java.util.List;
+
+public class LoginSteps {
+
+    @Given("the following login credentials")
+    public void the_following_login_credentials(List<LoginData> loginDataList) {
+        for (LoginData data : loginDataList) {
+            System.out.println(data);
+        }
+    }
+}
+
