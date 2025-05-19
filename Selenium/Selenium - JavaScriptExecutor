@@ -1,0 +1,63 @@
+✅ Interface Declaration
+JavascriptExecutor js = (JavascriptExecutor) driver;
+
+📘 Common Methods of JavaScriptExecutor
+| Method                                              | Description                                                                        
+| `executeScript(String script, Object... args)`      | Executes JavaScript in the context of the current page. Returns the result of the script. |
+| `executeAsyncScript(String script, Object... args)` | Executes an asynchronous JavaScript.                                               
+
+🔧 Common Use Cases with Examples
+1. Scroll Down / Up
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("window.scrollBy(0,1000)"); // Scroll down 1000 pixels
+
+2. Scroll to Element
+WebElement element = driver.findElement(By.id("footer"));
+js.executeScript("arguments[0].scrollIntoView(true);", element);
+
+3. Click an Element
+WebElement element = driver.findElement(By.id("submitBtn"));
+js.executeScript("arguments[0].click();", element);
+
+4. Set Value in Input Field
+WebElement input = driver.findElement(By.name("username"));
+js.executeScript("arguments[0].value='admin';", input);
+
+5. Get Page Title
+String title = (String) js.executeScript("return document.title;");
+System.out.println("Title is: " + title);
+
+6. Highlight an Element (e.g., for debugging)
+WebElement element = driver.findElement(By.id("username"));
+js.executeScript("arguments[0].style.border='3px solid red'", element);
+
+1. Click an Element by ID
+JavascriptExecutor js = (JavascriptExecutor) driver;
+js.executeScript("document.getElementById('submitBtn').click();");
+
+2. Set Value in Input Field by Name
+js.executeScript("document.getElementsByName('username')[0].value='admin';");
+
+3. Set Value Using querySelector (CSS Selector)
+js.executeScript("document.querySelector('input[type=\"password\"]').value='12345';");
+
+4. Scroll to Bottom of the Page
+js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+
+5. Scroll to a Specific Element by Class Name
+js.executeScript("document.getElementsByClassName('footer')[0].scrollIntoView(true);");
+
+6. Get Text Content of an Element
+String text = (String) js.executeScript("return document.querySelector('h1').innerText;");
+
+System.out.println("Text: " + text);
+7. Change Background Color of Element by ID
+js.executeScript("document.getElementById('main-header').style.background='yellow';");
+
+8. Click a Button Using querySelector
+js.executeScript("document.querySelector('button.login').click();");
+
+9. Check Checkbox Using DOM
+js.executeScript("document.querySelector('input[type=\"checkbox\"]').checked = true;");
+
+
