@@ -1,0 +1,51 @@
+🔹 Types of XPath in Selenium
+1. Absolute XPath
+It starts from the root node (HTML) and follows a complete path to the element.
+Syntax: /html/body/div[1]/div[2]/input
+
+✅ Example:
+/html/body/div[1]/form/input[1]
+❌ Not recommended – brittle; breaks if structure changes.
+
+2. Relative XPath
+It starts from any node in the DOM and is more flexible.
+Syntax: //tagname[@attribute='value']
+✅ Example:
+//input[@id='username']
+You can also use combinations:
+
+//div[@class='login']//input[@type='password']
+🔹 XPath Functions and Operators
+| Operator        | Description            | Example                                   |
+| --------------- | ---------------------- | ----------------------------------------- |
+| `=`             | Attribute equals       | `//input[@name='email']`                  |
+| `!=`            | Attribute not equals   | `//input[@name!='email']`                 |
+| `and`           | Combine two conditions | `//input[@type='text' and @name='email']` |
+| `or`            | Either condition       | `//input[@type='text' or @type='email']`  |
+| `contains()`    | Partial match          | `//button[contains(text(),'Login')]`      |
+| `starts-with()` | Starts with            | `//input[starts-with(@id,'user')]`        |
+| `text()`        | Match visible text     | `//a[text()='Home']`                      |
+
+
+🔹 XPath Axes in Selenium
+| Axis Name            | Description                                       | Example                                             |
+| -------------------- | ------------------------------------------------- | --------------------------------------------------- |
+| `self`               | Selects the current node                          | `//input[@id='user']/self::input`                   |
+| `parent`             | Selects the parent of the current node            | `//input[@id='user']/parent::div`                   |
+| `child`              | Selects all children of the current node          | `//div[@id='container']/child::input`               |
+| `ancestor`           | Selects all ancestors of the current node         | `//input[@id='user']/ancestor::form`                |
+| `ancestor-or-self`   | Selects all ancestors + the current node          | `//input[@id='user']/ancestor-or-self::*`           |
+| `descendant`         | Selects all descendants (children, grandchildren) | `//form[@id='loginForm']/descendant::input`         |
+| `descendant-or-self` | Descendants + the current node                    | `//form[@id='loginForm']/descendant-or-self::input` |
+| `following`          | Selects everything after the current node         | `//input[@id='user']/following::button`             |
+| `following-sibling`  | Selects siblings after the current node           | `//label[@for='user']/following-sibling::input`     |
+| `preceding`          | Everything before the current node                | `//button[@id='submit']/preceding::input`           |
+| `preceding-sibling`  | Siblings before the current node                  | `//input[@id='password']/preceding-sibling::label`  |
+
+
+| Feature    | `parent`                    | `ancestor`                                     | `preceding`                                |
+| ---------- | --------------------------- | ---------------------------------------------- | ------------------------------------------ |
+| Selects    | Only **one** level up       | **All** levels up (parent, grandparent, etc.)  | All **preceding nodes** in the document    |
+| Direction  | Upward (one level)          | Upward (multi-level)                           | Backward (anywhere before in DOM)          |
+| Returns    | Single node (if one parent) | One or more nodes                              | Zero or more nodes                         |
+| Common Use | Go to container `<div>`     | Get `<form>` or `<section>` containing element | Get earlier inputs, labels, headings, etc. |
