@@ -1,5 +1,84 @@
-Read Excel and Use Scenario Without Outline (With DataTable)
+✅ 3 Ways to Use Excel Data with Cucumber
+✅ Option 1: Use a regular Scenario, read Excel data in Java, and loop internally -Most real-world frameworks use this method — dynamic data read inside the step definition and running one scenario per row.
+✅ Option 2: Use a custom runner to generate .feature files from Excel (complex).
+✅ Option 3: Use a DataTable, map it from Excel (easier than Scenario Outline)
 
+✅ GOAL
+Read a list of credentials from an Excel file
+Pass the data into a step via a DataTable
+Use the data in Java to simulate login for each user
+
+✅ 1. Excel File: LoginData.xlsx
+Path: src/test/resources/data/LoginData.xlsx
+| username | password |
+| -------- | -------- |
+| user1    | pass1    |
+| user2    | pass2    |
+| user3    | pass3    |
+
+✅ 2. Feature File: login.feature
+Path: src/test/resources/features/login.feature
+
+Feature: Login functionality with DataTable from Excel
+  Scenario: Login using Excel DataTable
+    Given the user logs in using Excel file "LoginData.xlsx"
+
+✅ 3. Step Definition: LoginSteps.java
+Path: src/test/java/stepdefinitions/LoginSteps.java
+
+package stepdefinitions;
+import io.cucumber.java.en.Given;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.FileInputStream;
+import java.util.*;
+
+public class LoginSteps {
+
+    @Given("the user logs in using Excel file {string}")
+    public void the_user_logs_in_using_excel_file(String fileName) throws Exception {
+        String filePath = "src/test/resources/data/" + fileName;
+        FileInputStream inputStream = new FileInputStream(filePath);
+        Workbook workbook = new XSSFWorkbook(inputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<Map<String, String>> dataList = new ArrayList<>();
+
+        // Read header
+        Row headerRow = sheet.getRow(0);
+        int colCount = headerRow.getPhysicalNumberOfCells();
+        String[] headers = new String[colCount];
+        for (int i = 0; i < colCount; i++) {
+            headers[i] = headerRow.getCell(i).getStringCellValue();
+        }
+
+        // Read data
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            Map<String, String> data = new HashMap<>();
+            for (int j = 0; j < colCount; j++) {
+                data.put(headers[j], row.getCell(j).getStringCellValue());
+            }
+            dataList.add(data);
+        }
+
+        // Simulate login
+        for (Map<String, String> credentials : dataList) {
+            String username = credentials.get("username");
+            String password = credentials.get("password");
+
+            System.out.println("Logging in with Username: " + username + " | Password: " + password);
+
+            // Example: perform actual login logic here
+            // loginPage.login(username, password);
+        }
+
+        workbook.close();
+        inputStream.close();
+    }
+}
+
+----------------------------------------------------------------------------------
 📝 login.feature
 Feature: User Login with Excel data
 
@@ -124,3 +203,233 @@ import io.cucumber.junit.CucumberOptions;
     plugin = {"pretty", "html:target/cucumber-reports.html"}
 )
 public class TestRunner { }
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Option 1: using a standard Cucumber scenario where test data (e.g., login credentials) is read from an Excel file during the step execution.
+
+📝 login.feature
+Feature: User Login with Excel data
+
+  Scenario: Login with credentials from Excel
+    Given I test login functionality with data from Excel
+
+📘 LoginPage.java
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+    WebDriver driver;
+
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public void enterUsername(String username) {
+        driver.findElement(By.id("username")).sendKeys(username);
+    }
+
+    public void enterPassword(String password) {
+        driver.findElement(By.id("password")).sendKeys(password);
+    }
+
+    public void clickLogin() {
+        driver.findElement(By.id("loginBtn")).click();
+    }
+
+    public void verifyLoginResult(String expected) {
+        String message = driver.findElement(By.id("message")).getText();
+
+        if (expected.equals("success")) {
+            assert message.contains("Success") : "Expected success but got: " + message;
+        } else if (expected.equals("failure")) {
+            assert message.contains("Invalid") || message.contains("Failure") || !message.contains("Success")
+                : "Expected failure but got: " + message;
+        } else {
+            throw new IllegalArgumentException("Unknown expected result: " + expected);
+        }
+    }
+}
+
+📘 StepDefinitions.java
+
+package stepdefinitions;
+
+import io.cucumber.java.en.Given;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Iterator;
+
+public class LoginSteps {
+
+    WebDriver driver;
+    LoginPage loginPage;
+
+       @Given("I test login functionality with data from Excel")
+       public void the_user_logs_in_with_data_from_the_excel_file() throws Exception {
+        String excelFilePath = "src/test/resources/data/LoginData.xlsx";
+        InputStream file = new FileInputStream(excelFilePath);
+
+        Workbook workbook = new XSSFWorkbook(file);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        Iterator<Row> rows = sheet.iterator();
+        rows.next(); // Skip header row
+
+        while (rows.hasNext()) {
+            Row row = rows.next();
+            Cell usernameCell = row.getCell(0);
+            Cell passwordCell = row.getCell(1);
+
+            String username = usernameCell.getStringCellValue();
+            String password = passwordCell.getStringCellValue();
+
+            // Simulate login (replace with actual login logic)
+            System.out.println("Attempting login with Username: " + username + ", Password: " + password);
+
+            driver = new ChromeDriver();
+            driver.get("https://example.com/login");
+    
+            loginPage = new LoginPage(driver);
+            loginPage.enterUsername(username);
+            loginPage.enterPassword(password);
+            loginPage.clickLogin();
+            loginPage.verifyLoginResult(expected);
+            driver.quit();
+        }
+
+        workbook.close();
+        file.close();
+    }
+}
+
+
+📘 TestRunner.java
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = {"stepDefinitions"},
+    plugin = {"pretty", "html:target/cucumber-reports.html"}
+)
+public class TestRunner { }
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+✅ Option 2: Generate .feature files dynamically from Excel using a custom runner is more advanced, but it gives you the ability to Generate .feature files programmatically, Automatically parameterize your tests, Run each row as a separate Cucumber Scenario
+
+✅ 1. LoginData.xlsx
+| username | password |
+| -------- | -------- |
+| user1    | pass1    |
+| user2    | pass2    |
+| user3    | pass3    |
+📁 Save it as src/test/resources/data/LoginData.xlsx
+
+✅ 2. FeatureGenerator.java
+Generate .feature file dynamically from Excel:
+
+package generator;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class FeatureGenerator {
+
+    public static final String GENERATED_FEATURE_PATH = "src/test/resources/generated/generated_login.feature";
+
+    public static void generateFeatureFromExcel() throws Exception {
+        String excelPath = "src/test/resources/data/LoginData.xlsx";
+        InputStream file = new FileInputStream(excelPath);
+        Workbook workbook = new XSSFWorkbook(file);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        StringBuilder featureContent = new StringBuilder();
+        featureContent.append("Feature: Login using data from Excel\n\n");
+
+        int scenarioCounter = 1;
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) { // skip header
+            Row row = sheet.getRow(i);
+            String username = row.getCell(0).getStringCellValue();
+            String password = row.getCell(1).getStringCellValue();
+
+            featureContent.append("  Scenario: Login with user ").append(scenarioCounter++).append("\n");
+            featureContent.append("    Given the user logs in with username \"").append(username).append("\" and password \"").append(password).append("\"\n\n");
+        }
+
+        Files.createDirectories(Paths.get("src/test/resources/generated"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(GENERATED_FEATURE_PATH));
+        writer.write(featureContent.toString());
+        writer.close();
+
+        workbook.close();
+        file.close();
+    }
+}
+✅ 3. LoginSteps.java
+
+package stepdefinitions;
+import io.cucumber.java.en.Given;
+
+public class LoginSteps {
+
+    @Given("the user logs in with username {string} and password {string}")
+    public void login_with_credentials(String username, String password) {
+        // Replace this with actual login logic
+        System.out.println("Logging in with Username: " + username + ", Password: " + password);
+    }
+}
+
+✅ 4. TestRunner.java – Custom Runner with Generator
+
+package runner;
+import generator.FeatureGenerator;
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
+import static io.cucumber.junit.platform.engine.Constants.*;
+
+@Suite
+@SelectClasspathResource("generated") // points to generated feature folder
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "stepdefinitions")
+public class TestRunner {
+
+    static {
+        try {
+            // Generate feature file before Cucumber runs
+            FeatureGenerator.generateFeatureFromExcel();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate feature from Excel", e);
+        }
+    }
+}
+
+✅ Sample Output
+After running, the generated .feature file will look like:
+
+generated_login.feature
+Feature: Login using data from Excel
+
+  Scenario: Login with user 1
+    Given the user logs in with username "user1" and password "pass1"
+
+  Scenario: Login with user 2
+    Given the user logs in with username "user2" and password "pass2"
+
+  Scenario: Login with user 3
+    Given the user logs in with username "user3" and password "pass3"
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
