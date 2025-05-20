@@ -1,39 +1,97 @@
 Data Driven Testing using BDD Cucumber 
-Use Scenario Outline with Hardcoded Data
 
-✅ Example Scenario
-📄 1. Feature File (Gherkin)
-Feature: Login Functionality
-  Scenario Outline: Login with valid and invalid credentials
-    Given I am on the login page
-    When I enter username "<username>" and password "<password>"
-    Then I should see a message "<message>"
+✅ Short Answer:
+No, @DataTableType is not mandatory in all cases.
+But:
+✅ It is required only when you want to convert a DataTable into custom Java objects (like a UserCredential POJO).
+❌ It is not needed if you only use simple conversions (e.g., using DataTable.asMaps() or DataTable.asLists()).
 
-    Examples:
-      | username | password | message              |
-      | user1    | pass1    | Login successful     |
-      | user2    | wrong    | Invalid credentials  |
-      | admin    | admin123 | Login successful     |
+✅ When You Must Use @DataTableType
+You must use @DataTableType when:
+You want Cucumber to convert a row in a DataTable to a custom object automatically.
+You're using .asList(YourClass.class) or .asMap(ClassKey.class, ClassValue.class).
 
-💡 2. Step Definitions (Java - Cucumber + Selenium Example)
-
-@Given("I am on the login page")
-public void i_am_on_the_login_page() {
-    driver.get("https://example.com/login");
+@DataTableType
+public UserCredential map(Map<String, String> row) {
+    return new UserCredential(row.get("username"), row.get("password"));
 }
 
-@When("I enter username {string} and password {string}")
-public void i_enter_username_and_password(String username, String password) {
-    driver.findElement(By.id("username")).sendKeys(username);
-    driver.findElement(By.id("password")).sendKeys(password);
-    driver.findElement(By.id("loginButton")).click();
+Used like this:
+
+@When("I login with users:")
+public void loginWithUsers(DataTable dataTable) {
+    List<UserCredential> users = dataTable.asList(UserCredential.class);
 }
 
-@Then("I should see a message {string}")
-public void i_should_see_a_message(String expectedMessage) {
-    String actualMessage = driver.findElement(By.id("message")).getText();
-    assertEquals(expectedMessage, actualMessage);
+Here, @DataTableType tells Cucumber how to convert a row into UserCredential.
+
+✅ When You Don't Need @DataTableType
+If you’re not converting rows into a custom object, you don’t need @DataTableType.
+You can just use .asMaps() or .asLists():
+
+@When("I login with users:")
+public void loginWithUsers(DataTable dataTable) {
+    List<Map<String, String>> users = dataTable.asMaps(String.class, String.class);
+    for (Map<String, String> user : users) {
+        String username = user.get("username");
+        String password = user.get("password");
+    }
 }
+✅ This works without @DataTableType.
+
+✅ Summary Table
+| Use Case                                 | Use `@DataTableType`? | Example                                 |
+| ---------------------------------------- | --------------------- | --------------------------------------- |
+| `dataTable.asList(UserCredential.class)` | ✅ Required            | Convert rows to objects                 |
+| `dataTable.asMaps()`                     | ❌ Not needed          | Convert rows to `Map<String, String>`   |
+| `dataTable.asLists()`                    | ❌ Not needed          | Raw list of lists (List\<List<String>>) |
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+✅ Difference Between List<Map<String, String>> and List<String[]>
+List<Map<String, String>> -	A list where each item is a map (key-value pair), typically used for structured data with headers (like column names).
+List<String[]>	- A list where each item is a String array, typically used for raw row data, like from a CSV or Excel, without headers.
+
+🔍 Example to Illustrate the Difference
+1. List<String[]> readExcelData
+Suppose an Excel sheet:
+
+| Name  | Age | Country |
+| ----- | --- | ------- |
+| Alice | 25  | USA     |
+| Bob   | 30  | Canada  |
+
+List<String[]> readExcelData = new ArrayList<>();
+readExcelData.add(new String[]{"Alice", "25", "USA"});
+readExcelData.add(new String[]{"Bob", "30", "Canada"});
+
+Accessing data: readExcelData.get(0)[1] gives "25"
+
+2. List<Map<String, String>> dataList
+Now with headers included as keys:
+
+List<Map<String, String>> dataList = new ArrayList<>();
+
+Map<String, String> row1 = new HashMap<>();
+row1.put("Name", "Alice");
+row1.put("Age", "25");
+row1.put("Country", "USA");
+
+Map<String, String> row2 = new HashMap<>();
+row2.put("Name", "Bob");
+row2.put("Age", "30");
+row2.put("Country", "Canada");
+
+dataList.add(row1);
+dataList.add(row2);
+
+Accessing data: dataList.get(0).get("Age") gives "25"
+
+📝 Summary:
+Use List<String[]> when data is row-based and headers are separate or not needed.
+Use List<Map<String, String>> when you want named access to columns, like row.get("Name").
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 1. Feature File (products.feature)
 In this scenario, we'll define a list of products to be added to the e-commerce platform:
